@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>LibreChess RS</title>
   <link rel="icon" type="image/svg+xml" href="/icon.svg">
   <link rel="stylesheet" href="/css/style.css">
@@ -292,9 +292,17 @@
           <input type="checkbox" id="setting-sound-toggle" checked style="width: 18px; height: 18px; cursor: pointer;">
         </div>
 
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <label style="font-weight: 600;">Haptic Vibration</label>
+          <input type="checkbox" id="setting-vibration-toggle" checked style="width: 18px; height: 18px; cursor: pointer;">
+        </div>
+
         <div style="border-top: 1px solid var(--border-color); padding-top: 16px; margin-top: 8px;">
-          <div style="font-size: 0.95rem; font-weight: 700;">LibreChess RS</div>
-          <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 2px;">
+          <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <div style="font-size: 0.95rem; font-weight: 700;">LibreChess RS</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">v1.0.0</div>
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">
             Made by Polskie and Gemini
           </div>
         </div>

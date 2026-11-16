@@ -14,6 +14,7 @@ class LibreChessApp {
     this.theme = localStorage.getItem('librechess_board_theme') || 'green';
     this.uiMode = localStorage.getItem('librechess_theme_mode') || 'dark';
     this.soundEnabled = localStorage.getItem('librechess_sound') !== 'false';
+    this.vibrationEnabled = localStorage.getItem('librechess_vibration') !== 'false';
     this.clockInterval = null;
     this.reviewData = null;
     this.reviewMoveIndex = 0;
@@ -82,6 +83,12 @@ class LibreChessApp {
       this.soundEnabled = e.target.checked;
       this.audio.enabled = this.soundEnabled;
       localStorage.setItem('librechess_sound', this.soundEnabled ? 'true' : 'false');
+    });
+
+    document.getElementById('setting-vibration-toggle')?.addEventListener('change', (e) => {
+      this.vibrationEnabled = e.target.checked;
+      this.audio.vibrationEnabled = this.vibrationEnabled;
+      localStorage.setItem('librechess_vibration', this.vibrationEnabled ? 'true' : 'false');
     });
 
     // Game Action buttons

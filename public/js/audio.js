@@ -3,6 +3,7 @@ class ChessAudio {
   constructor() {
     this.ctx = null;
     this.enabled = true;
+    this.vibrationEnabled = true;
   }
 
   init() {
@@ -17,7 +18,16 @@ class ChessAudio {
     }
   }
 
+  vibrate(pattern) {
+    if (this.vibrationEnabled && typeof navigator !== 'undefined' && navigator.vibrate) {
+      try {
+        navigator.vibrate(pattern);
+      } catch (e) {}
+    }
+  }
+
   playMove() {
+    this.vibrate(15);
     if (!this.enabled) return;
     this.init();
     if (!this.ctx) return;
@@ -40,6 +50,7 @@ class ChessAudio {
   }
 
   playCapture() {
+    this.vibrate(28);
     if (!this.enabled) return;
     this.init();
     if (!this.ctx) return;
@@ -71,6 +82,7 @@ class ChessAudio {
   }
 
   playCastle() {
+    this.vibrate([15, 30, 15]);
     if (!this.enabled) return;
     this.init();
     if (!this.ctx) return;
@@ -81,6 +93,7 @@ class ChessAudio {
   }
 
   playCheck() {
+    this.vibrate([35, 40, 35]);
     if (!this.enabled) return;
     this.init();
     if (!this.ctx) return;
@@ -103,6 +116,7 @@ class ChessAudio {
   }
 
   playBrilliant() {
+    this.vibrate([40, 30, 40, 30, 60]);
     if (!this.enabled) return;
     this.init();
     if (!this.ctx) return;
