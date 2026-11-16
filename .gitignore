@@ -1,0 +1,7 @@
+/target
+*.db
+*.db-*
+android/bin/
+android/obj/
+android/*.keystore
+android/src/com/polskie/librechess/R.java

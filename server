@@ -1,0 +1,22 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# LibreChess RS Server Runner
+set -e
+
+PROJECT_DIR="/data/data/com.termux/files/home/Projects/librechess-rs"
+cd "$PROJECT_DIR"
+
+if [ ! -f "target/release/librechess-rs" ]; then
+    echo "Compiling LibreChess RS release binary..."
+    cargo build --release
+fi
+
+PORT="${PORT:-8080}"
+HOST="${HOST:-0.0.0.0}"
+
+echo "============================================================"
+echo "  LIBRECHESS RS"
+echo "  Starting Server & Matchmaking on http://$HOST:$PORT"
+echo "  Access locally: http://127.0.0.1:$PORT"
+echo "============================================================"
+
+exec ./target/release/librechess-rs
