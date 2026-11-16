@@ -1,6 +1,6 @@
 # LibreChess RS
 
-An open-source, lightweight chess server, web application, and Android package with real-time matchmaking, classic board themes, post-game move analysis, and a 100 base Elo rating system.
+An open-source, lightweight chess app and server with a 100% native Android Canvas GUI, real-time matchmaking, classic board themes, post-game move review, and a base 100 Elo rating system.
 
 Made by Polskie and Gemini.
 
@@ -8,17 +8,18 @@ Made by Polskie and Gemini.
 
 ## Features
 
-- Lightweight Backend: Fast asynchronous server built with Axum, Tokio, and Shakmaty chess engine validation.
-- Minimal Memory Footprint: Starts in milliseconds, uses under 15MB RAM.
+- 100% Native Android GUI: Hardware-accelerated Canvas chessboard renderer with sharp vector piece graphics. Zero WebView and zero web wrapper.
+- Edge-to-Edge Experience: Fully transparent system status and navigation bars on modern Android (including Android 14, 15, and 16).
+- Haptic Feedback: Tactile vibration pulses on moves, captures, castling, and check.
+- Move Quality Analyzer: Post-game accuracy calculations, evaluation advantage graphs, and move classifications (Brilliant !!, Best, Good, Inaccuracy, Mistake, Blunder).
+- Offline Bot AI: Five difficulty levels (Bot 100, Bot 300, Bot 600, Bot 1000, Bot 1500) using piece-square evaluation tables.
 - Base 100 Elo System: All players start at 100 Elo rating. Ratings update live using standard Elo formulas with a floor at 100.
 - Simple Player Identification: Enter your player name directly to play and save statistics without passwords.
-- Real-Time Matchmaking: Live queue for Bullet (1|0), Blitz (3|0), Blitz (5|3), and Rapid (10|0).
-- Play vs Bot: Five engine difficulty levels (100 Elo, 500 Elo, 1000 Elo, 1500 Elo, 2500+ Master).
-- Move Quality Analyzer: Post-game accuracy calculations, evaluation advantage graphs, and move classifications (Brilliant, Great, Best, Inaccuracy, Mistake, Blunder).
-- Board Customization: Classic Green, Warm Wood, Slate Grey, and Ocean Blue board themes.
+- Real-Time Matchmaking Server: Fast asynchronous server built with Axum, Tokio, and Shakmaty chess engine validation.
+- Minimal Memory Footprint: Server starts in milliseconds and uses under 15MB RAM.
+- Board Themes: Emerald Green, Minimal Slate, Warm Wood, and Royal Ocean.
 - Appearance: Dark Mode (default) and White Mode toggle in settings.
-- Sound Effects: Synthesized Web Audio API sound effects for moves, captures, checks, castling, and game results.
-- Android APK: Ready-to-install Android application package included (`librechess-rs.apk`).
+- Android APK: Ready-to-install signed 49KB native Android package included (`librechess-rs.apk`).
 
 ---
 
