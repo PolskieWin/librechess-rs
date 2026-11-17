@@ -38,6 +38,18 @@
             android:layout_marginRight="8dp" />
 
         <Button
+            android:id="@+id/btn_style"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:background="@drawable/btn_flat"
+            android:text="Pieces"
+            android:textColor="#38BDF8"
+            android:textSize="11sp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:layout_marginRight="6dp" />
+
+        <Button
             android:id="@+id/btn_settings"
             android:layout_width="wrap_content"
             android:layout_height="34dp"
@@ -690,168 +702,566 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Play vs Engine Bots"
+                    android:text="Engine Opponents"
                     android:textColor="#F8FAFC"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:layout_marginBottom="4dp" />
+                    android:layout_marginBottom="2dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Calibrated bots with full tactics &amp; Scholar's defense."
+                    android:text="Calibrated bots with full tactics &amp; opening defense."
                     android:textColor="#94A3B8"
                     android:textSize="13sp"
-                    android:layout_marginBottom="12dp" />
+                    android:layout_marginBottom="8dp" />
 
-                <!-- Bot 100 -->
+                <!-- Color Selection Bar -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/card_material"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Play as:"
+                        android:textColor="#94A3B8"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/btn_color_white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="26dp"
+                        android:background="@drawable/nav_tab_active"
+                        android:text="White"
+                        android:textColor="#38BDF8"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:layout_marginRight="4dp" />
+
+                    <TextView
+                        android:id="@+id/btn_color_random"
+                        android:layout_width="wrap_content"
+                        android:layout_height="26dp"
+                        android:background="@drawable/nav_tab_inactive"
+                        android:text="Random"
+                        android:textColor="#94A3B8"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:layout_marginRight="4dp" />
+
+                    <TextView
+                        android:id="@+id/btn_color_black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="26dp"
+                        android:background="@drawable/nav_tab_inactive"
+                        android:text="Black"
+                        android:textColor="#94A3B8"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
+
+                <!-- Bot 100: Toby (Emerald) -->
                 <LinearLayout
                     android:id="@+id/card_bot_100"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/card_material"
+                    android:orientation="horizontal"
+                    android:background="@drawable/card_bot_toby"
                     android:clickable="true"
                     android:focusable="true"
-                    android:layout_marginBottom="8dp">
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp">
+
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Toby (Beginner) • 100 Elo"
-                        android:textColor="#38BDF8"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/avatar_toby"
+                        android:text="T"
+                        android:textColor="#064E3B"
+                        android:textSize="22sp"
                         android:textStyle="bold"
-                        android:textSize="15sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:gravity="center"
+                        android:layout_marginRight="12dp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Friendly beginner play, develops pieces, avoids hanging queen."
-                        android:textColor="#94A3B8"
-                        android:textSize="12sp" />
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Toby"
+                                android:textColor="#10B981"
+                                android:textStyle="bold"
+                                android:textSize="16sp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/badge_pill_green"
+                                android:text="100 ELO • BEGINNER"
+                                android:textColor="#34D399"
+                                android:textSize="10sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Playful novice. Focuses on simple piece development and captures."
+                            android:textColor="#E2E8F0"
+                            android:textSize="12sp"
+                            android:layout_marginTop="2dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Traits: Casual • Blunder: High • Easy"
+                            android:textColor="#94A3B8"
+                            android:textSize="10sp"
+                            android:layout_marginTop="2dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/btn_pill_toby"
+                            android:text="Challenge Toby"
+                            android:textColor="#064E3B"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="6dp" />
+                    </LinearLayout>
                 </LinearLayout>
 
-                <!-- Bot 300 -->
+                <!-- Bot 300: Martin (Amber) -->
                 <LinearLayout
                     android:id="@+id/card_bot_300"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/card_material"
+                    android:orientation="horizontal"
+                    android:background="@drawable/card_bot_martin"
                     android:clickable="true"
                     android:focusable="true"
-                    android:layout_marginBottom="8dp">
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp">
+
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Martin (Casual) • 300 Elo"
-                        android:textColor="#38BDF8"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/avatar_martin"
+                        android:text="M"
+                        android:textColor="#451A03"
+                        android:textSize="22sp"
                         android:textStyle="bold"
-                        android:textSize="15sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:gravity="center"
+                        android:layout_marginRight="12dp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Basic opening principles, center pawn control, and king safety."
-                        android:textColor="#94A3B8"
-                        android:textSize="12sp" />
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Martin"
+                                android:textColor="#F59E0B"
+                                android:textStyle="bold"
+                                android:textSize="16sp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/badge_pill_amber"
+                                android:text="300 ELO • CASUAL"
+                                android:textColor="#FBBF24"
+                                android:textSize="10sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Center pawn developer. Castles early, steady play but misses pins."
+                            android:textColor="#E2E8F0"
+                            android:textSize="12sp"
+                            android:layout_marginTop="2dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Traits: Center Control • Early Castle • Normal"
+                            android:textColor="#94A3B8"
+                            android:textSize="10sp"
+                            android:layout_marginTop="2dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/btn_pill_martin"
+                            android:text="Challenge Martin"
+                            android:textColor="#451A03"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="6dp" />
+                    </LinearLayout>
                 </LinearLayout>
 
-                <!-- Bot 600 -->
+                <!-- Bot 600: Elena (Cyan) -->
                 <LinearLayout
                     android:id="@+id/card_bot_600"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/card_material"
+                    android:orientation="horizontal"
+                    android:background="@drawable/card_bot_elena"
                     android:clickable="true"
                     android:focusable="true"
-                    android:layout_marginBottom="8dp">
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp">
+
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Elena (Club) • 600 Elo"
-                        android:textColor="#10B981"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/avatar_elena"
+                        android:text="E"
+                        android:textColor="#164E63"
+                        android:textSize="22sp"
                         android:textStyle="bold"
-                        android:textSize="15sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:gravity="center"
+                        android:layout_marginRight="12dp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Positional development, bishop pair dynamics, open rooks."
-                        android:textColor="#94A3B8"
-                        android:textSize="12sp" />
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Elena"
+                                android:textColor="#06B6D4"
+                                android:textStyle="bold"
+                                android:textSize="16sp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/badge_pill_cyan"
+                                android:text="600 ELO • CLUB"
+                                android:textColor="#22D3EE"
+                                android:textSize="10sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Active diagonal control, targets open files, avoids hanging pieces."
+                            android:textColor="#E2E8F0"
+                            android:textSize="12sp"
+                            android:layout_marginTop="2dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Traits: Active Bishops • Open Files • Defends"
+                            android:textColor="#94A3B8"
+                            android:textSize="10sp"
+                            android:layout_marginTop="2dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/btn_pill_elena"
+                            android:text="Challenge Elena"
+                            android:textColor="#164E63"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="6dp" />
+                    </LinearLayout>
                 </LinearLayout>
 
-                <!-- Bot 1000 -->
+                <!-- Bot 1000: Tactics Bot (Violet) -->
                 <LinearLayout
                     android:id="@+id/card_bot_1000"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/card_material"
+                    android:orientation="horizontal"
+                    android:background="@drawable/card_bot_tactics"
                     android:clickable="true"
                     android:focusable="true"
-                    android:layout_marginBottom="8dp">
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp">
+
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Tactics Bot • 1000 Elo"
-                        android:textColor="#F59E0B"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/avatar_tactics"
+                        android:text="T"
+                        android:textColor="#3B0764"
+                        android:textSize="22sp"
                         android:textStyle="bold"
-                        android:textSize="15sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:gravity="center"
+                        android:layout_marginRight="12dp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Calculates knight forks, pins to king and queen, and skewers."
-                        android:textColor="#94A3B8"
-                        android:textSize="12sp" />
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Tactics Bot"
+                                android:textColor="#8B5CF6"
+                                android:textStyle="bold"
+                                android:textSize="16sp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/badge_pill_violet"
+                                android:text="1000 ELO • TACTICIAN"
+                                android:textColor="#A78BFA"
+                                android:textSize="10sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Calculates sharp knight forks, discovered checks, skewers, and pins."
+                            android:textColor="#E2E8F0"
+                            android:textSize="12sp"
+                            android:layout_marginTop="2dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Traits: Sharp Forks &amp; Pins • 3-Ply Tactical Depth"
+                            android:textColor="#94A3B8"
+                            android:textSize="10sp"
+                            android:layout_marginTop="2dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/btn_pill_tactics"
+                            android:text="Challenge Tactics"
+                            android:textColor="#FFFFFF"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="6dp" />
+                    </LinearLayout>
                 </LinearLayout>
 
-                <!-- Bot 1500 -->
+                <!-- Bot 1500: Magnus (Orange) -->
                 <LinearLayout
                     android:id="@+id/card_bot_1500"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/card_material"
+                    android:orientation="horizontal"
+                    android:background="@drawable/card_bot_magnus"
                     android:clickable="true"
                     android:focusable="true"
-                    android:layout_marginBottom="8dp">
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp">
+
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Magnus (Master) • 1500 Elo"
-                        android:textColor="#F97316"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/avatar_magnus"
+                        android:text="M"
+                        android:textColor="#541C06"
+                        android:textSize="22sp"
                         android:textStyle="bold"
-                        android:textSize="15sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:gravity="center"
+                        android:layout_marginRight="12dp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Alpha-Beta deep calculation. Punishes Scholar's Mate traps!"
-                        android:textColor="#94A3B8"
-                        android:textSize="12sp" />
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Magnus"
+                                android:textColor="#F97316"
+                                android:textStyle="bold"
+                                android:textSize="16sp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/badge_pill_orange"
+                                android:text="1500 ELO • MASTER"
+                                android:textColor="#FB923C"
+                                android:textSize="10sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Alpha-Beta deep calculation. Punishes Scholar's Mate traps!"
+                            android:textColor="#E2E8F0"
+                            android:textSize="12sp"
+                            android:layout_marginTop="2dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Traits: Trap Refutation 100% • Deep Search • Master"
+                            android:textColor="#94A3B8"
+                            android:textSize="10sp"
+                            android:layout_marginTop="2dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/btn_pill_magnus"
+                            android:text="Challenge Magnus"
+                            android:textColor="#FFFFFF"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="6dp" />
+                    </LinearLayout>
                 </LinearLayout>
 
-                <!-- Bot 2500 GM -->
+                <!-- Bot 2500: Grandmaster (Gold) -->
                 <LinearLayout
                     android:id="@+id/card_bot_2500"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/card_material"
+                    android:orientation="horizontal"
+                    android:background="@drawable/card_bot_gm"
                     android:clickable="true"
                     android:focusable="true"
-                    android:layout_marginBottom="12dp">
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="14dp">
+
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Grandmaster Engine • 2500+ Elo"
-                        android:textColor="#EF4444"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/avatar_gm"
+                        android:text="GM"
+                        android:textColor="#422006"
+                        android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textSize="15sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:gravity="center"
+                        android:layout_marginRight="12dp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Full minimax tactical depth, quiescence search, and check evasions."
-                        android:textColor="#94A3B8"
-                        android:textSize="12sp" />
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Grandmaster Engine"
+                                android:textColor="#EAB308"
+                                android:textStyle="bold"
+                                android:textSize="16sp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/badge_pill_gold"
+                                android:text="2500+ ELO • TITAN"
+                                android:textColor="#FDE047"
+                                android:textSize="10sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Ultra-deep minimax calculation with endgame tablebases."
+                            android:textColor="#E2E8F0"
+                            android:textSize="12sp"
+                            android:layout_marginTop="2dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Traits: Stockfish Titan • 0.1% Error • Maximum Depth"
+                            android:textColor="#94A3B8"
+                            android:textSize="10sp"
+                            android:layout_marginTop="2dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/btn_pill_gm"
+                            android:text="Challenge Grandmaster"
+                            android:textColor="#422006"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="6dp" />
+                    </LinearLayout>
                 </LinearLayout>
 
             </LinearLayout>

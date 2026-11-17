@@ -42,6 +42,12 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
     private TextView txtAppTitle;
     private TextView btnUserBadge;
     private Button btnSettings;
+    private Button btnStyle;
+    private TextView btnColorWhite;
+    private TextView btnColorRandom;
+    private TextView btnColorBlack;
+    private int playerColorPreference = 0; // 0: White, 1: Random, 2: Black
+    private boolean isPlayerWhite = true;
     private TextView txtOpponentName;
     private TextView txtOpponentClock;
     private TextView txtPlayerName;
@@ -252,6 +258,7 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         txtAppTitle = (TextView) findViewById(R.id.txt_app_title);
         btnUserBadge = (TextView) findViewById(R.id.btn_user_badge);
         btnSettings = (Button) findViewById(R.id.btn_settings);
+        btnStyle = (Button) findViewById(R.id.btn_style);
         txtOpponentName = (TextView) findViewById(R.id.txt_opponent_name);
         txtOpponentClock = (TextView) findViewById(R.id.txt_opponent_clock);
         txtPlayerName = (TextView) findViewById(R.id.txt_player_name);
@@ -291,6 +298,10 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         cardBot1000 = findViewById(R.id.card_bot_1000);
         cardBot1500 = findViewById(R.id.card_bot_1500);
         cardBot2500 = findViewById(R.id.card_bot_2500);
+
+        btnColorWhite = (TextView) findViewById(R.id.btn_color_white);
+        btnColorRandom = (TextView) findViewById(R.id.btn_color_random);
+        btnColorBlack = (TextView) findViewById(R.id.btn_color_black);
 
         // Analyzer UI
         txtAnWhiteAcc = (TextView) findViewById(R.id.txt_an_white_acc);
@@ -526,6 +537,31 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
             }
         });
 
+        if (btnStyle != null) {
+            btnStyle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showBoardStyleDialog();
+                }
+            });
+        }
+
+        if (btnColorWhite != null) {
+            btnColorWhite.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) { updateColorPreference(0); }
+            });
+        }
+        if (btnColorRandom != null) {
+            btnColorRandom.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) { updateColorPreference(1); }
+            });
+        }
+        if (btnColorBlack != null) {
+            btnColorBlack.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) { updateColorPreference(2); }
+            });
+        }
+
         btnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -634,10 +670,17 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
                 public void onClick(View v) {
                     botLevel = rating;
                     savePreferences();
-                    txtOpponentName.setText("Bot " + botLevel);
+                    if (playerColorPreference == 0) {
+                        isPlayerWhite = true;
+                    } else if (playerColorPreference == 2) {
+                        isPlayerWhite = false;
+                    } else {
+                        isPlayerWhite = (Math.random() < 0.5);
+                    }
                     startNewGame();
                     switchTab(0);
-                    Toast.makeText(MainActivity.this, "Playing vs Bot " + rating, Toast.LENGTH_SHORT).show();
+                    String sideName = isPlayerWhite ? "White" : "Black";
+                    Toast.makeText(MainActivity.this, "Challenged Bot " + rating + " as " + sideName, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -795,20 +838,41 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         boardView.setEngine(engine);
         boardView.clearHighlights();
 
+        boardView.setFlipped(!isPlayerWhite);
+        txtPlayerName.setText(playerName + " (" + playerElo + ")");
+        txtOpponentName.setText("Bot " + botLevel);
+
         whiteTimeSeconds = selectedTimeSeconds;
         blackTimeSeconds = selectedTimeSeconds;
         updateClockDisplays();
 
-        txtStatusBar.setText("White to move");
-        txtStatusBar.setTextColor(0xFF38BDF8);
+        boolean botStarts = (!isPlayerWhite && engine.whiteToMove);
+        if (botStarts) {
+            txtStatusBar.setText("Bot thinking...");
+            txtStatusBar.setTextColor(0xFF38BDF8);
+        } else {
+            txtStatusBar.setText("White to move");
+            txtStatusBar.setTextColor(0xFF38BDF8);
+        }
 
         clockRunning = true;
         timerHandler.postDelayed(clockRunnable, 1000);
+
+        if (botStarts) {
+            timerHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    makeBotMove();
+                }
+            }, 450);
+        }
     }
 
     @Override
     public void onMove(int from, int to, int promoType) {
         if (inReviewMode || engine.isGameOver) return;
+        boolean isBotTurn = (engine.whiteToMove == !isPlayerWhite);
+        if (isBotTurn) return;
 
         boolean success = engine.makeMove(from, to, promoType);
         if (!success) return;
@@ -836,7 +900,7 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         }
 
         // Bot turn
-        if (!engine.whiteToMove) {
+        if (engine.whiteToMove == !isPlayerWhite) {
             txtStatusBar.setText("Bot thinking...");
             timerHandler.postDelayed(new Runnable() {
                 @Override
@@ -848,7 +912,9 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
     }
 
     private void makeBotMove() {
-        if (engine.isGameOver || engine.whiteToMove) return;
+        if (engine.isGameOver) return;
+        boolean isBotTurn = (engine.whiteToMove == !isPlayerWhite);
+        if (!isBotTurn) return;
 
         int[] botMove = engine.getBotMove(botLevel);
         if (botMove != null) {
@@ -1128,6 +1194,67 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         } catch (Exception ignored) {}
     }
 
+    private void updateColorPreference(int pref) {
+        playerColorPreference = pref;
+        if (btnColorWhite != null) {
+            btnColorWhite.setBackgroundResource(pref == 0 ? R.drawable.nav_tab_active : R.drawable.nav_tab_inactive);
+            btnColorWhite.setTextColor(pref == 0 ? 0xFF38BDF8 : 0xFF94A3B8);
+        }
+        if (btnColorRandom != null) {
+            btnColorRandom.setBackgroundResource(pref == 1 ? R.drawable.nav_tab_active : R.drawable.nav_tab_inactive);
+            btnColorRandom.setTextColor(pref == 1 ? 0xFF38BDF8 : 0xFF94A3B8);
+        }
+        if (btnColorBlack != null) {
+            btnColorBlack.setBackgroundResource(pref == 2 ? R.drawable.nav_tab_active : R.drawable.nav_tab_inactive);
+            btnColorBlack.setTextColor(pref == 2 ? 0xFF38BDF8 : 0xFF94A3B8);
+        }
+    }
+
+    private void showBoardStyleDialog() {
+        String[] options = {
+            "Pieces: Lichess (cburnett)" + (pieceStyle == 0 ? "  [Active]" : ""),
+            "Pieces: Neo Modern" + (pieceStyle == 1 ? "  [Active]" : ""),
+            "Pieces: Tournament Staunton" + (pieceStyle == 2 ? "  [Active]" : ""),
+            "Board: Lichess Green" + (boardTheme == 0 ? "  [Active]" : ""),
+            "Board: Lichess Wood" + (boardTheme == 1 ? "  [Active]" : ""),
+            "Board: Lichess Blue" + (boardTheme == 2 ? "  [Active]" : ""),
+            "Board: Lichess Canvas" + (boardTheme == 3 ? "  [Active]" : ""),
+            "Board: Lichess Charcoal" + (boardTheme == 4 ? "  [Active]" : ""),
+            "Board: Midnight OLED (Pure Black)" + (boardTheme == 5 ? "  [Active]" : "")
+        };
+
+        createDialogBuilder()
+            .setTitle("Piece Sets & Board Themes")
+            .setItems(options, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (which == 0) {
+                        pieceStyle = 0;
+                        boardView.setPieceStyle(pieceStyle);
+                        savePreferences();
+                        Toast.makeText(MainActivity.this, "Pieces: Lichess (cburnett)", Toast.LENGTH_SHORT).show();
+                    } else if (which == 1) {
+                        pieceStyle = 1;
+                        boardView.setPieceStyle(pieceStyle);
+                        savePreferences();
+                        Toast.makeText(MainActivity.this, "Pieces: Neo Modern", Toast.LENGTH_SHORT).show();
+                    } else if (which == 2) {
+                        pieceStyle = 2;
+                        boardView.setPieceStyle(pieceStyle);
+                        savePreferences();
+                        Toast.makeText(MainActivity.this, "Pieces: Tournament Staunton", Toast.LENGTH_SHORT).show();
+                    } else {
+                        boardTheme = which - 3;
+                        boardView.setBoardTheme(boardTheme);
+                        savePreferences();
+                        Toast.makeText(MainActivity.this, "Board: " + ChessBoardView.THEME_NAMES[boardTheme], Toast.LENGTH_SHORT).show();
+                    }
+                }
+            })
+            .setNegativeButton("Close", null)
+            .show();
+    }
+
     private void showSettingsDialog() {
         ScrollView scrollView = new ScrollView(this);
         LinearLayout layout = new LinearLayout(this);
@@ -1167,9 +1294,9 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
             rb.setId(300 + i);
             rb.setText(THEME_MODE_NAMES[i]);
             rb.setTextColor(textPrimary);
-            if (i == themeMode) rb.setChecked(true);
             rgThemeMode.addView(rb);
         }
+        rgThemeMode.check(300 + themeMode);
         layout.addView(rgThemeMode);
 
         // Haptic feedback toggle
@@ -1202,9 +1329,9 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
             rb.setId(200 + i);
             rb.setText(ChessBoardView.PIECE_STYLE_NAMES[i]);
             rb.setTextColor(textPrimary);
-            if (i == pieceStyle) rb.setChecked(true);
             rgPiece.addView(rb);
         }
+        rgPiece.check(200 + pieceStyle);
         layout.addView(rgPiece);
 
         // Official Lichess Board Theme selector
@@ -1221,9 +1348,9 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
             rb.setId(100 + i);
             rb.setText(ChessBoardView.THEME_NAMES[i]);
             rb.setTextColor(textPrimary);
-            if (i == boardTheme) rb.setChecked(true);
             rgTheme.addView(rb);
         }
+        rgTheme.check(100 + boardTheme);
         layout.addView(rgTheme);
 
         // Clipboard Export Tools

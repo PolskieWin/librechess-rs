@@ -79,6 +79,11 @@ class LibreChessApp {
     });
 
     // Gear / Settings
+    document.getElementById('btn-open-pieces')?.addEventListener('click', () => {
+      this.openModal('settings-modal');
+      document.getElementById('setting-piece-style')?.focus();
+    });
+
     document.getElementById('btn-open-settings')?.addEventListener('click', () => {
       this.openModal('settings-modal');
     });
