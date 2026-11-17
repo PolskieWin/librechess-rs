@@ -142,10 +142,16 @@
           </div>
 
           <div class="action-buttons-row">
+            <button id="btn-hint" class="btn btn-secondary" style="color: #06b6d4;" title="Tactical Hint">💡 Hint</button>
             <button id="btn-draw" class="btn btn-secondary" style="flex: 1;">Draw</button>
             <button id="btn-resign" class="btn btn-danger" style="flex: 1;">Resign</button>
             <button id="btn-flip" class="btn btn-secondary" title="Flip Board" style="width: 44px; padding: 0;">Flip</button>
           </div>
+          <div style="display: flex; gap: 8px; margin-top: 6px;">
+            <button id="btn-copy-fen" class="btn btn-secondary" style="flex: 1; font-size: 0.8rem; padding: 6px;">Copy FEN</button>
+            <button id="btn-copy-pgn" class="btn btn-secondary" style="flex: 1; font-size: 0.8rem; padding: 6px;">Copy PGN</button>
+          </div>
+          <div id="hint-banner" style="display: none; margin-top: 8px; padding: 8px 12px; background: rgba(6,182,212,0.15); border: 1px solid #06b6d4; border-radius: 6px; font-size: 0.85rem; color: #06b6d4;"></div>
         </div>
       </div>
     </section>
@@ -281,11 +287,12 @@
         <div>
           <label style="font-weight: 600; display: block; margin-bottom: 6px;">Board Colors</label>
           <select id="setting-board-theme" class="form-input">
-            <option value="green">Classic Green</option>
-            <option value="wood">Warm Wood</option>
-            <option value="slate">Slate Grey</option>
-            <option value="ocean">Ocean Blue</option>
-            <option value="midnight">Midnight Dark (OLED)</option>
+            <option value="green">Lichess Green</option>
+            <option value="wood">Lichess Wood</option>
+            <option value="blue">Lichess Blue</option>
+            <option value="canvas">Lichess Canvas</option>
+            <option value="charcoal">Lichess Charcoal</option>
+            <option value="midnight">Midnight OLED</option>
           </select>
         </div>
 
@@ -297,6 +304,11 @@
         <div style="display: flex; align-items: center; justify-content: space-between;">
           <label style="font-weight: 600;">Haptic Vibration</label>
           <input type="checkbox" id="setting-vibration-toggle" checked style="width: 18px; height: 18px; cursor: pointer;">
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <label style="font-weight: 600;">Tactical Threat Highlights</label>
+          <input type="checkbox" id="setting-threats-toggle" checked style="width: 18px; height: 18px; cursor: pointer;">
         </div>
 
         <div style="border-top: 1px solid var(--border-color); padding-top: 16px; margin-top: 8px;">

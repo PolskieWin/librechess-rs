@@ -2,6 +2,8 @@ package com.polskie.librechess;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -19,6 +21,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +51,7 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
     private Button btnNewGame;
     private Button btnBot;
     private Button btnFlip;
+    private Button btnHint;
     private Button btnResign;
     private Button btnReview;
 
@@ -64,6 +68,8 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
     private int playerElo = 100;
     private boolean isDarkMode = true;
     private int boardTheme = 0;
+    private int pieceStyle = 0; // 0: Lichess, 1: Modern
+    private boolean showThreats = true;
     private boolean hapticsEnabled = true;
     private int botLevel = 100;
     private String serverUrl = "http://127.0.0.1:8080";
@@ -128,6 +134,8 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         boardView.setEngine(engine);
         boardView.setOnMoveListener(this);
         boardView.setBoardTheme(boardTheme);
+        boardView.setPieceStyle(pieceStyle);
+        boardView.setShowThreats(showThreats);
         boardView.setHapticsEnabled(hapticsEnabled);
 
         setupClickListeners();
@@ -161,6 +169,8 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         playerElo = prefs.getInt("player_elo", 100);
         isDarkMode = prefs.getBoolean("is_dark_mode", true);
         boardTheme = prefs.getInt("board_theme", 0);
+        pieceStyle = prefs.getInt("piece_style", 0);
+        showThreats = prefs.getBoolean("show_threats", true);
         hapticsEnabled = prefs.getBoolean("haptics_enabled", true);
         botLevel = prefs.getInt("bot_level", 100);
         serverUrl = prefs.getString("server_url", "http://127.0.0.1:8080");
@@ -172,6 +182,8 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         editor.putInt("player_elo", playerElo);
         editor.putBoolean("is_dark_mode", isDarkMode);
         editor.putInt("board_theme", boardTheme);
+        editor.putInt("piece_style", pieceStyle);
+        editor.putBoolean("show_threats", showThreats);
         editor.putBoolean("haptics_enabled", hapticsEnabled);
         editor.putInt("bot_level", botLevel);
         editor.putString("server_url", serverUrl);
@@ -196,6 +208,7 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         btnNewGame = (Button) findViewById(R.id.btn_new_game);
         btnBot = (Button) findViewById(R.id.btn_bot);
         btnFlip = (Button) findViewById(R.id.btn_flip);
+        btnHint = (Button) findViewById(R.id.btn_hint);
         btnResign = (Button) findViewById(R.id.btn_resign);
         btnReview = (Button) findViewById(R.id.btn_review);
 
@@ -275,6 +288,20 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
             @Override
             public void onClick(View v) {
                 boardView.setFlipped(!boardView.isFlipped());
+            }
+        });
+
+        btnHint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (inReviewMode || engine.isGameOver) return;
+                ChessEngine.TacticalHint hint = engine.getTacticalHint();
+                if (hint != null) {
+                    boardView.setHint(hint.from, hint.to);
+                    txtStatusBar.setText("💡 " + hint.san + " • " + hint.explanation);
+                    txtStatusBar.setTextColor(0xFF06B6D4);
+                    boardView.vibrate(25);
+                }
             }
         });
 
@@ -508,6 +535,13 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
                     enterReviewMode();
                 }
             })
+            .setNeutralButton("Copy PGN", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    copyToClipboard("LibreChess PGN", engine.toPGN(playerName, "Bot " + botLevel));
+                    Toast.makeText(MainActivity.this, "PGN copied to clipboard!", Toast.LENGTH_SHORT).show();
+                }
+            })
             .setNegativeButton("New Game", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -667,10 +701,20 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
             .show();
     }
 
+    private void copyToClipboard(String label, String text) {
+        try {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText(label, text);
+            if (clipboard != null) clipboard.setPrimaryClip(clip);
+        } catch (Exception ignored) {}
+    }
+
     private void showSettingsDialog() {
+        ScrollView scrollView = new ScrollView(this);
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setPadding(36, 20, 36, 20);
+        scrollView.addView(layout);
 
         int textPrimary = isDarkMode ? 0xFFF8FAFC : 0xFF0F172A;
         int textSecondary = isDarkMode ? 0xFF94A3B8 : 0xFF475569;
@@ -680,7 +724,7 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         lblName.setText("Display Name");
         lblName.setTextSize(14f);
         lblName.setTextColor(textSecondary);
-        lblName.setPadding(0, 10, 0, 4);
+        lblName.setPadding(0, 8, 0, 4);
         layout.addView(lblName);
 
         final EditText edtName = new EditText(this);
@@ -689,12 +733,12 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         edtName.setSingleLine(true);
         layout.addView(edtName);
 
-        // Dark / White Mode toggle
+        // Dark / OLED Mode toggle
         final CheckBox chkDarkMode = new CheckBox(this);
-        chkDarkMode.setText("Dark Mode (Full OLED Dark)");
+        chkDarkMode.setText("Full OLED Dark Mode");
         chkDarkMode.setChecked(isDarkMode);
         chkDarkMode.setTextColor(textPrimary);
-        chkDarkMode.setPadding(0, 10, 0, 10);
+        chkDarkMode.setPadding(0, 8, 0, 8);
         layout.addView(chkDarkMode);
 
         // Haptic feedback toggle
@@ -702,10 +746,38 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         chkHaptics.setText("Haptic Vibration Feedback");
         chkHaptics.setChecked(hapticsEnabled);
         chkHaptics.setTextColor(textPrimary);
-        chkHaptics.setPadding(0, 4, 0, 10);
+        chkHaptics.setPadding(0, 4, 0, 8);
         layout.addView(chkHaptics);
 
-        // Board Theme selector
+        // Tactical Threat Highlights toggle
+        final CheckBox chkThreats = new CheckBox(this);
+        chkThreats.setText("Highlight Tactical Threats & Hanging Pieces");
+        chkThreats.setChecked(showThreats);
+        chkThreats.setTextColor(textPrimary);
+        chkThreats.setPadding(0, 4, 0, 10);
+        layout.addView(chkThreats);
+
+        // Piece Look selector (Lichess cburnett vs Modern)
+        TextView lblPiece = new TextView(this);
+        lblPiece.setText("Pieces Look");
+        lblPiece.setTextSize(14f);
+        lblPiece.setTextColor(textSecondary);
+        lblPiece.setPadding(0, 8, 0, 4);
+        layout.addView(lblPiece);
+
+        final RadioGroup rgPiece = new RadioGroup(this);
+        final String[] pieceSets = {"Lichess (cburnett) Pieces", "Modern Minimal Pieces"};
+        for (int i = 0; i < pieceSets.length; i++) {
+            RadioButton rb = new RadioButton(this);
+            rb.setId(200 + i);
+            rb.setText(pieceSets[i]);
+            rb.setTextColor(textPrimary);
+            if (i == pieceStyle) rb.setChecked(true);
+            rgPiece.addView(rb);
+        }
+        layout.addView(rgPiece);
+
+        // Official Lichess Board Theme selector
         TextView lblTheme = new TextView(this);
         lblTheme.setText("Board Theme");
         lblTheme.setTextSize(14f);
@@ -714,16 +786,61 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         layout.addView(lblTheme);
 
         final RadioGroup rgTheme = new RadioGroup(this);
-        final String[] themes = {"Emerald Green", "Minimal Slate", "Warm Wood", "Royal Ocean", "Midnight Dark (OLED)"};
-        for (int i = 0; i < themes.length; i++) {
+        for (int i = 0; i < ChessBoardView.THEME_NAMES.length; i++) {
             RadioButton rb = new RadioButton(this);
             rb.setId(100 + i);
-            rb.setText(themes[i]);
+            rb.setText(ChessBoardView.THEME_NAMES[i]);
             rb.setTextColor(textPrimary);
             if (i == boardTheme) rb.setChecked(true);
             rgTheme.addView(rb);
         }
         layout.addView(rgTheme);
+
+        // Clipboard Export Tools
+        TextView lblExport = new TextView(this);
+        lblExport.setText("Export Game Notation");
+        lblExport.setTextSize(14f);
+        lblExport.setTextColor(textSecondary);
+        lblExport.setPadding(0, 12, 0, 4);
+        layout.addView(lblExport);
+
+        LinearLayout rowButtons = new LinearLayout(this);
+        rowButtons.setOrientation(LinearLayout.HORIZONTAL);
+
+        Button btnCopyFen = new Button(this);
+        btnCopyFen.setText("Copy FEN");
+        btnCopyFen.setTextSize(12f);
+        btnCopyFen.setTextColor(0xFF06B6D4);
+        btnCopyFen.setBackgroundResource(R.drawable.btn_flat);
+        LinearLayout.LayoutParams lpFen = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
+        lpFen.setMargins(0, 0, 8, 0);
+        btnCopyFen.setLayoutParams(lpFen);
+        btnCopyFen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                copyToClipboard("LibreChess FEN", engine.toFEN());
+                Toast.makeText(MainActivity.this, "Position FEN copied!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        rowButtons.addView(btnCopyFen);
+
+        Button btnCopyPgn = new Button(this);
+        btnCopyPgn.setText("Copy PGN");
+        btnCopyPgn.setTextSize(12f);
+        btnCopyPgn.setTextColor(0xFF10B981);
+        btnCopyPgn.setBackgroundResource(R.drawable.btn_flat);
+        LinearLayout.LayoutParams lpPgn = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
+        lpPgn.setMargins(8, 0, 0, 0);
+        btnCopyPgn.setLayoutParams(lpPgn);
+        btnCopyPgn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                copyToClipboard("LibreChess PGN", engine.toPGN(playerName, "Bot " + botLevel));
+                Toast.makeText(MainActivity.this, "Match PGN copied!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        rowButtons.addView(btnCopyPgn);
+        layout.addView(rowButtons);
 
         // Server URL for Termux ./server
         TextView lblServer = new TextView(this);
@@ -741,7 +858,7 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
 
         // Credits Box
         TextView txtCredits = new TextView(this);
-        txtCredits.setText("\nLibreChess RS\nMade by Polskie and Gemini\nVersion 1.1.0\nReal Chess Bots & Full Dark Mode");
+        txtCredits.setText("\nLibreChess RS\nVersion 1.2.0 • Ultra-Lightweight (<1MB)\nLichess Pieces & Boards • Full Tactics Bot AI");
         txtCredits.setTextSize(12f);
         txtCredits.setTextColor(textSecondary);
         txtCredits.setPadding(0, 10, 0, 10);
@@ -749,7 +866,7 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
 
         createDialogBuilder()
             .setTitle("Settings")
-            .setView(layout)
+            .setView(scrollView)
             .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -758,11 +875,19 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
 
                     isDarkMode = chkDarkMode.isChecked();
                     hapticsEnabled = chkHaptics.isChecked();
+                    showThreats = chkThreats.isChecked();
                     boardView.setHapticsEnabled(hapticsEnabled);
+                    boardView.setShowThreats(showThreats);
 
-                    int checkedId = rgTheme.getCheckedRadioButtonId();
-                    if (checkedId >= 100) {
-                        boardTheme = checkedId - 100;
+                    int checkedPieceId = rgPiece.getCheckedRadioButtonId();
+                    if (checkedPieceId >= 200) {
+                        pieceStyle = checkedPieceId - 200;
+                        boardView.setPieceStyle(pieceStyle);
+                    }
+
+                    int checkedThemeId = rgTheme.getCheckedRadioButtonId();
+                    if (checkedThemeId >= 100) {
+                        boardTheme = checkedThemeId - 100;
                         boardView.setBoardTheme(boardTheme);
                     }
 

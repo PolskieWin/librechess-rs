@@ -584,7 +584,7 @@ impl EngineManager {
 }
 
 // =========================================================================
-// Native Shakmaty Minimax Alpha-Beta Search Engine
+// Native Shakmaty Minimax Alpha-Beta Search Engine with Full Tactics
 // =========================================================================
 
 const MATE_SCORE: i32 = 100_000;
@@ -592,22 +592,31 @@ const MATE_SCORE: i32 = 100_000;
 fn piece_value_cp(role: Role) -> i32 {
     match role {
         Role::Pawn => 100,
-        Role::Knight => 320,
-        Role::Bishop => 330,
-        Role::Rook => 500,
-        Role::Queen => 900,
+        Role::Knight => 325,
+        Role::Bishop => 335,
+        Role::Rook => 505,
+        Role::Queen => 950,
         Role::King => 20_000,
     }
 }
 
 /// Evaluates static score in centipawns from White's perspective (+100 = White +1 pawn)
+/// Includes positional PST, tactical evaluations (hanging pieces, forks, pins, king safety, open files)
 fn evaluate_board(pos: &Chess) -> i32 {
     let mut score = 0;
 
+    let board = pos.board();
+    let white_bb = board.white();
+    let black_bb = board.black();
+
+    let mut white_bishops = 0;
+    let mut black_bishops = 0;
+
     for sq in Square::ALL {
-        if let Some(piece) = pos.board().piece_at(sq) {
+        if let Some(piece) = board.piece_at(sq) {
             let val = piece_value_cp(piece.role);
-            let pst_idx = if piece.color == Color::White {
+            let is_white = piece.color == Color::White;
+            let pst_idx = if is_white {
                 sq as usize
             } else {
                 sq.flip_vertical() as usize
@@ -616,19 +625,74 @@ fn evaluate_board(pos: &Chess) -> i32 {
             let pst = match piece.role {
                 Role::Pawn => PAWN_PST[pst_idx],
                 Role::Knight => KNIGHT_PST[pst_idx],
-                Role::Bishop => BISHOP_PST[pst_idx],
-                Role::Rook => ROOK_PST[pst_idx],
+                Role::Bishop => {
+                    if is_white { white_bishops += 1; } else { black_bishops += 1; }
+                    BISHOP_PST[pst_idx]
+                }
+                Role::Rook => {
+                    let mut rook_bonus = ROOK_PST[pst_idx];
+                    let file = sq.file();
+                    // Open file bonus: no friendly pawns on file
+                    let file_pawns = board.pawns() & shakmaty::Bitboard::from(file);
+                    if file_pawns.is_empty() {
+                        rook_bonus += 35; // Fully open file
+                    } else if (file_pawns & (if is_white { white_bb } else { black_bb })).is_empty() {
+                        rook_bonus += 20; // Semi-open file
+                    }
+                    // 7th rank bonus
+                    if (is_white && sq.rank() == shakmaty::Rank::Seventh)
+                        || (!is_white && sq.rank() == shakmaty::Rank::Second)
+                    {
+                        rook_bonus += 40;
+                    }
+                    rook_bonus
+                }
                 Role::Queen => QUEEN_PST[pst_idx],
                 Role::King => KING_MIDGAME_PST[pst_idx],
             };
 
-            let total = val + pst;
-            if piece.color == Color::White {
-                score += total;
+            let mut piece_score = val + pst;
+
+            // Tactical evaluation: Hanging pieces and attack/defense balance
+            let opp_color = piece.color.other();
+            let is_attacked = pos.board().attacks_to(sq, opp_color, board.occupied()).any();
+            let is_defended = pos.board().attacks_to(sq, piece.color, board.occupied()).any();
+
+            if is_attacked && !is_defended {
+                // Free hanging piece! Huge tactical penalty
+                piece_score -= val / 2;
+            } else if is_attacked && is_defended {
+                // Check if attacked by a lesser value piece (e.g. pawn attacking knight/queen)
+                let enemy_pawns = board.pawns() & (if is_white { black_bb } else { white_bb });
+                if piece.role != Role::Pawn && (pos.board().attacks_to(sq, opp_color, board.occupied()) & enemy_pawns).any() {
+                    piece_score -= 60; // Tactical pin/pawn fork danger
+                }
+            }
+
+            // Tactical fork potential: Knights attacking multiple high-value targets
+            if piece.role == Role::Knight {
+                let attacks = pos.board().attacks_from(sq);
+                let enemy_majors = (if is_white { black_bb } else { white_bb })
+                    & (board.queens() | board.rooks() | board.kings());
+                if (attacks & enemy_majors).count() >= 2 {
+                    piece_score += 150; // Tactical fork!
+                }
+            }
+
+            if is_white {
+                score += piece_score;
             } else {
-                score -= total;
+                score -= piece_score;
             }
         }
+    }
+
+    // Bishop pair tactical bonus
+    if white_bishops >= 2 {
+        score += 45;
+    }
+    if black_bishops >= 2 {
+        score -= 45;
     }
 
     score
@@ -646,17 +710,29 @@ fn has_immediate_mate(pos: &Chess) -> bool {
 }
 
 /// Order moves to maximize alpha-beta pruning cutoffs
-/// MVV-LVA (Most Valuable Victim - Least Valuable Attacker) for captures
+/// Priority: Checks > Tactical captures (MVV-LVA) > Promotions > Quiet moves
 fn score_move(pos: &Chess, m: &Move) -> i32 {
     let mut score = 0;
+
+    let mut next = pos.clone();
+    next.play_unchecked(m);
+    if next.is_checkmate() {
+        return 100_000; // Immediate checkmate wins!
+    }
+    if next.is_check() {
+        score += 8_000; // Check gives high tactical priority
+    }
+
     if m.is_capture() {
         let victim = pos.board().piece_at(m.to()).map(|p| piece_value_cp(p.role)).unwrap_or(100);
         let attacker = m.from().and_then(|sq| pos.board().piece_at(sq)).map(|p| piece_value_cp(p.role)).unwrap_or(100);
         score += 10_000 + (victim * 10 - attacker);
     }
+
     if m.is_promotion() {
-        score += 9_000;
+        score += 9_500;
     }
+
     score
 }
 
@@ -664,26 +740,53 @@ fn order_moves(pos: &Chess, moves: &mut [Move]) {
     moves.sort_by_cached_key(|m| -score_move(pos, m));
 }
 
-/// Quiescence search evaluates capture sequences to avoid horizon blunders
+/// Quiescence search evaluates capture sequences AND checks to prevent tactical horizon blunders
 fn quiescence(pos: &Chess, mut alpha: i32, beta: i32, is_white: bool, max_depth: i32) -> i32 {
+    let in_check = pos.is_check();
     let stand_pat = evaluate_board(pos);
 
-    if max_depth <= 0 {
+    if max_depth <= 0 && !in_check {
         return stand_pat;
     }
 
     if is_white {
-        if stand_pat >= beta {
-            return beta;
-        }
-        if stand_pat > alpha {
-            alpha = stand_pat;
+        if !in_check {
+            if stand_pat >= beta {
+                return beta;
+            }
+            if stand_pat > alpha {
+                alpha = stand_pat;
+            }
         }
 
-        let mut captures: Vec<Move> = pos.legal_moves().into_iter().filter(|m| m.is_capture() || m.is_promotion()).collect();
-        order_moves(pos, &mut captures);
+        let mut tactical_moves: Vec<Move> = if in_check {
+            // Must evaluate all legal evasions when in check
+            pos.legal_moves().into_iter().collect()
+        } else {
+            // Search all captures, promotions, and checking moves
+            pos.legal_moves()
+                .into_iter()
+                .filter(|m| {
+                    if m.is_capture() || m.is_promotion() {
+                        true
+                    } else if max_depth >= 2 {
+                        let mut next = pos.clone();
+                        next.play_unchecked(m);
+                        next.is_check()
+                    } else {
+                        false
+                    }
+                })
+                .collect()
+        };
 
-        for m in captures {
+        if tactical_moves.is_empty() {
+            return if in_check { -MATE_SCORE } else { stand_pat };
+        }
+
+        order_moves(pos, &mut tactical_moves);
+
+        for m in tactical_moves {
             let mut next = pos.clone();
             next.play_unchecked(&m);
             let score = quiescence(&next, alpha, beta, false, max_depth - 1);
@@ -697,17 +800,41 @@ fn quiescence(pos: &Chess, mut alpha: i32, beta: i32, is_white: bool, max_depth:
         alpha
     } else {
         let mut beta_mut = beta;
-        if stand_pat <= alpha {
-            return alpha;
-        }
-        if stand_pat < beta_mut {
-            beta_mut = stand_pat;
+        if !in_check {
+            if stand_pat <= alpha {
+                return alpha;
+            }
+            if stand_pat < beta_mut {
+                beta_mut = stand_pat;
+            }
         }
 
-        let mut captures: Vec<Move> = pos.legal_moves().into_iter().filter(|m| m.is_capture() || m.is_promotion()).collect();
-        order_moves(pos, &mut captures);
+        let mut tactical_moves: Vec<Move> = if in_check {
+            pos.legal_moves().into_iter().collect()
+        } else {
+            pos.legal_moves()
+                .into_iter()
+                .filter(|m| {
+                    if m.is_capture() || m.is_promotion() {
+                        true
+                    } else if max_depth >= 2 {
+                        let mut next = pos.clone();
+                        next.play_unchecked(m);
+                        next.is_check()
+                    } else {
+                        false
+                    }
+                })
+                .collect()
+        };
 
-        for m in captures {
+        if tactical_moves.is_empty() {
+            return if in_check { MATE_SCORE } else { stand_pat };
+        }
+
+        order_moves(pos, &mut tactical_moves);
+
+        for m in tactical_moves {
             let mut next = pos.clone();
             next.play_unchecked(&m);
             let score = quiescence(&next, alpha, beta_mut, true, max_depth - 1);

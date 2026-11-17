@@ -586,40 +586,121 @@ public class ChessEngine {
         -30,-40,-40,-50,-50,-40,-40,-30
     };
 
+    public boolean isAttackedByPawn(int sq, int byColor) {
+        int r = sq / 8;
+        int f = sq % 8;
+        int pDir = byColor == WHITE ? 1 : -1;
+        int pr = r + pDir;
+        if (pr >= 0 && pr < 8) {
+            if (f > 0 && board[pr * 8 + (f - 1)] == (byColor | PAWN)) return true;
+            if (f < 7 && board[pr * 8 + (f + 1)] == (byColor | PAWN)) return true;
+        }
+        return false;
+    }
+
+    public List<Integer> getKnightAttacks(int sq) {
+        List<Integer> list = new ArrayList<>();
+        int r = sq / 8, f = sq % 8;
+        int[][] nDeltas = {{-2, -1}, {-2, 1}, {-1, -2}, {-1, 2}, {1, -2}, {1, 2}, {2, -1}, {2, 1}};
+        for (int[] d : nDeltas) {
+            int tr = r + d[0], tf = f + d[1];
+            if (tr >= 0 && tr < 8 && tf >= 0 && tf < 8) {
+                list.add(tr * 8 + tf);
+            }
+        }
+        return list;
+    }
+
     public float evaluate() {
         float score = 0;
+        int whiteBishops = 0;
+        int blackBishops = 0;
+
         for (int i = 0; i < 64; i++) {
             int p = board[i];
             if (p == EMPTY) continue;
             int type = typeOf(p);
             int color = colorOf(p);
+            boolean isWhite = (color == WHITE);
+            int oppColor = isWhite ? BLACK : WHITE;
 
             float val = pieceValue(type);
-            int pstIndex = color == WHITE ? i : (63 - i);
+            int pstIndex = isWhite ? i : (63 - i);
             float bonus = 0;
             switch (type) {
                 case PAWN: bonus = PAWN_PST[pstIndex] * 0.01f; break;
-                case KNIGHT: bonus = KNIGHT_PST[pstIndex] * 0.01f; break;
-                case BISHOP: bonus = BISHOP_PST[pstIndex] * 0.01f; break;
-                case ROOK: bonus = ROOK_PST[pstIndex] * 0.01f; break;
+                case KNIGHT:
+                    bonus = KNIGHT_PST[pstIndex] * 0.01f;
+                    // Tactical Knight Fork evaluation
+                    int targets = 0;
+                    for (int dest : getKnightAttacks(i)) {
+                        int destP = board[dest];
+                        if (destP != EMPTY && colorOf(destP) == oppColor) {
+                            int dt = typeOf(destP);
+                            if (dt == KING || dt == QUEEN || dt == ROOK) targets++;
+                        }
+                    }
+                    if (targets >= 2) bonus += 1.50f; // Knight fork tactical bonus
+                    break;
+                case BISHOP:
+                    bonus = BISHOP_PST[pstIndex] * 0.01f;
+                    if (isWhite) whiteBishops++; else blackBishops++;
+                    break;
+                case ROOK:
+                    bonus = ROOK_PST[pstIndex] * 0.01f;
+                    int f = i % 8;
+                    int r = i / 8;
+                    // 7th rank bonus (White row 1, Black row 6)
+                    if ((isWhite && r == 1) || (!isWhite && r == 6)) bonus += 0.40f;
+                    // Open file bonus
+                    boolean hasFriendlyPawn = false;
+                    boolean hasEnemyPawn = false;
+                    for (int rank = 0; rank < 8; rank++) {
+                        int pieceOnCol = board[rank * 8 + f];
+                        if (typeOf(pieceOnCol) == PAWN) {
+                            if (colorOf(pieceOnCol) == color) hasFriendlyPawn = true;
+                            else hasEnemyPawn = true;
+                        }
+                    }
+                    if (!hasFriendlyPawn && !hasEnemyPawn) bonus += 0.35f; // Open file
+                    else if (!hasFriendlyPawn) bonus += 0.20f; // Semi-open file
+                    break;
                 case QUEEN: bonus = QUEEN_PST[pstIndex] * 0.01f; break;
                 case KING: bonus = KING_PST[pstIndex] * 0.01f; break;
             }
 
+            // Tactical hanging piece & pin penalty
+            if (type != KING) {
+                boolean attacked = isSquareAttacked(i, oppColor);
+                boolean defended = isSquareAttacked(i, color);
+                if (attacked && !defended) {
+                    bonus -= val * 0.50f; // Hanging piece penalty
+                } else if (attacked && defended) {
+                    if (type != PAWN && isAttackedByPawn(i, oppColor)) {
+                        bonus -= 0.60f; // Attacked by cheaper piece
+                    }
+                }
+            }
+
             float totalVal = val + bonus;
-            if (color == WHITE) score += totalVal;
+            if (isWhite) score += totalVal;
             else score -= totalVal;
         }
+
+        // Bishop pair bonus
+        if (whiteBishops >= 2) score += 0.45f;
+        if (blackBishops >= 2) score -= 0.45f;
+
         return score;
     }
 
     private float pieceValue(int type) {
         switch (type) {
             case PAWN: return 1.0f;
-            case KNIGHT: return 3.2f;
-            case BISHOP: return 3.3f;
-            case ROOK: return 5.0f;
-            case QUEEN: return 9.0f;
+            case KNIGHT: return 3.25f;
+            case BISHOP: return 3.35f;
+            case ROOK: return 5.05f;
+            case QUEEN: return 9.5f;
             case KING: return 200.0f;
             default: return 0.0f;
         }
@@ -638,38 +719,44 @@ public class ChessEngine {
         return moves;
     }
 
-    public List<int[]> getCaptureMoves() {
-        List<int[]> captures = new ArrayList<>();
+    public List<int[]> getTacticalMoves() {
+        List<int[]> tactical = new ArrayList<>();
         int sideColor = whiteToMove ? WHITE : BLACK;
         for (int i = 0; i < 64; i++) {
             if (board[i] != EMPTY && colorOf(board[i]) == sideColor) {
+                int pieceType = typeOf(board[i]);
                 for (int to : getLegalMoves(i)) {
-                    if (board[to] != EMPTY || to == enPassantSq) {
-                        captures.add(new int[]{i, to});
+                    boolean isCapture = (board[to] != EMPTY || to == enPassantSq);
+                    boolean isPromotion = (pieceType == PAWN && (to / 8 == 0 || to / 8 == 7));
+                    if (isCapture || isPromotion) {
+                        tactical.add(new int[]{i, to});
                     }
                 }
             }
         }
-        return captures;
+        return tactical;
     }
 
     private void orderMoves(List<int[]> moves) {
-        // MVV-LVA move ordering: Most Valuable Victim - Least Valuable Attacker
+        // Fast MVV-LVA move ordering
         moves.sort(new java.util.Comparator<int[]>() {
             @Override
             public int compare(int[] m1, int[] m2) {
-                int score1 = moveScore(m1);
-                int score2 = moveScore(m2);
-                return Integer.compare(score2, score1);
+                return Integer.compare(scoreMove(m2), scoreMove(m1));
             }
 
-            private int moveScore(int[] m) {
-                int victim = board[m[1]] != EMPTY ? typeOf(board[m[1]]) : 0;
-                int attacker = board[m[0]] != EMPTY ? typeOf(board[m[0]]) : 0;
+            private int scoreMove(int[] m) {
+                int target = board[m[1]];
+                int victim = target != EMPTY ? typeOf(target) : (m[1] == enPassantSq ? PAWN : 0);
+                int attacker = typeOf(board[m[0]]);
+                int score = 0;
                 if (victim > 0) {
-                    return 1000 + (victim * 10 - attacker);
+                    score += 10000 + (victim * 10 - attacker);
                 }
-                return 0;
+                if (attacker == PAWN && (m[1] / 8 == 0 || m[1] / 8 == 7)) {
+                    score += 9500;
+                }
+                return score;
             }
         });
     }
@@ -686,16 +773,24 @@ public class ChessEngine {
     }
 
     public float quiescence(float alpha, float beta, boolean maximizing, int maxDepth) {
+        boolean inCheck = isKingInCheck(maximizing ? WHITE : BLACK);
         float standPat = evaluate();
-        if (maxDepth <= 0) return standPat;
+
+        if (maxDepth <= 0 && !inCheck) return standPat;
 
         if (maximizing) {
-            if (standPat >= beta) return beta;
-            if (standPat > alpha) alpha = standPat;
+            if (!inCheck) {
+                if (standPat >= beta) return beta;
+                if (standPat > alpha) alpha = standPat;
+            }
 
-            List<int[]> captures = getCaptureMoves();
-            orderMoves(captures);
-            for (int[] m : captures) {
+            List<int[]> tacticalMoves = inCheck ? getAllLegalMoves() : getTacticalMoves();
+            if (tacticalMoves.isEmpty()) {
+                return inCheck ? -100000f : standPat;
+            }
+
+            orderMoves(tacticalMoves);
+            for (int[] m : tacticalMoves) {
                 ChessEngine sim = cloneEngine();
                 sim.makeMove(m[0], m[1]);
                 float score = sim.quiescence(alpha, beta, false, maxDepth - 1);
@@ -704,12 +799,18 @@ public class ChessEngine {
             }
             return alpha;
         } else {
-            if (standPat <= alpha) return alpha;
-            if (standPat < beta) beta = standPat;
+            if (!inCheck) {
+                if (standPat <= alpha) return alpha;
+                if (standPat < beta) beta = standPat;
+            }
 
-            List<int[]> captures = getCaptureMoves();
-            orderMoves(captures);
-            for (int[] m : captures) {
+            List<int[]> tacticalMoves = inCheck ? getAllLegalMoves() : getTacticalMoves();
+            if (tacticalMoves.isEmpty()) {
+                return inCheck ? 100000f : standPat;
+            }
+
+            orderMoves(tacticalMoves);
+            for (int[] m : tacticalMoves) {
                 ChessEngine sim = cloneEngine();
                 sim.makeMove(m[0], m[1]);
                 float score = sim.quiescence(alpha, beta, true, maxDepth - 1);
@@ -861,6 +962,227 @@ public class ChessEngine {
         float whiteAcc = whiteMoves > 0 ? (whiteScore / whiteMoves) : 100.0f;
         float blackAcc = blackMoves > 0 ? (blackScore / blackMoves) : 100.0f;
         return new float[]{Math.round(whiteAcc * 10) / 10.0f, Math.round(blackAcc * 10) / 10.0f};
+    }
+
+    public static class TacticalHint {
+        public int from;
+        public int to;
+        public String san;
+        public String explanation;
+
+        public TacticalHint(int from, int to, String san, String explanation) {
+            this.from = from;
+            this.to = to;
+            this.san = san;
+            this.explanation = explanation;
+        }
+    }
+
+    public TacticalHint getTacticalHint() {
+        List<int[]> moves = getAllLegalMoves();
+        if (moves.isEmpty()) return null;
+
+        int[] bestMove = getBotMove(1500);
+        if (bestMove == null) bestMove = moves.get(0);
+
+        int from = bestMove[0];
+        int to = bestMove[1];
+        int p = board[from];
+        int pType = typeOf(p);
+        int targetP = board[to];
+        int targetType = typeOf(targetP);
+        boolean isWhite = whiteToMove;
+        int oppColor = isWhite ? BLACK : WHITE;
+
+        ChessEngine sim = cloneEngine();
+        sim.makeMove(from, to);
+
+        boolean isCapture = (targetP != EMPTY || to == enPassantSq);
+        String san = toSAN(from, to, pType, isCapture, false, EMPTY);
+        if (sim.isGameOver && !"1/2-1/2".equals(sim.gameResult)) san += "#";
+        else if (sim.isKingInCheck(oppColor)) san += "+";
+
+        String explanation;
+        if (sim.isGameOver && !"1/2-1/2".equals(sim.gameResult)) {
+            explanation = "Checkmate! Wins the game immediately.";
+        } else if (sim.isKingInCheck(oppColor)) {
+            explanation = "Delivers check disrupting opponent king safety.";
+        } else if (targetP != EMPTY) {
+            if (!sim.isSquareAttacked(to, oppColor)) {
+                explanation = "Captures hanging piece (" + getPieceName(targetType) + ") on " + squareName(to) + "!";
+            } else {
+                explanation = "Tactical exchange winning material on " + squareName(to) + ".";
+            }
+        } else if (isSquareAttacked(from, oppColor) && !sim.isSquareAttacked(to, oppColor)) {
+            explanation = "Evacuates attacked piece (" + getPieceName(pType) + ") to a secure square.";
+        } else if (pType == KNIGHT) {
+            int forks = 0;
+            for (int dest : getKnightAttacks(to)) {
+                int dp = sim.board[dest];
+                if (dp != EMPTY && colorOf(dp) == oppColor) {
+                    int dt = typeOf(dp);
+                    if (dt == KING || dt == QUEEN || dt == ROOK) forks++;
+                }
+            }
+            if (forks >= 2) {
+                explanation = "Knight fork! Attacks multiple high-value targets simultaneously.";
+            } else {
+                explanation = "Tactical knight leap controlling critical central outposts.";
+            }
+        } else if (pType == PAWN && (to / 8 == 1 || to / 8 == 6)) {
+            explanation = "Pushes passed pawn towards impending promotion.";
+        } else {
+            explanation = "Optimal tactical move controlling key files and center diagonals.";
+        }
+
+        return new TacticalHint(from, to, san, explanation);
+    }
+
+    public static String getPieceName(int type) {
+        switch (type) {
+            case PAWN: return "Pawn";
+            case KNIGHT: return "Knight";
+            case BISHOP: return "Bishop";
+            case ROOK: return "Rook";
+            case QUEEN: return "Queen";
+            case KING: return "King";
+            default: return "Piece";
+        }
+    }
+
+    public String toFEN() {
+        StringBuilder sb = new StringBuilder();
+        for (int r = 0; r < 8; r++) {
+            int emptyCount = 0;
+            for (int f = 0; f < 8; f++) {
+                int p = board[r * 8 + f];
+                if (p == EMPTY) {
+                    emptyCount++;
+                } else {
+                    if (emptyCount > 0) {
+                        sb.append(emptyCount);
+                        emptyCount = 0;
+                    }
+                    int type = typeOf(p);
+                    char c;
+                    switch (type) {
+                        case PAWN: c = 'p'; break;
+                        case KNIGHT: c = 'n'; break;
+                        case BISHOP: c = 'b'; break;
+                        case ROOK: c = 'r'; break;
+                        case QUEEN: c = 'q'; break;
+                        case KING: c = 'k'; break;
+                        default: c = '?'; break;
+                    }
+                    if (colorOf(p) == WHITE) c = Character.toUpperCase(c);
+                    sb.append(c);
+                }
+            }
+            if (emptyCount > 0) sb.append(emptyCount);
+            if (r < 7) sb.append('/');
+        }
+        sb.append(whiteToMove ? " w " : " b ");
+        StringBuilder castling = new StringBuilder();
+        if (castlingWK) castling.append('K');
+        if (castlingWQ) castling.append('Q');
+        if (castlingBK) castling.append('k');
+        if (castlingBQ) castling.append('q');
+        if (castling.length() == 0) castling.append('-');
+        sb.append(castling).append(' ');
+
+        if (enPassantSq >= 0 && enPassantSq < 64) {
+            sb.append(squareName(enPassantSq));
+        } else {
+            sb.append('-');
+        }
+        sb.append(' ').append(halfMoves).append(' ').append(fullMoves);
+        return sb.toString();
+    }
+
+    public boolean loadFEN(String fen) {
+        if (fen == null || fen.trim().isEmpty()) return false;
+        try {
+            String[] parts = fen.trim().split("\\s+");
+            if (parts.length < 1) return false;
+            String[] rows = parts[0].split("/");
+            if (rows.length != 8) return false;
+
+            int[] newBoard = new int[64];
+            for (int r = 0; r < 8; r++) {
+                String row = rows[r];
+                int f = 0;
+                for (int i = 0; i < row.length(); i++) {
+                    char c = row.charAt(i);
+                    if (Character.isDigit(c)) {
+                        f += (c - '0');
+                    } else {
+                        if (f >= 8) return false;
+                        int color = Character.isUpperCase(c) ? WHITE : BLACK;
+                        int type = EMPTY;
+                        switch (Character.toLowerCase(c)) {
+                            case 'p': type = PAWN; break;
+                            case 'n': type = KNIGHT; break;
+                            case 'b': type = BISHOP; break;
+                            case 'r': type = ROOK; break;
+                            case 'q': type = QUEEN; break;
+                            case 'k': type = KING; break;
+                        }
+                        newBoard[r * 8 + f] = color | type;
+                        f++;
+                    }
+                }
+            }
+            System.arraycopy(newBoard, 0, board, 0, 64);
+            whiteToMove = parts.length < 2 || "w".equalsIgnoreCase(parts[1]);
+
+            castlingWK = false; castlingWQ = false; castlingBK = false; castlingBQ = false;
+            if (parts.length >= 3) {
+                String cast = parts[2];
+                if (cast.contains("K")) castlingWK = true;
+                if (cast.contains("Q")) castlingWQ = true;
+                if (cast.contains("k")) castlingBK = true;
+                if (cast.contains("q")) castlingBQ = true;
+            }
+            enPassantSq = -1;
+            if (parts.length >= 4 && !"-".equals(parts[3])) {
+                String ep = parts[3].toLowerCase();
+                if (ep.length() >= 2) {
+                    int ef = ep.charAt(0) - 'a';
+                    int er = 8 - (ep.charAt(1) - '0');
+                    if (ef >= 0 && ef < 8 && er >= 0 && er < 8) {
+                        enPassantSq = er * 8 + ef;
+                    }
+                }
+            }
+            halfMoves = (parts.length >= 5) ? Integer.parseInt(parts[4]) : 0;
+            fullMoves = (parts.length >= 6) ? Integer.parseInt(parts[5]) : 1;
+            moveHistory.clear();
+            isGameOver = false;
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public String toPGN(String whiteName, String blackName) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[Event \"LibreChess RS Match\"]\n");
+        sb.append("[Site \"Android / Termux\"]\n");
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy.MM.dd", java.util.Locale.US);
+        sb.append("[Date \"").append(sdf.format(new java.util.Date())).append("\"]\n");
+        sb.append("[White \"").append(whiteName != null && !whiteName.isEmpty() ? whiteName : "White").append("\"]\n");
+        sb.append("[Black \"").append(blackName != null && !blackName.isEmpty() ? blackName : "Black").append("\"]\n");
+        String res = isGameOver ? (gameResult.isEmpty() ? "*" : gameResult) : "*";
+        sb.append("[Result \"").append(res).append("\"]\n\n");
+
+        for (int i = 0; i < moveHistory.size(); i++) {
+            if (i % 2 == 0) {
+                sb.append((i / 2 + 1)).append(". ");
+            }
+            sb.append(moveHistory.get(i).san).append(" ");
+        }
+        sb.append(res);
+        return sb.toString();
     }
 
     public ChessEngine cloneEngine() {

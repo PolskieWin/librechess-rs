@@ -143,22 +143,31 @@
   color: #f0d9b5;
 }
 
-.chess-board.theme-slate .square.light {
-  background-color: #cfd8dc;
-  color: #546e7a;
+.chess-board.theme-blue .square.light {
+  background-color: #dee3e6;
+  color: #8ca2ad;
 }
-.chess-board.theme-slate .square.dark {
-  background-color: #546e7a;
-  color: #cfd8dc;
+.chess-board.theme-blue .square.dark {
+  background-color: #8ca2ad;
+  color: #dee3e6;
 }
 
-.chess-board.theme-ocean .square.light {
-  background-color: #dbeafe;
-  color: #2563eb;
+.chess-board.theme-canvas .square.light {
+  background-color: #e3c16f;
+  color: #b88b4a;
 }
-.chess-board.theme-ocean .square.dark {
-  background-color: #2563eb;
-  color: #dbeafe;
+.chess-board.theme-canvas .square.dark {
+  background-color: #b88b4a;
+  color: #e3c16f;
+}
+
+.chess-board.theme-charcoal .square.light {
+  background-color: #8a939e;
+  color: #4a545e;
+}
+.chess-board.theme-charcoal .square.dark {
+  background-color: #4a545e;
+  color: #8a939e;
 }
 
 .chess-board.theme-midnight .square.light {
@@ -168,6 +177,53 @@
 .chess-board.theme-midnight .square.dark {
   background-color: #0f172a;
   color: #475569;
+}
+
+/* Square States & Highlights */
+.square.selected {
+  background-color: rgba(255, 255, 0, 0.45) !important;
+}
+
+.square.last-move {
+  background-color: rgba(247, 247, 105, 0.4) !important;
+}
+
+.square.in-check {
+  background: rgba(239, 68, 68, 0.6) !important;
+}
+
+.square.hint {
+  background-color: rgba(6, 182, 212, 0.45) !important;
+}
+
+.square.hint-target::after {
+  content: '';
+  position: absolute;
+  inset: 10%;
+  border: 3px solid #06b6d4;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 11;
+  animation: pulse-ring 1.5s infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.8; }
+}
+
+.square .threat-dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.8);
+  pointer-events: none;
+  z-index: 12;
 }
 
 /* Individual Board Squares */

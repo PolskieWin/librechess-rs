@@ -165,6 +165,39 @@ class ChessEngineClient {
 
     return moves;
   }
+
+  toFen() {
+    let fen = '';
+    for (let r = 0; r < 8; r++) {
+      let emptyCount = 0;
+      for (let f = 0; f < 8; f++) {
+        const piece = this.board[r * 8 + f];
+        if (!piece) {
+          emptyCount++;
+        } else {
+          if (emptyCount > 0) {
+            fen += emptyCount;
+            emptyCount = 0;
+          }
+          const char = piece[0] === 'w' ? piece[1].toUpperCase() : piece[1].toLowerCase();
+          fen += char;
+        }
+      }
+      if (emptyCount > 0) fen += emptyCount;
+      if (r < 7) fen += '/';
+    }
+
+    fen += ` ${this.turn} `;
+    let castling = '';
+    if (this.castling.K) castling += 'K';
+    if (this.castling.Q) castling += 'Q';
+    if (this.castling.k) castling += 'k';
+    if (this.castling.q) castling += 'q';
+    fen += castling || '-';
+
+    fen += ` ${this.enPassant || '-'} ${this.halfMoves} ${this.fullMoves}`;
+    return fen;
+  }
 }
 
 window.ChessClient = ChessEngineClient;

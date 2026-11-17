@@ -97,6 +97,9 @@ class LibreChessApp {
     document.getElementById('btn-resign')?.addEventListener('click', () => this.resign());
     document.getElementById('btn-draw')?.addEventListener('click', () => this.offerDraw());
     document.getElementById('btn-flip')?.addEventListener('click', () => this.flipBoard());
+    document.getElementById('btn-hint')?.addEventListener('click', () => this.requestHint());
+    document.getElementById('btn-copy-fen')?.addEventListener('click', () => this.copyFEN());
+    document.getElementById('btn-copy-pgn')?.addEventListener('click', () => this.copyPGN());
 
     // Matchmaking buttons
     document.querySelectorAll('[data-time-control]').forEach(btn => {
@@ -346,6 +349,9 @@ class LibreChessApp {
 
     this.selectedSquare = null;
     this.legalMoves = [];
+    this.hintMove = null;
+    const banner = document.getElementById('hint-banner');
+    if (banner) banner.style.display = 'none';
     this.renderBoard();
     this.renderMovesTable();
   }
@@ -462,6 +468,11 @@ class LibreChessApp {
           sqDiv.classList.add('selected');
         }
 
+        if (this.hintMove) {
+          if (this.hintMove.from === sq) sqDiv.classList.add('hint');
+          if (this.hintMove.to === sq) sqDiv.classList.add('hint', 'hint-target');
+        }
+
         const piece = this.engine.getPiece(sq);
         if (piece) {
           sqDiv.innerHTML = window.PIECE_SVGS[piece] || '';
@@ -556,6 +567,70 @@ class LibreChessApp {
   flipBoard() {
     this.boardOrientation = this.boardOrientation === 'w' ? 'b' : 'w';
     this.renderBoard();
+  }
+
+  async requestHint() {
+    if (!this.engine) return;
+    const banner = document.getElementById('hint-banner');
+    if (banner) {
+      banner.style.display = 'block';
+      banner.textContent = '💡 Calculating best tactical move...';
+    }
+
+    try {
+      const fen = this.engine.toFen();
+      const res = await fetch('/api/bot/move', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fen, level: 4 })
+      });
+      const data = await res.json();
+      if (data && data.uci && data.uci.length >= 4) {
+        const fromSq = data.uci.slice(0, 2);
+        const toSq = data.uci.slice(2, 4);
+
+        this.hintMove = { from: fromSq, to: toSq };
+        this.renderBoard();
+
+        const evalText = (typeof data.eval === 'number') ? ` (Eval: ${(data.eval / 100).toFixed(1)})` : '';
+        if (banner) {
+          banner.textContent = `💡 Hint: Play ${data.uci.toUpperCase()}${evalText} - Best tactical move.`;
+        }
+      }
+    } catch (err) {
+      if (banner) banner.textContent = '💡 Hint could not be calculated.';
+    }
+  }
+
+  copyFEN() {
+    if (!this.engine) return;
+    const fen = this.engine.toFen();
+    navigator.clipboard.writeText(fen).then(() => {
+      const banner = document.getElementById('hint-banner');
+      if (banner) {
+        banner.style.display = 'block';
+        banner.textContent = '📋 FEN copied to clipboard!';
+        setTimeout(() => { if (banner.textContent.includes('copied')) banner.style.display = 'none'; }, 2500);
+      }
+    });
+  }
+
+  copyPGN() {
+    if (!this.activeGame || !this.activeGame.moves) return;
+    let pgn = `[Event "LibreChess RS Game"]\n[Site "LibreChess RS Web"]\n[White "${this.activeGame.white?.name || 'White'}"]\n[Black "${this.activeGame.black?.name || 'Black'}"]\n\n`;
+    const moves = this.activeGame.moves;
+    for (let i = 0; i < moves.length; i++) {
+      if (i % 2 === 0) pgn += `${(i / 2) + 1}. `;
+      pgn += `${moves[i].san || moves[i].uci} `;
+    }
+    navigator.clipboard.writeText(pgn).then(() => {
+      const banner = document.getElementById('hint-banner');
+      if (banner) {
+        banner.style.display = 'block';
+        banner.textContent = '📋 PGN copied to clipboard!';
+        setTimeout(() => { if (banner.textContent.includes('copied')) banner.style.display = 'none'; }, 2500);
+      }
+    });
   }
 
   renderMovesTable() {
