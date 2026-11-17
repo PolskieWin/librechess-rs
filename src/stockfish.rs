@@ -675,7 +675,26 @@ fn evaluate_board(pos: &Chess) -> i32 {
                 let enemy_majors = (if is_white { black_bb } else { white_bb })
                     & (board.queens() | board.rooks() | board.kings());
                 if (attacks & enemy_majors).count() >= 2 {
-                    piece_score += 150; // Tactical fork!
+                    piece_score += 150; // Tactical Knight fork!
+                }
+            }
+
+            // Tactical fork potential: Pawns attacking multiple high-value targets
+            if piece.role == Role::Pawn {
+                let attacks = pos.board().attacks_from(sq);
+                let enemy_minors_majors = (if is_white { black_bb } else { white_bb }) & !board.pawns();
+                if (attacks & enemy_minors_majors).count() >= 2 {
+                    piece_score += 180; // Tactical Pawn fork!
+                }
+            }
+
+            // Tactical Queen double-attack
+            if piece.role == Role::Queen {
+                let attacks = pos.board().attacks_from(sq);
+                let enemy_majors = (if is_white { black_bb } else { white_bb })
+                    & (board.queens() | board.rooks() | board.kings());
+                if (attacks & enemy_majors).count() >= 2 {
+                    piece_score += 120; // Tactical Queen fork/skewer!
                 }
             }
 

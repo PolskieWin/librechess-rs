@@ -611,6 +611,173 @@ public class ChessEngine {
         return list;
     }
 
+    public int getPawnForkCount(int sq, int pawnColor) {
+        int r = sq / 8, f = sq % 8;
+        int pDir = (pawnColor == WHITE) ? -1 : 1;
+        int tr = r + pDir;
+        if (tr < 0 || tr >= 8) return 0;
+        int oppColor = (pawnColor == WHITE) ? BLACK : WHITE;
+        int targetCount = 0;
+
+        for (int df : new int[]{-1, 1}) {
+            int tf = f + df;
+            if (tf >= 0 && tf < 8) {
+                int p = board[tr * 8 + tf];
+                if (p != EMPTY && colorOf(p) == oppColor) {
+                    int t = typeOf(p);
+                    if (t == KNIGHT || t == BISHOP || t == ROOK || t == QUEEN) {
+                        targetCount++;
+                    }
+                }
+            }
+        }
+        return targetCount >= 2 ? targetCount : 0;
+    }
+
+    public boolean isPinnedToKing(int sq, int color) {
+        int kingSq = -1;
+        int kingPiece = color | KING;
+        for (int i = 0; i < 64; i++) {
+            if (board[i] == kingPiece) { kingSq = i; break; }
+        }
+        if (kingSq == -1) return false;
+
+        int kr = kingSq / 8, kf = kingSq % 8;
+        int pr = sq / 8, pf = sq % 8;
+        int dr = pr - kr, df = pf - kf;
+
+        int stepR = 0, stepF = 0;
+        if (dr == 0 && df != 0) {
+            stepF = df > 0 ? 1 : -1;
+        } else if (df == 0 && dr != 0) {
+            stepR = dr > 0 ? 1 : -1;
+        } else if (Math.abs(dr) == Math.abs(df) && dr != 0) {
+            stepR = dr > 0 ? 1 : -1;
+            stepF = df > 0 ? 1 : -1;
+        } else {
+            return false;
+        }
+
+        int currR = kr + stepR, currF = kf + stepF;
+        while (currR != pr || currF != pf) {
+            if (board[currR * 8 + currF] != EMPTY) return false;
+            currR += stepR;
+            currF += stepF;
+        }
+
+        currR = pr + stepR;
+        currF = pf + stepF;
+        int oppColor = (color == WHITE) ? BLACK : WHITE;
+        boolean isDiag = (stepR != 0 && stepF != 0);
+
+        while (currR >= 0 && currR < 8 && currF >= 0 && currF < 8) {
+            int p = board[currR * 8 + currF];
+            if (p != EMPTY) {
+                if (colorOf(p) == oppColor) {
+                    int type = typeOf(p);
+                    if (isDiag && (type == BISHOP || type == QUEEN)) return true;
+                    if (!isDiag && (type == ROOK || type == QUEEN)) return true;
+                }
+                return false;
+            }
+            currR += stepR;
+            currF += stepF;
+        }
+        return false;
+    }
+
+    public boolean isPinnedToQueen(int sq, int color) {
+        int queenSq = -1;
+        int queenPiece = color | QUEEN;
+        for (int i = 0; i < 64; i++) {
+            if (board[i] == queenPiece) { queenSq = i; break; }
+        }
+        if (queenSq == -1) return false;
+
+        int qr = queenSq / 8, qf = queenSq % 8;
+        int pr = sq / 8, pf = sq % 8;
+        int dr = pr - qr, df = pf - qf;
+
+        int stepR = 0, stepF = 0;
+        if (dr == 0 && df != 0) {
+            stepF = df > 0 ? 1 : -1;
+        } else if (df == 0 && dr != 0) {
+            stepR = dr > 0 ? 1 : -1;
+        } else if (Math.abs(dr) == Math.abs(df) && dr != 0) {
+            stepR = dr > 0 ? 1 : -1;
+            stepF = df > 0 ? 1 : -1;
+        } else {
+            return false;
+        }
+
+        int currR = qr + stepR, currF = qf + stepF;
+        while (currR != pr || currF != pf) {
+            if (board[currR * 8 + currF] != EMPTY) return false;
+            currR += stepR;
+            currF += stepF;
+        }
+
+        currR = pr + stepR;
+        currF = pf + stepF;
+        int oppColor = (color == WHITE) ? BLACK : WHITE;
+        boolean isDiag = (stepR != 0 && stepF != 0);
+
+        while (currR >= 0 && currR < 8 && currF >= 0 && currF < 8) {
+            int p = board[currR * 8 + currF];
+            if (p != EMPTY) {
+                if (colorOf(p) == oppColor) {
+                    int type = typeOf(p);
+                    if (isDiag && (type == BISHOP || type == QUEEN)) return true;
+                    if (!isDiag && (type == ROOK || type == QUEEN)) return true;
+                }
+                return false;
+            }
+            currR += stepR;
+            currF += stepF;
+        }
+        return false;
+    }
+
+    public int countAttackedMajors(int sq, int oppColor) {
+        int count = 0;
+        for (int to : getLegalMoves(sq)) {
+            int p = board[to];
+            if (p != EMPTY && colorOf(p) == oppColor) {
+                int t = typeOf(p);
+                if (t == KING || t == QUEEN || t == ROOK) count++;
+            }
+        }
+        return count;
+    }
+
+    public boolean isBackRankVulnerable(int kingColor) {
+        int r = (kingColor == WHITE) ? 7 : 0;
+        int pawnR = (kingColor == WHITE) ? 6 : 1;
+        int kingSq = -1;
+        for (int f = 0; f < 8; f++) {
+            if (board[r * 8 + f] == (kingColor | KING)) { kingSq = r * 8 + f; break; }
+        }
+        if (kingSq == -1) return false;
+        int kf = kingSq % 8;
+        if (kf < 5) return false; // Not kingside castled
+
+        // Check if f, g, h pawns are unmoved
+        boolean pawnsUnmoved = (board[pawnR * 8 + 5] == (kingColor | PAWN))
+                            && (board[pawnR * 8 + 6] == (kingColor | PAWN))
+                            && (board[pawnR * 8 + 7] == (kingColor | PAWN));
+        if (!pawnsUnmoved) return false;
+
+        // Check if enemy has a rook or queen on the board
+        int oppColor = (kingColor == WHITE) ? BLACK : WHITE;
+        for (int i = 0; i < 64; i++) {
+            int p = board[i];
+            if (colorOf(p) == oppColor && (typeOf(p) == ROOK || typeOf(p) == QUEEN)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public float evaluate() {
         float score = 0;
         int whiteBishops = 0;
@@ -628,8 +795,14 @@ public class ChessEngine {
             int pstIndex = isWhite ? i : (63 - i);
             float bonus = 0;
             switch (type) {
-                case PAWN: bonus = PAWN_PST[pstIndex] * 0.01f; break;
-                case KNIGHT:
+                case PAWN: {
+                    bonus = PAWN_PST[pstIndex] * 0.01f;
+                    // Tactical Pawn Fork
+                    int forkCount = getPawnForkCount(i, color);
+                    if (forkCount >= 2) bonus += 1.80f;
+                    break;
+                }
+                case KNIGHT: {
                     bonus = KNIGHT_PST[pstIndex] * 0.01f;
                     // Tactical Knight Fork evaluation
                     int targets = 0;
@@ -642,11 +815,13 @@ public class ChessEngine {
                     }
                     if (targets >= 2) bonus += 1.50f; // Knight fork tactical bonus
                     break;
-                case BISHOP:
+                }
+                case BISHOP: {
                     bonus = BISHOP_PST[pstIndex] * 0.01f;
                     if (isWhite) whiteBishops++; else blackBishops++;
                     break;
-                case ROOK:
+                }
+                case ROOK: {
                     bonus = ROOK_PST[pstIndex] * 0.01f;
                     int f = i % 8;
                     int r = i / 8;
@@ -665,16 +840,36 @@ public class ChessEngine {
                     if (!hasFriendlyPawn && !hasEnemyPawn) bonus += 0.35f; // Open file
                     else if (!hasFriendlyPawn) bonus += 0.20f; // Semi-open file
                     break;
-                case QUEEN: bonus = QUEEN_PST[pstIndex] * 0.01f; break;
-                case KING: bonus = KING_PST[pstIndex] * 0.01f; break;
+                }
+                case QUEEN: {
+                    bonus = QUEEN_PST[pstIndex] * 0.01f;
+                    // Tactical Queen Double Attack / Fork
+                    int qTargets = countAttackedMajors(i, oppColor);
+                    if (qTargets >= 2) bonus += 1.20f;
+                    break;
+                }
+                case KING: {
+                    bonus = KING_PST[pstIndex] * 0.01f;
+                    // Tactical back-rank vulnerability penalty
+                    if (isBackRankVulnerable(color)) bonus -= 0.75f;
+                    break;
+                }
             }
 
             // Tactical hanging piece & pin penalty
             if (type != KING) {
+                // Pin detection
+                if (isPinnedToKing(i, color)) {
+                    bonus -= 0.65f; // Absolute pin penalty
+                } else if (isPinnedToQueen(i, color)) {
+                    bonus -= 0.35f; // Relative pin penalty
+                }
+
+                // Hanging piece / en prise evaluation
                 boolean attacked = isSquareAttacked(i, oppColor);
                 boolean defended = isSquareAttacked(i, color);
                 if (attacked && !defended) {
-                    bonus -= val * 0.50f; // Hanging piece penalty
+                    bonus -= val * 0.50f; // Free hanging piece penalty
                 } else if (attacked && defended) {
                     if (type != PAWN && isAttackedByPawn(i, oppColor)) {
                         bonus -= 0.60f; // Attacked by cheaper piece
@@ -1007,14 +1202,8 @@ public class ChessEngine {
             explanation = "Checkmate! Wins the game immediately.";
         } else if (sim.isKingInCheck(oppColor)) {
             explanation = "Delivers check disrupting opponent king safety.";
-        } else if (targetP != EMPTY) {
-            if (!sim.isSquareAttacked(to, oppColor)) {
-                explanation = "Captures hanging piece (" + getPieceName(targetType) + ") on " + squareName(to) + "!";
-            } else {
-                explanation = "Tactical exchange winning material on " + squareName(to) + ".";
-            }
-        } else if (isSquareAttacked(from, oppColor) && !sim.isSquareAttacked(to, oppColor)) {
-            explanation = "Evacuates attacked piece (" + getPieceName(pType) + ") to a secure square.";
+        } else if (pType == PAWN && sim.getPawnForkCount(to, isWhite ? WHITE : BLACK) >= 2) {
+            explanation = "Pawn Fork! Attacks two major enemy pieces simultaneously.";
         } else if (pType == KNIGHT) {
             int forks = 0;
             for (int dest : getKnightAttacks(to)) {
@@ -1025,12 +1214,26 @@ public class ChessEngine {
                 }
             }
             if (forks >= 2) {
-                explanation = "Knight fork! Attacks multiple high-value targets simultaneously.";
+                explanation = "Knight Fork! Attacks multiple high-value targets simultaneously.";
             } else {
                 explanation = "Tactical knight leap controlling critical central outposts.";
             }
+        } else if (pType == QUEEN && sim.countAttackedMajors(to, oppColor) >= 2) {
+            explanation = "Queen Fork! Dual attack forcing opponent material surrender.";
+        } else if (sim.isPinnedToKing(to, oppColor)) {
+            explanation = "Absolute Pin! Enemy piece is immobilized against their King.";
+        } else if (targetP != EMPTY) {
+            if (!sim.isSquareAttacked(to, oppColor)) {
+                explanation = "Captures hanging piece (" + getPieceName(targetType) + ") on " + squareName(to) + "!";
+            } else {
+                explanation = "Tactical exchange winning material on " + squareName(to) + ".";
+            }
+        } else if (isSquareAttacked(from, oppColor) && !sim.isSquareAttacked(to, oppColor)) {
+            explanation = "Evacuates attacked piece (" + getPieceName(pType) + ") to a secure square.";
         } else if (pType == PAWN && (to / 8 == 1 || to / 8 == 6)) {
             explanation = "Pushes passed pawn towards impending promotion.";
+        } else if (sim.isBackRankVulnerable(oppColor)) {
+            explanation = "Back-Rank Infiltration! Infiltrating the baseline with mating threats.";
         } else {
             explanation = "Optimal tactical move controlling key files and center diagonals.";
         }

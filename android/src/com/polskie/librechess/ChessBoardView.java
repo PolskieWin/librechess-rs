@@ -39,6 +39,13 @@ public class ChessBoardView extends View {
 
     public static final int PIECE_STYLE_LICHESS = 0;
     public static final int PIECE_STYLE_MODERN = 1;
+    public static final int PIECE_STYLE_TOURNAMENT = 2;
+
+    public static final String[] PIECE_STYLE_NAMES = {
+        "Lichess (cburnett)",
+        "Modern Minimal (Neo)",
+        "Classic Tournament (Staunton)"
+    };
 
     // Official Lichess Board themes: {lightColor, darkColor}
     public static final String[] THEME_NAMES = {
@@ -47,7 +54,7 @@ public class ChessBoardView extends View {
         "Lichess Blue",
         "Lichess Canvas",
         "Lichess Charcoal",
-        "Midnight OLED"
+        "Midnight OLED (Pure Black)"
     };
 
     private static final int[][] THEMES = {
@@ -56,7 +63,7 @@ public class ChessBoardView extends View {
         {0xFFDEE3E6, 0xFF8CA2AD}, // Lichess Blue
         {0xFFE3C16F, 0xFFB88B4A}, // Lichess Canvas (Sand)
         {0xFF8A939E, 0xFF4A545E}, // Lichess Charcoal
-        {0xFF334155, 0xFF050810}  // Midnight OLED (Pure Dark)
+        {0xFF334155, 0xFF000000}  // Midnight OLED (True Pure Black)
     };
 
     private Paint lightSqPaint;
@@ -381,81 +388,68 @@ public class ChessBoardView extends View {
         float topY = cy - s * 0.45f;
         float botY = cy + s * 0.45f;
 
-        Path path = new Path();
+        if (pieceStyle == PIECE_STYLE_MODERN) {
+            drawModernPiece(canvas, type, isWhite, cx, cy, s, topY, botY, fill, stroke, pieceDetailStroke);
+        } else if (pieceStyle == PIECE_STYLE_TOURNAMENT) {
+            drawTournamentPiece(canvas, type, isWhite, cx, cy, s, topY, botY, fill, stroke, pieceDetailStroke);
+        } else {
+            drawLichessPiece(canvas, type, isWhite, cx, cy, s, topY, botY, fill, stroke, pieceDetailStroke);
+        }
+    }
 
+    private void drawLichessPiece(Canvas canvas, int type, boolean isWhite, float cx, float cy, float s, float topY, float botY, Paint fill, Paint stroke, Paint detail) {
+        Path path = new Path();
         switch (type) {
             case ChessEngine.PAWN: {
-                // Base
                 path.moveTo(cx - s * 0.28f, botY);
                 path.lineTo(cx + s * 0.28f, botY);
                 path.lineTo(cx + s * 0.22f, botY - s * 0.12f);
-                // Waist
                 path.quadTo(cx + s * 0.08f, cy, cx + s * 0.12f, cy - s * 0.08f);
-                // Collar
                 path.lineTo(cx - s * 0.12f, cy - s * 0.08f);
                 path.quadTo(cx - s * 0.08f, cy, cx - s * 0.22f, botY - s * 0.12f);
                 path.close();
                 canvas.drawPath(path, fill);
                 canvas.drawPath(path, stroke);
 
-                // Head sphere
                 float hr = s * 0.17f;
                 float hy = topY + hr + s * 0.04f;
                 canvas.drawCircle(cx, hy, hr, fill);
                 canvas.drawCircle(cx, hy, hr, stroke);
-
-                // Collar trim
-                canvas.drawLine(cx - s * 0.12f, cy - s * 0.08f, cx + s * 0.12f, cy - s * 0.08f, pieceDetailStroke);
+                canvas.drawLine(cx - s * 0.12f, cy - s * 0.08f, cx + s * 0.12f, cy - s * 0.08f, detail);
                 break;
             }
             case ChessEngine.KNIGHT: {
-                // Authentic Lichess cburnett horse
                 path.moveTo(cx - s * 0.30f, botY);
                 path.lineTo(cx + s * 0.30f, botY);
                 path.lineTo(cx + s * 0.24f, botY - s * 0.12f);
-
-                // 3 scalloped notches of the mane
                 path.quadTo(cx + s * 0.32f, cy + s * 0.14f, cx + s * 0.28f, cy + s * 0.04f);
                 path.quadTo(cx + s * 0.34f, cy - s * 0.06f, cx + s * 0.23f, cy - s * 0.16f);
                 path.quadTo(cx + s * 0.26f, cy - s * 0.28f, cx + s * 0.14f, topY + s * 0.06f);
-
-                // Forward perked ear
                 path.lineTo(cx + s * 0.08f, topY - s * 0.05f);
                 path.lineTo(cx + s * 0.01f, topY + s * 0.06f);
-
-                // Forehead down to snout / muzzle
                 path.lineTo(cx - s * 0.16f, cy - s * 0.14f);
                 path.quadTo(cx - s * 0.32f, cy - s * 0.08f, cx - s * 0.34f, cy - s * 0.02f);
-                path.lineTo(cx - s * 0.34f, cy + s * 0.03f); // nostril
-                path.lineTo(cx - s * 0.27f, cy + s * 0.07f); // mouth
-
-                // Lower jaw and throat to chest
+                path.lineTo(cx - s * 0.34f, cy + s * 0.03f);
+                path.lineTo(cx - s * 0.27f, cy + s * 0.07f);
                 path.lineTo(cx - s * 0.16f, cy + s * 0.08f);
                 path.quadTo(cx - s * 0.11f, cy + s * 0.17f, cx - s * 0.18f, cy + s * 0.24f);
                 path.lineTo(cx - s * 0.24f, botY - s * 0.12f);
                 path.close();
-
                 canvas.drawPath(path, fill);
                 canvas.drawPath(path, stroke);
 
-                // Eye (circle with inner pupil dot)
-                canvas.drawCircle(cx - s * 0.13f, cy - s * 0.08f, s * 0.04f, pieceDetailStroke);
-                // Mane scallop accent lines
-                canvas.drawLine(cx + s * 0.16f, cy - s * 0.16f, cx + s * 0.04f, cy - s * 0.10f, pieceDetailStroke);
-                canvas.drawLine(cx + s * 0.19f, cy - s * 0.04f, cx + s * 0.07f, cy + s * 0.02f, pieceDetailStroke);
-                canvas.drawLine(cx + s * 0.21f, cy + s * 0.08f, cx + s * 0.09f, cy + s * 0.14f, pieceDetailStroke);
-                // Nostril accent
-                canvas.drawCircle(cx - s * 0.29f, cy, s * 0.022f, pieceDetailStroke);
+                canvas.drawCircle(cx - s * 0.13f, cy - s * 0.08f, s * 0.04f, detail);
+                canvas.drawLine(cx + s * 0.16f, cy - s * 0.16f, cx + s * 0.04f, cy - s * 0.10f, detail);
+                canvas.drawLine(cx + s * 0.19f, cy - s * 0.04f, cx + s * 0.07f, cy + s * 0.02f, detail);
+                canvas.drawLine(cx + s * 0.21f, cy + s * 0.08f, cx + s * 0.09f, cy + s * 0.14f, detail);
+                canvas.drawCircle(cx - s * 0.29f, cy, s * 0.022f, detail);
                 break;
             }
             case ChessEngine.BISHOP: {
-                // Base
                 path.moveTo(cx - s * 0.32f, botY);
                 path.lineTo(cx + s * 0.32f, botY);
                 path.lineTo(cx + s * 0.24f, botY - s * 0.12f);
-                // Torso
                 path.quadTo(cx + s * 0.10f, cy + s * 0.10f, cx + s * 0.18f, cy);
-                // Mitre body
                 path.quadTo(cx + s * 0.24f, cy - s * 0.24f, cx, topY + s * 0.06f);
                 path.quadTo(cx - s * 0.24f, cy - s * 0.24f, cx - s * 0.18f, cy);
                 path.quadTo(cx - s * 0.10f, cy + s * 0.10f, cx - s * 0.24f, botY - s * 0.12f);
@@ -463,34 +457,26 @@ public class ChessBoardView extends View {
                 canvas.drawPath(path, fill);
                 canvas.drawPath(path, stroke);
 
-                // Finial sphere on top
                 canvas.drawCircle(cx, topY + s * 0.03f, s * 0.045f, fill);
                 canvas.drawCircle(cx, topY + s * 0.03f, s * 0.045f, stroke);
-
-                // Diagonal mitre cleft slit
-                canvas.drawLine(cx - s * 0.04f, cy - s * 0.20f, cx + s * 0.14f, cy - s * 0.06f, pieceDetailStroke);
-                canvas.drawLine(cx + s * 0.02f, cy - s * 0.16f, cx + s * 0.08f, cy - s * 0.10f, pieceDetailStroke);
-                // Collar band
-                canvas.drawLine(cx - s * 0.18f, cy + s * 0.12f, cx + s * 0.18f, cy + s * 0.12f, pieceDetailStroke);
+                canvas.drawLine(cx - s * 0.04f, cy - s * 0.20f, cx + s * 0.14f, cy - s * 0.06f, detail);
+                canvas.drawLine(cx + s * 0.02f, cy - s * 0.16f, cx + s * 0.08f, cy - s * 0.10f, detail);
+                canvas.drawLine(cx - s * 0.18f, cy + s * 0.12f, cx + s * 0.18f, cy + s * 0.12f, detail);
                 break;
             }
             case ChessEngine.ROOK: {
-                // Base
                 path.moveTo(cx - s * 0.34f, botY);
                 path.lineTo(cx + s * 0.34f, botY);
                 path.lineTo(cx + s * 0.26f, botY - s * 0.12f);
-                // Tower trunk
                 path.lineTo(cx + s * 0.20f, cy - s * 0.15f);
-                // Battlements cornice
                 path.lineTo(cx + s * 0.32f, cy - s * 0.20f);
-                // 3 Crenellations & 2 embrasure gaps (cburnett)
                 path.lineTo(cx + s * 0.32f, topY);
                 path.lineTo(cx + s * 0.18f, topY);
-                path.lineTo(cx + s * 0.18f, topY + s * 0.10f); // gap 2
+                path.lineTo(cx + s * 0.18f, topY + s * 0.10f);
                 path.lineTo(cx + s * 0.07f, topY + s * 0.10f);
-                path.lineTo(cx + s * 0.07f, topY);            // center crenel
+                path.lineTo(cx + s * 0.07f, topY);
                 path.lineTo(cx - s * 0.07f, topY);
-                path.lineTo(cx - s * 0.07f, topY + s * 0.10f); // gap 1
+                path.lineTo(cx - s * 0.07f, topY + s * 0.10f);
                 path.lineTo(cx - s * 0.18f, topY + s * 0.10f);
                 path.lineTo(cx - s * 0.18f, topY);
                 path.lineTo(cx - s * 0.32f, topY);
@@ -500,38 +486,29 @@ public class ChessBoardView extends View {
                 path.close();
                 canvas.drawPath(path, fill);
                 canvas.drawPath(path, stroke);
-
-                // Horizontal embrasure trim line
-                canvas.drawLine(cx - s * 0.24f, cy - s * 0.17f, cx + s * 0.24f, cy - s * 0.17f, pieceDetailStroke);
+                canvas.drawLine(cx - s * 0.24f, cy - s * 0.17f, cx + s * 0.24f, cy - s * 0.17f, detail);
                 break;
             }
             case ChessEngine.QUEEN: {
-                // Base
                 path.moveTo(cx - s * 0.36f, botY);
                 path.lineTo(cx + s * 0.36f, botY);
                 path.lineTo(cx + s * 0.28f, botY - s * 0.12f);
-                // Bodice
                 path.quadTo(cx + s * 0.14f, cy + s * 0.10f, cx + s * 0.22f, cy - s * 0.06f);
-
-                // 5 Coronet Spikes (cburnett)
-                path.lineTo(cx + s * 0.36f, topY + s * 0.04f); // spike 5
+                path.lineTo(cx + s * 0.36f, topY + s * 0.04f);
                 path.lineTo(cx + s * 0.20f, cy - s * 0.16f);
-                path.lineTo(cx + s * 0.18f, topY);            // spike 4
+                path.lineTo(cx + s * 0.18f, topY);
                 path.lineTo(cx + s * 0.08f, cy - s * 0.18f);
-                path.lineTo(cx, topY - s * 0.04f);            // spike 3 (center apex)
+                path.lineTo(cx, topY - s * 0.04f);
                 path.lineTo(cx - s * 0.08f, cy - s * 0.18f);
-                path.lineTo(cx - s * 0.18f, topY);            // spike 2
+                path.lineTo(cx - s * 0.18f, topY);
                 path.lineTo(cx - s * 0.20f, cy - s * 0.16f);
-                path.lineTo(cx - s * 0.36f, topY + s * 0.04f); // spike 1
-
+                path.lineTo(cx - s * 0.36f, topY + s * 0.04f);
                 path.lineTo(cx - s * 0.22f, cy - s * 0.06f);
                 path.quadTo(cx - s * 0.14f, cy + s * 0.10f, cx - s * 0.28f, botY - s * 0.12f);
                 path.close();
-
                 canvas.drawPath(path, fill);
                 canvas.drawPath(path, stroke);
 
-                // 5 Pearl jewels on the tips
                 float pr = s * 0.035f;
                 canvas.drawCircle(cx - s * 0.36f, topY + s * 0.04f, pr, fill);
                 canvas.drawCircle(cx - s * 0.36f, topY + s * 0.04f, pr, stroke);
@@ -543,43 +520,279 @@ public class ChessBoardView extends View {
                 canvas.drawCircle(cx + s * 0.18f, topY, pr, stroke);
                 canvas.drawCircle(cx + s * 0.36f, topY + s * 0.04f, pr, fill);
                 canvas.drawCircle(cx + s * 0.36f, topY + s * 0.04f, pr, stroke);
-
-                // Decorative horizontal waist band
-                canvas.drawLine(cx - s * 0.20f, cy + s * 0.12f, cx + s * 0.20f, cy + s * 0.12f, pieceDetailStroke);
+                canvas.drawLine(cx - s * 0.20f, cy + s * 0.12f, cx + s * 0.20f, cy + s * 0.12f, detail);
                 break;
             }
             case ChessEngine.KING: {
-                // Base
                 path.moveTo(cx - s * 0.36f, botY);
                 path.lineTo(cx + s * 0.36f, botY);
                 path.lineTo(cx + s * 0.28f, botY - s * 0.12f);
-                // Regal crown mantle
                 path.quadTo(cx + s * 0.12f, cy + s * 0.10f, cx + s * 0.24f, cy - s * 0.04f);
                 path.quadTo(cx + s * 0.30f, cy - s * 0.22f, cx, cy - s * 0.26f);
                 path.quadTo(cx - s * 0.30f, cy - s * 0.22f, cx - s * 0.24f, cy - s * 0.04f);
                 path.quadTo(cx - s * 0.12f, cy + s * 0.10f, cx - s * 0.28f, botY - s * 0.12f);
                 path.close();
-
                 canvas.drawPath(path, fill);
                 canvas.drawPath(path, stroke);
 
-                // Cross Pattée finial (Lichess King)
                 float crossTop = topY - s * 0.05f;
                 float crossBot = cy - s * 0.26f;
                 float crossMidY = crossTop + (crossBot - crossTop) * 0.38f;
                 float cw = s * 0.09f;
 
-                // Vertical stem
                 canvas.drawLine(cx, crossTop, cx, crossBot, stroke);
-                // Horizontal arm
                 canvas.drawLine(cx - cw, crossMidY, cx + cw, crossMidY, stroke);
-                // Flared endpoints on the cross
                 canvas.drawLine(cx - cw, crossMidY - s * 0.025f, cx - cw, crossMidY + s * 0.025f, stroke);
                 canvas.drawLine(cx + cw, crossMidY - s * 0.025f, cx + cw, crossMidY + s * 0.025f, stroke);
                 canvas.drawLine(cx - s * 0.025f, crossTop, cx + s * 0.025f, crossTop, stroke);
+                canvas.drawLine(cx - s * 0.20f, cy + s * 0.12f, cx + s * 0.20f, cy + s * 0.12f, detail);
+                break;
+            }
+        }
+    }
 
-                // Decorative mantle band
-                canvas.drawLine(cx - s * 0.20f, cy + s * 0.12f, cx + s * 0.20f, cy + s * 0.12f, pieceDetailStroke);
+    private void drawModernPiece(Canvas canvas, int type, boolean isWhite, float cx, float cy, float s, float topY, float botY, Paint fill, Paint stroke, Paint detail) {
+        Path path = new Path();
+        switch (type) {
+            case ChessEngine.PAWN: {
+                path.moveTo(cx - s * 0.24f, botY);
+                path.lineTo(cx + s * 0.24f, botY);
+                path.lineTo(cx + s * 0.14f, cy - s * 0.04f);
+                path.lineTo(cx - s * 0.14f, cy - s * 0.04f);
+                path.close();
+                canvas.drawPath(path, fill);
+                canvas.drawPath(path, stroke);
+                float hr = s * 0.16f;
+                canvas.drawCircle(cx, topY + hr + s * 0.05f, hr, fill);
+                canvas.drawCircle(cx, topY + hr + s * 0.05f, hr, stroke);
+                break;
+            }
+            case ChessEngine.KNIGHT: {
+                // Geometric sharp modern steed
+                path.moveTo(cx - s * 0.26f, botY);
+                path.lineTo(cx + s * 0.26f, botY);
+                path.lineTo(cx + s * 0.22f, cy + s * 0.10f);
+                path.lineTo(cx + s * 0.18f, cy - s * 0.15f);
+                path.lineTo(cx + s * 0.08f, topY - s * 0.03f); // sharp ear
+                path.lineTo(cx - s * 0.02f, topY + s * 0.08f);
+                path.lineTo(cx - s * 0.32f, cy - s * 0.02f); // sharp muzzle
+                path.lineTo(cx - s * 0.26f, cy + s * 0.12f);
+                path.lineTo(cx - s * 0.14f, cy + s * 0.12f);
+                path.lineTo(cx - s * 0.20f, botY - s * 0.08f);
+                path.close();
+                canvas.drawPath(path, fill);
+                canvas.drawPath(path, stroke);
+                canvas.drawLine(cx - s * 0.15f, cy - s * 0.08f, cx - s * 0.07f, cy - s * 0.08f, detail);
+                break;
+            }
+            case ChessEngine.BISHOP: {
+                path.moveTo(cx - s * 0.28f, botY);
+                path.lineTo(cx + s * 0.28f, botY);
+                path.lineTo(cx + s * 0.16f, cy + s * 0.12f);
+                path.lineTo(cx + s * 0.18f, cy - s * 0.12f);
+                path.lineTo(cx, topY + s * 0.02f); // spearhead
+                path.lineTo(cx - s * 0.18f, cy - s * 0.12f);
+                path.lineTo(cx - s * 0.16f, cy + s * 0.12f);
+                path.close();
+                canvas.drawPath(path, fill);
+                canvas.drawPath(path, stroke);
+                canvas.drawLine(cx, cy - s * 0.25f, cx, cy - s * 0.05f, detail);
+                break;
+            }
+            case ChessEngine.ROOK: {
+                path.moveTo(cx - s * 0.30f, botY);
+                path.lineTo(cx + s * 0.30f, botY);
+                path.lineTo(cx + s * 0.22f, topY + s * 0.18f);
+                path.lineTo(cx + s * 0.30f, topY);
+                path.lineTo(cx + s * 0.10f, topY);
+                path.lineTo(cx + s * 0.10f, topY + s * 0.12f);
+                path.lineTo(cx - s * 0.10f, topY + s * 0.12f);
+                path.lineTo(cx - s * 0.10f, topY);
+                path.lineTo(cx - s * 0.30f, topY);
+                path.lineTo(cx - s * 0.22f, topY + s * 0.18f);
+                path.close();
+                canvas.drawPath(path, fill);
+                canvas.drawPath(path, stroke);
+                break;
+            }
+            case ChessEngine.QUEEN: {
+                path.moveTo(cx - s * 0.34f, botY);
+                path.lineTo(cx + s * 0.34f, botY);
+                path.lineTo(cx + s * 0.24f, cy + s * 0.05f);
+                path.lineTo(cx + s * 0.35f, topY + s * 0.02f);
+                path.lineTo(cx + s * 0.14f, cy - s * 0.12f);
+                path.lineTo(cx, topY - s * 0.03f);
+                path.lineTo(cx - s * 0.14f, cy - s * 0.12f);
+                path.lineTo(cx - s * 0.35f, topY + s * 0.02f);
+                path.lineTo(cx - s * 0.24f, cy + s * 0.05f);
+                path.close();
+                canvas.drawPath(path, fill);
+                canvas.drawPath(path, stroke);
+                break;
+            }
+            case ChessEngine.KING: {
+                path.moveTo(cx - s * 0.34f, botY);
+                path.lineTo(cx + s * 0.34f, botY);
+                path.lineTo(cx + s * 0.22f, cy + s * 0.08f);
+                path.lineTo(cx + s * 0.24f, cy - s * 0.18f);
+                path.lineTo(cx, cy - s * 0.24f);
+                path.lineTo(cx - s * 0.24f, cy - s * 0.18f);
+                path.lineTo(cx - s * 0.22f, cy + s * 0.08f);
+                path.close();
+                canvas.drawPath(path, fill);
+                canvas.drawPath(path, stroke);
+
+                float crossTop = topY - s * 0.04f;
+                float crossBot = cy - s * 0.24f;
+                float crossMid = crossTop + (crossBot - crossTop) * 0.45f;
+                float arm = s * 0.08f;
+                canvas.drawLine(cx, crossTop, cx, crossBot, stroke);
+                canvas.drawLine(cx - arm, crossMid, cx + arm, crossMid, stroke);
+                break;
+            }
+        }
+    }
+
+    private void drawTournamentPiece(Canvas canvas, int type, boolean isWhite, float cx, float cy, float s, float topY, float botY, Paint fill, Paint stroke, Paint detail) {
+        Path path = new Path();
+        switch (type) {
+            case ChessEngine.PAWN: {
+                // Wide weighted base
+                path.moveTo(cx - s * 0.32f, botY);
+                path.lineTo(cx + s * 0.32f, botY);
+                path.lineTo(cx + s * 0.26f, botY - s * 0.10f);
+                path.lineTo(cx - s * 0.26f, botY - s * 0.10f);
+                path.close();
+                canvas.drawPath(path, fill);
+                canvas.drawPath(path, stroke);
+
+                Path body = new Path();
+                body.moveTo(cx - s * 0.22f, botY - s * 0.10f);
+                body.lineTo(cx + s * 0.22f, botY - s * 0.10f);
+                body.quadTo(cx + s * 0.06f, cy, cx + s * 0.14f, cy - s * 0.12f);
+                body.lineTo(cx - s * 0.14f, cy - s * 0.12f);
+                body.quadTo(cx - s * 0.06f, cy, cx - s * 0.22f, botY - s * 0.10f);
+                body.close();
+                canvas.drawPath(body, fill);
+                canvas.drawPath(body, stroke);
+
+                float hr = s * 0.18f;
+                float hy = topY + hr + s * 0.02f;
+                canvas.drawCircle(cx, hy, hr, fill);
+                canvas.drawCircle(cx, hy, hr, stroke);
+                break;
+            }
+            case ChessEngine.KNIGHT: {
+                // Classical tournament sculpted horse
+                path.moveTo(cx - s * 0.32f, botY);
+                path.lineTo(cx + s * 0.32f, botY);
+                path.lineTo(cx + s * 0.24f, botY - s * 0.12f);
+                path.quadTo(cx + s * 0.35f, cy + s * 0.08f, cx + s * 0.25f, cy - s * 0.10f);
+                path.quadTo(cx + s * 0.28f, cy - s * 0.26f, cx + s * 0.10f, topY + s * 0.04f);
+                path.lineTo(cx + s * 0.06f, topY - s * 0.06f); // ear
+                path.lineTo(cx - s * 0.02f, topY + s * 0.06f);
+                path.lineTo(cx - s * 0.22f, cy - s * 0.12f);
+                path.quadTo(cx - s * 0.35f, cy - s * 0.04f, cx - s * 0.32f, cy + s * 0.06f);
+                path.lineTo(cx - s * 0.20f, cy + s * 0.08f);
+                path.quadTo(cx - s * 0.12f, cy + s * 0.18f, cx - s * 0.20f, cy + s * 0.26f);
+                path.lineTo(cx - s * 0.24f, botY - s * 0.12f);
+                path.close();
+                canvas.drawPath(path, fill);
+                canvas.drawPath(path, stroke);
+
+                canvas.drawCircle(cx - s * 0.15f, cy - s * 0.07f, s * 0.035f, detail);
+                canvas.drawLine(cx + s * 0.12f, cy - s * 0.12f, cx + s * 0.22f, cy - s * 0.06f, detail);
+                canvas.drawLine(cx + s * 0.15f, cy + s * 0.02f, cx + s * 0.24f, cy + s * 0.08f, detail);
+                break;
+            }
+            case ChessEngine.BISHOP: {
+                path.moveTo(cx - s * 0.34f, botY);
+                path.lineTo(cx + s * 0.34f, botY);
+                path.lineTo(cx + s * 0.24f, botY - s * 0.12f);
+                path.quadTo(cx + s * 0.12f, cy + s * 0.08f, cx + s * 0.20f, cy - s * 0.02f);
+                path.quadTo(cx + s * 0.22f, cy - s * 0.26f, cx, topY + s * 0.06f);
+                path.quadTo(cx - s * 0.22f, cy - s * 0.26f, cx - s * 0.20f, cy - s * 0.02f);
+                path.quadTo(cx - s * 0.12f, cy + s * 0.08f, cx - s * 0.24f, botY - s * 0.12f);
+                path.close();
+                canvas.drawPath(path, fill);
+                canvas.drawPath(path, stroke);
+
+                canvas.drawCircle(cx, topY + s * 0.03f, s * 0.045f, fill);
+                canvas.drawCircle(cx, topY + s * 0.03f, s * 0.045f, stroke);
+                canvas.drawLine(cx - s * 0.08f, cy - s * 0.20f, cx + s * 0.10f, cy - s * 0.08f, detail);
+                break;
+            }
+            case ChessEngine.ROOK: {
+                path.moveTo(cx - s * 0.36f, botY);
+                path.lineTo(cx + s * 0.36f, botY);
+                path.lineTo(cx + s * 0.28f, botY - s * 0.12f);
+                path.lineTo(cx + s * 0.22f, cy - s * 0.14f);
+                path.lineTo(cx + s * 0.34f, cy - s * 0.20f);
+                path.lineTo(cx + s * 0.34f, topY);
+                path.lineTo(cx + s * 0.22f, topY);
+                path.lineTo(cx + s * 0.22f, topY + s * 0.10f);
+                path.lineTo(cx + s * 0.10f, topY + s * 0.10f);
+                path.lineTo(cx + s * 0.10f, topY);
+                path.lineTo(cx - s * 0.10f, topY);
+                path.lineTo(cx - s * 0.10f, topY + s * 0.10f);
+                path.lineTo(cx - s * 0.22f, topY + s * 0.10f);
+                path.lineTo(cx - s * 0.22f, topY);
+                path.lineTo(cx - s * 0.34f, topY);
+                path.lineTo(cx - s * 0.34f, cy - s * 0.20f);
+                path.lineTo(cx - s * 0.22f, cy - s * 0.14f);
+                path.lineTo(cx - s * 0.28f, botY - s * 0.12f);
+                path.close();
+                canvas.drawPath(path, fill);
+                canvas.drawPath(path, stroke);
+                canvas.drawLine(cx - s * 0.26f, cy - s * 0.16f, cx + s * 0.26f, cy - s * 0.16f, detail);
+                break;
+            }
+            case ChessEngine.QUEEN: {
+                path.moveTo(cx - s * 0.36f, botY);
+                path.lineTo(cx + s * 0.36f, botY);
+                path.lineTo(cx + s * 0.28f, botY - s * 0.12f);
+                path.quadTo(cx + s * 0.12f, cy + s * 0.10f, cx + s * 0.24f, cy - s * 0.08f);
+                path.lineTo(cx + s * 0.36f, topY + s * 0.04f);
+                path.lineTo(cx + s * 0.18f, cy - s * 0.18f);
+                path.lineTo(cx + s * 0.18f, topY);
+                path.lineTo(cx + s * 0.08f, cy - s * 0.18f);
+                path.lineTo(cx, topY - s * 0.04f);
+                path.lineTo(cx - s * 0.08f, cy - s * 0.18f);
+                path.lineTo(cx - s * 0.18f, topY);
+                path.lineTo(cx - s * 0.18f, cy - s * 0.18f);
+                path.lineTo(cx - s * 0.36f, topY + s * 0.04f);
+                path.lineTo(cx - s * 0.24f, cy - s * 0.08f);
+                path.quadTo(cx - s * 0.12f, cy + s * 0.10f, cx - s * 0.28f, botY - s * 0.12f);
+                path.close();
+                canvas.drawPath(path, fill);
+                canvas.drawPath(path, stroke);
+
+                float pr = s * 0.032f;
+                canvas.drawCircle(cx - s * 0.36f, topY + s * 0.04f, pr, fill);
+                canvas.drawCircle(cx - s * 0.18f, topY, pr, fill);
+                canvas.drawCircle(cx, topY - s * 0.04f, pr, fill);
+                canvas.drawCircle(cx + s * 0.18f, topY, pr, fill);
+                canvas.drawCircle(cx + s * 0.36f, topY + s * 0.04f, pr, fill);
+                break;
+            }
+            case ChessEngine.KING: {
+                path.moveTo(cx - s * 0.38f, botY);
+                path.lineTo(cx + s * 0.38f, botY);
+                path.lineTo(cx + s * 0.30f, botY - s * 0.12f);
+                path.quadTo(cx + s * 0.14f, cy + s * 0.10f, cx + s * 0.26f, cy - s * 0.04f);
+                path.quadTo(cx + s * 0.30f, cy - s * 0.22f, cx, cy - s * 0.28f);
+                path.quadTo(cx - s * 0.30f, cy - s * 0.22f, cx - s * 0.26f, cy - s * 0.04f);
+                path.quadTo(cx - s * 0.14f, cy + s * 0.10f, cx - s * 0.30f, botY - s * 0.12f);
+                path.close();
+                canvas.drawPath(path, fill);
+                canvas.drawPath(path, stroke);
+
+                float crossTop = topY - s * 0.04f;
+                float crossBot = cy - s * 0.28f;
+                float crossMid = crossTop + (crossBot - crossTop) * 0.4f;
+                float arm = s * 0.09f;
+                canvas.drawLine(cx, crossTop, cx, crossBot, stroke);
+                canvas.drawLine(cx - arm, crossMid, cx + arm, crossMid, stroke);
                 break;
             }
         }

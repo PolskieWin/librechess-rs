@@ -63,12 +63,22 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
     private Button btnRevExit;
 
     // State & Preferences
+    public static final int THEME_MODE_DEEP_SLATE = 0;
+    public static final int THEME_MODE_OLED = 1;
+    public static final int THEME_MODE_LIGHT = 2;
+    public static final String[] THEME_MODE_NAMES = {
+        "Deep Slate Dark (#0F172A)",
+        "Midnight OLED Pure Black (#000000)",
+        "Clean Light Mode"
+    };
+
     private SharedPreferences prefs;
     private String playerName = "Polskie";
     private int playerElo = 100;
+    private int themeMode = THEME_MODE_DEEP_SLATE;
     private boolean isDarkMode = true;
     private int boardTheme = 0;
-    private int pieceStyle = 0; // 0: Lichess, 1: Modern
+    private int pieceStyle = 0; // 0: Lichess, 1: Modern, 2: Tournament
     private boolean showThreats = true;
     private boolean hapticsEnabled = true;
     private int botLevel = 100;
@@ -157,7 +167,8 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
                   | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                   | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !isDarkMode) {
+        boolean isLight = (themeMode == THEME_MODE_LIGHT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && isLight) {
             flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
         }
 
@@ -167,7 +178,8 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
     private void loadPreferences() {
         playerName = prefs.getString("player_name", "Polskie");
         playerElo = prefs.getInt("player_elo", 100);
-        isDarkMode = prefs.getBoolean("is_dark_mode", true);
+        themeMode = prefs.getInt("theme_mode", prefs.getBoolean("is_dark_mode", true) ? THEME_MODE_DEEP_SLATE : THEME_MODE_LIGHT);
+        isDarkMode = (themeMode != THEME_MODE_LIGHT);
         boardTheme = prefs.getInt("board_theme", 0);
         pieceStyle = prefs.getInt("piece_style", 0);
         showThreats = prefs.getBoolean("show_threats", true);
@@ -180,7 +192,8 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("player_name", playerName);
         editor.putInt("player_elo", playerElo);
-        editor.putBoolean("is_dark_mode", isDarkMode);
+        editor.putInt("theme_mode", themeMode);
+        editor.putBoolean("is_dark_mode", themeMode != THEME_MODE_LIGHT);
         editor.putInt("board_theme", boardTheme);
         editor.putInt("piece_style", pieceStyle);
         editor.putBoolean("show_threats", showThreats);
@@ -237,19 +250,34 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
     }
 
     private void applyTheme() {
-        if (isDarkMode) {
-            rootLayout.setBackgroundColor(0xFF0F172A);
-            txtAppTitle.setTextColor(0xFFF8FAFC);
-            txtOpponentClock.setTextColor(0xFFF8FAFC);
-            txtPlayerClock.setTextColor(0xFFF8FAFC);
-            txtOpponentName.setTextColor(0xFF94A3B8);
-        } else {
-            rootLayout.setBackgroundColor(0xFFF8FAFC);
-            txtAppTitle.setTextColor(0xFF0F172A);
-            txtOpponentClock.setTextColor(0xFF0F172A);
-            txtPlayerClock.setTextColor(0xFF0F172A);
-            txtOpponentName.setTextColor(0xFF475569);
+        int bgColor;
+        int textTitleColor;
+        int textSecondaryColor;
+        int clockColor;
+
+        if (themeMode == THEME_MODE_OLED) {
+            bgColor = 0xFF000000;
+            textTitleColor = 0xFFFFFFFF;
+            textSecondaryColor = 0xFF94A3B8;
+            clockColor = 0xFF22C55E; // High-contrast green clock for OLED Pure Black
+        } else if (themeMode == THEME_MODE_LIGHT) {
+            bgColor = 0xFFF8FAFC;
+            textTitleColor = 0xFF0F172A;
+            textSecondaryColor = 0xFF475569;
+            clockColor = 0xFF0F172A;
+        } else { // THEME_MODE_DEEP_SLATE
+            bgColor = 0xFF0F172A;
+            textTitleColor = 0xFFF8FAFC;
+            textSecondaryColor = 0xFF94A3B8;
+            clockColor = 0xFF38BDF8;
         }
+
+        rootLayout.setBackgroundColor(bgColor);
+        txtAppTitle.setTextColor(textTitleColor);
+        txtOpponentClock.setTextColor(clockColor);
+        txtPlayerClock.setTextColor(clockColor);
+        txtOpponentName.setTextColor(textSecondaryColor);
+
         btnUserBadge.setText(playerName + " (" + playerElo + ")");
         txtPlayerName.setText(playerName + " (" + playerElo + ")");
         txtOpponentName.setText("Bot " + botLevel);
@@ -487,7 +515,8 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
 
     private AlertDialog.Builder createDialogBuilder() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            return new AlertDialog.Builder(this, isDarkMode ? AlertDialog.THEME_DEVICE_DEFAULT_DARK : AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+            boolean isDark = (themeMode != THEME_MODE_LIGHT);
+            return new AlertDialog.Builder(this, isDark ? AlertDialog.THEME_DEVICE_DEFAULT_DARK : AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
         }
         return new AlertDialog.Builder(this);
     }
@@ -630,7 +659,7 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         input.setText(playerName);
         input.setSingleLine(true);
         input.setPadding(30, 20, 30, 20);
-        if (isDarkMode) {
+        if (themeMode != THEME_MODE_LIGHT) {
             input.setTextColor(0xFFF8FAFC);
             input.setHintTextColor(0xFF64748B);
         }
@@ -716,8 +745,9 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         layout.setPadding(36, 20, 36, 20);
         scrollView.addView(layout);
 
-        int textPrimary = isDarkMode ? 0xFFF8FAFC : 0xFF0F172A;
-        int textSecondary = isDarkMode ? 0xFF94A3B8 : 0xFF475569;
+        boolean isDark = (themeMode != THEME_MODE_LIGHT);
+        int textPrimary = isDark ? 0xFFF8FAFC : 0xFF0F172A;
+        int textSecondary = isDark ? 0xFF94A3B8 : 0xFF475569;
 
         // Display Name input
         TextView lblName = new TextView(this);
@@ -733,20 +763,31 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         edtName.setSingleLine(true);
         layout.addView(edtName);
 
-        // Dark / OLED Mode toggle
-        final CheckBox chkDarkMode = new CheckBox(this);
-        chkDarkMode.setText("Full OLED Dark Mode");
-        chkDarkMode.setChecked(isDarkMode);
-        chkDarkMode.setTextColor(textPrimary);
-        chkDarkMode.setPadding(0, 8, 0, 8);
-        layout.addView(chkDarkMode);
+        // App Theme Mode (Slate Dark, Midnight OLED Pure Black, Light)
+        TextView lblThemeMode = new TextView(this);
+        lblThemeMode.setText("App Theme Mode");
+        lblThemeMode.setTextSize(14f);
+        lblThemeMode.setTextColor(textSecondary);
+        lblThemeMode.setPadding(0, 10, 0, 4);
+        layout.addView(lblThemeMode);
+
+        final RadioGroup rgThemeMode = new RadioGroup(this);
+        for (int i = 0; i < THEME_MODE_NAMES.length; i++) {
+            RadioButton rb = new RadioButton(this);
+            rb.setId(300 + i);
+            rb.setText(THEME_MODE_NAMES[i]);
+            rb.setTextColor(textPrimary);
+            if (i == themeMode) rb.setChecked(true);
+            rgThemeMode.addView(rb);
+        }
+        layout.addView(rgThemeMode);
 
         // Haptic feedback toggle
         final CheckBox chkHaptics = new CheckBox(this);
         chkHaptics.setText("Haptic Vibration Feedback");
         chkHaptics.setChecked(hapticsEnabled);
         chkHaptics.setTextColor(textPrimary);
-        chkHaptics.setPadding(0, 4, 0, 8);
+        chkHaptics.setPadding(0, 8, 0, 8);
         layout.addView(chkHaptics);
 
         // Tactical Threat Highlights toggle
@@ -757,20 +798,19 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         chkThreats.setPadding(0, 4, 0, 10);
         layout.addView(chkThreats);
 
-        // Piece Look selector (Lichess cburnett vs Modern)
+        // Piece Look selector (3 distinct custom piece sets)
         TextView lblPiece = new TextView(this);
         lblPiece.setText("Pieces Look");
         lblPiece.setTextSize(14f);
         lblPiece.setTextColor(textSecondary);
-        lblPiece.setPadding(0, 8, 0, 4);
+        lblPiece.setPadding(0, 10, 0, 4);
         layout.addView(lblPiece);
 
         final RadioGroup rgPiece = new RadioGroup(this);
-        final String[] pieceSets = {"Lichess (cburnett) Pieces", "Modern Minimal Pieces"};
-        for (int i = 0; i < pieceSets.length; i++) {
+        for (int i = 0; i < ChessBoardView.PIECE_STYLE_NAMES.length; i++) {
             RadioButton rb = new RadioButton(this);
             rb.setId(200 + i);
-            rb.setText(pieceSets[i]);
+            rb.setText(ChessBoardView.PIECE_STYLE_NAMES[i]);
             rb.setTextColor(textPrimary);
             if (i == pieceStyle) rb.setChecked(true);
             rgPiece.addView(rb);
@@ -873,7 +913,12 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
                     String newName = edtName.getText().toString().trim();
                     if (!newName.isEmpty()) playerName = newName;
 
-                    isDarkMode = chkDarkMode.isChecked();
+                    int checkedThemeModeId = rgThemeMode.getCheckedRadioButtonId();
+                    if (checkedThemeModeId >= 300) {
+                        themeMode = checkedThemeModeId - 300;
+                        isDarkMode = (themeMode != THEME_MODE_LIGHT);
+                    }
+
                     hapticsEnabled = chkHaptics.isChecked();
                     showThreats = chkThreats.isChecked();
                     boardView.setHapticsEnabled(hapticsEnabled);

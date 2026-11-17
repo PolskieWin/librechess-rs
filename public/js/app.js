@@ -12,6 +12,7 @@ class LibreChessApp {
     this.legalMoves = [];
     this.boardOrientation = 'w';
     this.theme = localStorage.getItem('librechess_board_theme') || 'green';
+    this.pieceStyle = localStorage.getItem('librechess_piece_style') || 'lichess';
     this.uiMode = localStorage.getItem('librechess_theme_mode') || 'dark';
     this.soundEnabled = localStorage.getItem('librechess_sound') !== 'false';
     this.vibrationEnabled = localStorage.getItem('librechess_vibration') !== 'false';
@@ -25,6 +26,7 @@ class LibreChessApp {
   async init() {
     this.applyThemeMode(this.uiMode);
     this.setBoardTheme(this.theme);
+    this.setPieceStyle(this.pieceStyle);
     this.audio.enabled = this.soundEnabled;
     this.bindDOM();
     await this.fetchMe();
@@ -59,6 +61,14 @@ class LibreChessApp {
     if (select) select.value = theme;
   }
 
+  setPieceStyle(style) {
+    this.pieceStyle = style;
+    localStorage.setItem('librechess_piece_style', style);
+    const select = document.getElementById('setting-piece-style');
+    if (select) select.value = style;
+    this.renderBoard();
+  }
+
   bindDOM() {
     // Navigation Tabs
     document.querySelectorAll('.nav-tab').forEach(btn => {
@@ -79,6 +89,10 @@ class LibreChessApp {
 
     document.getElementById('setting-board-theme')?.addEventListener('change', (e) => {
       this.setBoardTheme(e.target.value);
+    });
+
+    document.getElementById('setting-piece-style')?.addEventListener('change', (e) => {
+      this.setPieceStyle(e.target.value);
     });
 
     document.getElementById('setting-sound-toggle')?.addEventListener('change', (e) => {
@@ -475,7 +489,7 @@ class LibreChessApp {
 
         const piece = this.engine.getPiece(sq);
         if (piece) {
-          sqDiv.innerHTML = window.PIECE_SVGS[piece] || '';
+          sqDiv.innerHTML = window.getPieceSvg ? window.getPieceSvg(piece, this.pieceStyle) : (window.PIECE_SVGS[piece] || '');
         }
 
         if (this.legalMoves.includes(sq)) {

@@ -15,6 +15,43 @@ const PIECE_SVGS = {
   bP: `<svg viewBox="0 0 45 45" class="piece"><path d="M22.5 9c-2.21 0-4 1.79-4 4 0 .89.29 1.71.78 2.38C17.33 16.5 16 18.59 16 21c0 2.03.94 3.84 2.41 5.03-3 1.06-7.41 5.55-7.41 13.47h23c0-7.92-4.41-12.41-7.41-13.47 1.47-1.19 2.41-3 2.41-5.03 0-2.41-1.33-4.5-3.28-5.62.49-.67.78-1.49.78-2.38 0-2.21-1.79-4-4-4z" fill="#111" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>`
 };
 
+
+const PIECE_SETS_NEO = {
+  wK: '<svg viewBox="0 0 45 45" class="piece"><g fill="#fff" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 38h21v-3H12v3zm2-3l3-14h11l3 14H14zm8.5-14V13M18 16.5h9" stroke-linecap="butt"/><polygon points="22.5,6 20,11 25,11" fill="#000"/></g></svg>',
+  wQ: '<svg viewBox="0 0 45 45" class="piece"><g fill="#fff" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 38h21v-3H12v3zm2-3l2-15 6.5 7 4.5-12 4.5 12 6.5-7 2 15H14z"/><circle cx="16" cy="19" r="1.5" fill="#000"/><circle cx="22.5" cy="14" r="1.5" fill="#000"/><circle cx="29" cy="19" r="1.5" fill="#000"/></g></svg>',
+  wR: '<svg viewBox="0 0 45 45" class="piece"><g fill="#fff" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 38h21v-3H12v3zm2.5-3l1.5-16h13l1.5 16H14.5zm-1-16h18v-7h-4.5v3h-9v-3H13.5v7z"/></g></svg>',
+  wB: '<svg viewBox="0 0 45 45" class="piece"><g fill="#fff" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 38h19v-3H13v3zm3.5-3l1.5-10c0-6 4.5-13 4.5-17 0 4 4.5 11 4.5 17l1.5 10H16.5z"/><line x1="22.5" y1="18" x2="22.5" y2="28"/><circle cx="22.5" cy="7.5" r="1.5" fill="#000"/></g></svg>',
+  wN: '<svg viewBox="0 0 45 45" class="piece"><g fill="#fff" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 38h18v-3H14v3zm2-3l1-7 9-11-2-5-9 6-3 8 4 9zm13 0l-2-12-5-7 6-4 4 7 1 16h-4z"/><circle cx="20" cy="18" r="1.5" fill="#000"/></g></svg>',
+  wP: '<svg viewBox="0 0 45 45" class="piece"><g fill="#fff" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 38h15v-3H15v3zm2.5-3l2-13h6l2 13H17.5z"/><circle cx="22.5" cy="15" r="4.5"/></g></svg>',
+  bK: '<svg viewBox="0 0 45 45" class="piece"><g fill="#111" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 38h21v-3H12v3zm2-3l3-14h11l3 14H14zm8.5-14V13M18 16.5h9" stroke="#fff" stroke-linecap="butt"/><polygon points="22.5,6 20,11 25,11" fill="#fff" stroke="#fff"/></g></svg>',
+  bQ: '<svg viewBox="0 0 45 45" class="piece"><g fill="#111" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 38h21v-3H12v3zm2-3l2-15 6.5 7 4.5-12 4.5 12 6.5-7 2 15H14z" stroke="#000"/><circle cx="16" cy="19" r="1.5" fill="#fff"/><circle cx="22.5" cy="14" r="1.5" fill="#fff"/><circle cx="29" cy="19" r="1.5" fill="#fff"/></g></svg>',
+  bR: '<svg viewBox="0 0 45 45" class="piece"><g fill="#111" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 38h21v-3H12v3zm2.5-3l1.5-16h13l1.5 16H14.5zm-1-16h18v-7h-4.5v3h-9v-3H13.5v7z"/></g></svg>',
+  bB: '<svg viewBox="0 0 45 45" class="piece"><g fill="#111" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 38h19v-3H13v3zm3.5-3l1.5-10c0-6 4.5-13 4.5-17 0 4 4.5 11 4.5 17l1.5 10H16.5z"/><line x1="22.5" y1="18" x2="22.5" y2="28" stroke="#fff"/><circle cx="22.5" cy="7.5" r="1.5" fill="#fff" stroke="#fff"/></g></svg>',
+  bN: '<svg viewBox="0 0 45 45" class="piece"><g fill="#111" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 38h18v-3H14v3zm2-3l1-7 9-11-2-5-9 6-3 8 4 9zm13 0l-2-12-5-7 6-4 4 7 1 16h-4z"/><circle cx="20" cy="18" r="1.5" fill="#fff" stroke="#fff"/></g></svg>',
+  bP: '<svg viewBox="0 0 45 45" class="piece"><g fill="#111" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 38h15v-3H15v3zm2.5-3l2-13h6l2 13H17.5z"/><circle cx="22.5" cy="15" r="4.5"/></g></svg>'
+};
+
+const PIECE_SETS_STAUNTON = {
+  wK: '<svg viewBox="0 0 45 45" class="piece"><g fill="#fff" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 39h25v-3H10v3zm2-3v-2.5h21V36H12zm2.5-2.5c2-6 3.5-12 3.5-15h9c0 3 1.5 9 3.5 15H14.5z"/><path d="M17 15.5c-2.5-2-1-6.5 5.5-6.5s8 4.5 5.5 6.5c-2 1.5-9 1.5-11 0z"/><path d="M22.5 9V4M20 6h5" stroke-width="1.8"/></g></svg>',
+  wQ: '<svg viewBox="0 0 45 45" class="piece"><g fill="#fff" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 39h25v-3H10v3zm2-3v-2.5h21V36H12zm2-2.5l2-12c2.5 3 4.5 4 6.5 4s4-1 6.5-4l2 12H14z"/><path d="M11 21l3-10 6 7 2.5-10 2.5 10 6-7 3 10H11z"/><circle cx="11" cy="10" r="1.5" fill="#000"/><circle cx="17" cy="17" r="1.5" fill="#000"/><circle cx="22.5" cy="7" r="1.5" fill="#000"/><circle cx="28" cy="17" r="1.5" fill="#000"/><circle cx="34" cy="10" r="1.5" fill="#000"/></g></svg>',
+  wR: '<svg viewBox="0 0 45 45" class="piece"><g fill="#fff" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 39h25v-3H10v3zm2.5-3v-2h20v2h-20zm2-2l1-15h14l1 15h-16zm-2.5-15h21v-7h-4v2.5h-3.5V12h-6v2.5h-3.5V12H12v7z"/></g></svg>',
+  wB: '<svg viewBox="0 0 45 45" class="piece"><g fill="#fff" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 39h23v-3H11v3zm2.5-3v-2.5h18V36h-18zm2-2.5c1-5 2.5-10 2.5-14 0-4 3-9 4.5-9s4.5 5 4.5 9c0 4 1.5 9 2.5 14H15.5z"/><circle cx="22.5" cy="8.5" r="2"/><path d="M20 18l5 6" stroke-width="1.8"/></g></svg>',
+  wN: '<svg viewBox="0 0 45 45" class="piece"><g fill="#fff" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 39h23v-3H11v3zm3-3c0-4 1-8 3-10-2-1-4-4-4-7 0-4 3-7 6-8 1-2 4-2 6 0 3 3 4 8 3 13 3 1 5 4 5 7 0 2-1 4-2 5H14z"/><circle cx="19" cy="18" r="1.5" fill="#000"/><path d="M23 11c3 4 3 10 0 14" stroke="#000" fill="none"/></g></svg>',
+  wP: '<svg viewBox="0 0 45 45" class="piece"><g fill="#fff" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 39h19v-3H13v3zm2.5-3v-2h14v2h-14zm1.5-2c1.5-5 2.5-10 2.5-13h6c0 3 1 8 2.5 13H17z"/><circle cx="22.5" cy="15" r="4.5"/><circle cx="22.5" cy="9.5" r="2" fill="none"/></g></svg>',
+  bK: '<svg viewBox="0 0 45 45" class="piece"><g fill="#111" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 39h25v-3H10v3zm2-3v-2.5h21V36H12zm2.5-2.5c2-6 3.5-12 3.5-15h9c0 3 1.5 9 3.5 15H14.5z"/><path d="M17 15.5c-2.5-2-1-6.5 5.5-6.5s8 4.5 5.5 6.5c-2 1.5-9 1.5-11 0z"/><path d="M22.5 9V4M20 6h5" stroke="#fff" stroke-width="1.8"/></g></svg>',
+  bQ: '<svg viewBox="0 0 45 45" class="piece"><g fill="#111" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 39h25v-3H10v3zm2-3v-2.5h21V36H12zm2-2.5l2-12c2.5 3 4.5 4 6.5 4s4-1 6.5-4l2 12H14z"/><path d="M11 21l3-10 6 7 2.5-10 2.5 10 6-7 3 10H11z"/><circle cx="11" cy="10" r="1.5" fill="#fff"/><circle cx="17" cy="17" r="1.5" fill="#fff"/><circle cx="22.5" cy="7" r="1.5" fill="#fff"/><circle cx="28" cy="17" r="1.5" fill="#fff"/><circle cx="34" cy="10" r="1.5" fill="#fff"/></g></svg>',
+  bR: '<svg viewBox="0 0 45 45" class="piece"><g fill="#111" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 39h25v-3H10v3zm2.5-3v-2h20v2h-20zm2-2l1-15h14l1 15h-16zm-2.5-15h21v-7h-4v2.5h-3.5V12h-6v2.5h-3.5V12H12v7z"/></g></svg>',
+  bB: '<svg viewBox="0 0 45 45" class="piece"><g fill="#111" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 39h23v-3H11v3zm2.5-3v-2.5h18V36h-18zm2-2.5c1-5 2.5-10 2.5-14 0-4 3-9 4.5-9s4.5 5 4.5 9c0 4 1.5 9 2.5 14H15.5z"/><circle cx="22.5" cy="8.5" r="2"/><path d="M20 18l5 6" stroke="#fff" stroke-width="1.8"/></g></svg>',
+  bN: '<svg viewBox="0 0 45 45" class="piece"><g fill="#111" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 39h23v-3H11v3zm3-3c0-4 1-8 3-10-2-1-4-4-4-7 0-4 3-7 6-8 1-2 4-2 6 0 3 3 4 8 3 13 3 1 5 4 5 7 0 2-1 4-2 5H14z"/><circle cx="19" cy="18" r="1.5" fill="#fff"/><path d="M23 11c3 4 3 10 0 14" stroke="#fff" fill="none"/></g></svg>',
+  bP: '<svg viewBox="0 0 45 45" class="piece"><g fill="#111" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 39h19v-3H13v3zm2.5-3v-2h14v2h-14zm1.5-2c1.5-5 2.5-10 2.5-13h6c0 3 1 8 2.5 13H17z"/><circle cx="22.5" cy="15" r="4.5"/><circle cx="22.5" cy="9.5" r="2" fill="none"/></g></svg>'
+};
+
+const PIECE_SETS = {
+  lichess: PIECE_SVGS,
+  neo: PIECE_SETS_NEO,
+  staunton: PIECE_SETS_STAUNTON
+};
+
 class ChessEngineClient {
   constructor() {
     this.board = Array(64).fill(null);
@@ -202,3 +239,8 @@ class ChessEngineClient {
 
 window.ChessClient = ChessEngineClient;
 window.PIECE_SVGS = PIECE_SVGS;
+window.PIECE_SETS = PIECE_SETS;
+window.getPieceSvg = function(piece, style) {
+  const set = PIECE_SETS[style] || PIECE_SETS.lichess;
+  return set[piece] || PIECE_SVGS[piece] || '';
+};
