@@ -1,25 +1,42 @@
 /* LibreChess RS - Human Clean Minimalist Styling (No Gradients, No Material You) */
 
 :root {
-  /* Default Dark Mode */
-  --bg-color: #121316;
-  --surface-color: #1a1c20;
-  --surface-hover: #22252a;
-  --surface-active: #2a2e34;
-  --border-color: #2c3036;
-  --text-main: #f0f2f5;
-  --text-muted: #8b929e;
-  --accent-color: #388e3c;
-  --accent-hover: #43a047;
+  /* Default Full Dark Mode (Sleek Slate) */
+  --bg-color: #0f172a;
+  --surface-color: #1e293b;
+  --surface-hover: #334155;
+  --surface-active: #475569;
+  --border-color: #334155;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --accent-color: #22c55e;
+  --accent-hover: #16a34a;
   --accent-text: #ffffff;
-  --danger-color: #d32f2f;
-  --danger-hover: #e53935;
-  --blue-color: #1976d2;
+  --danger-color: #ef4444;
+  --danger-hover: #dc2626;
+  --blue-color: #38bdf8;
 
   --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 14px;
+}
+
+[data-theme="oled"] {
+  /* True Pure Black OLED / AMOLED Mode */
+  --bg-color: #000000;
+  --surface-color: #0d0f12;
+  --surface-hover: #16191f;
+  --surface-active: #212630;
+  --border-color: #232731;
+  --text-main: #f8fafc;
+  --text-muted: #8b95a5;
+  --accent-color: #22c55e;
+  --accent-hover: #16a34a;
+  --accent-text: #ffffff;
+  --danger-color: #ef4444;
+  --danger-hover: #dc2626;
+  --blue-color: #38bdf8;
 }
 
 [data-theme="light"] {
@@ -43,6 +60,31 @@
   margin: 0;
   padding: 0;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Custom Clean Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-color);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) var(--bg-color);
+}
+
+select.form-input option {
+  background-color: var(--surface-color);
+  color: var(--text-main);
 }
 
 body {

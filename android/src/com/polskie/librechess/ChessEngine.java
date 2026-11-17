@@ -522,24 +522,68 @@ public class ChessEngine {
     // Positional piece-square tables for intelligent play
     private static final int[] PAWN_PST = {
          0,  0,  0,  0,  0,  0,  0,  0,
-        50, 50, 50, 50, 50, 50, 50, 50,
-        10, 10, 20, 30, 30, 20, 10, 10,
-         5,  5, 10, 25, 25, 10,  5,  5,
-         0,  0,  0, 20, 20,  0,  0,  0,
-         5, -5,-10,  0,  0,-10, -5,  5,
          5, 10, 10,-20,-20, 10, 10,  5,
+         5, -5,-10,  0,  0,-10, -5,  5,
+         0,  0,  0, 25, 25,  0,  0,  0,
+         5,  5, 10, 27, 27, 10,  5,  5,
+        10, 10, 20, 30, 30, 20, 10, 10,
+        50, 50, 50, 50, 50, 50, 50, 50,
          0,  0,  0,  0,  0,  0,  0,  0
     };
 
     private static final int[] KNIGHT_PST = {
         -50,-40,-30,-30,-30,-30,-40,-50,
-        -40,-20,  0,  0,  0,  0,-20,-40,
-        -30,  0, 10, 15, 15, 10,  0,-30,
-        -30,  5, 15, 20, 20, 15,  5,-30,
-        -30,  0, 15, 20, 20, 15,  0,-30,
-        -30,  5, 10, 15, 15, 10,  5,-30,
         -40,-20,  0,  5,  5,  0,-20,-40,
+        -30,  5, 10, 15, 15, 10,  5,-30,
+        -30,  0, 15, 20, 20, 15,  0,-30,
+        -30,  5, 15, 20, 20, 15,  5,-30,
+        -30,  0, 10, 15, 15, 10,  0,-30,
+        -40,-20,  0,  0,  0,  0,-20,-40,
         -50,-40,-30,-30,-30,-30,-40,-50
+    };
+
+    private static final int[] BISHOP_PST = {
+        -20,-10,-10,-10,-10,-10,-10,-20,
+        -10,  5,  0,  0,  0,  0,  5,-10,
+        -10, 10, 10, 10, 10, 10, 10,-10,
+        -10,  0, 10, 10, 10, 10,  0,-10,
+        -10,  5,  5, 10, 10,  5,  5,-10,
+        -10,  0,  5, 10, 10,  5,  0,-10,
+        -10,  0,  0,  0,  0,  0,  0,-10,
+        -20,-10,-10,-10,-10,-10,-10,-20
+    };
+
+    private static final int[] ROOK_PST = {
+          0,  0,  0,  5,  5,  0,  0,  0,
+         -5,  0,  0,  0,  0,  0,  0, -5,
+         -5,  0,  0,  0,  0,  0,  0, -5,
+         -5,  0,  0,  0,  0,  0,  0, -5,
+         -5,  0,  0,  0,  0,  0,  0, -5,
+         -5,  0,  0,  0,  0,  0,  0, -5,
+          5, 10, 10, 10, 10, 10, 10,  5,
+          0,  0,  0,  0,  0,  0,  0,  0
+    };
+
+    private static final int[] QUEEN_PST = {
+        -20,-10,-10, -5, -5,-10,-10,-20,
+        -10,  0,  0,  0,  0,  0,  0,-10,
+        -10,  0,  5,  5,  5,  5,  0,-10,
+         -5,  0,  5,  5,  5,  5,  0, -5,
+          0,  0,  5,  5,  5,  5,  0, -5,
+        -10,  5,  5,  5,  5,  5,  0,-10,
+        -10,  0,  5,  0,  0,  0,  0,-10,
+        -20,-10,-10, -5, -5,-10,-10,-20
+    };
+
+    private static final int[] KING_PST = {
+         20, 30, 10,  0,  0, 10, 30, 20,
+         20, 20,  0,  0,  0,  0, 20, 20,
+        -10,-20,-20,-20,-20,-20,-20,-10,
+        -20,-30,-30,-40,-40,-30,-30,-20,
+        -30,-40,-40,-50,-50,-40,-40,-30,
+        -30,-40,-40,-50,-50,-40,-40,-30,
+        -30,-40,-40,-50,-50,-40,-40,-30,
+        -30,-40,-40,-50,-50,-40,-40,-30
     };
 
     public float evaluate() {
@@ -553,8 +597,14 @@ public class ChessEngine {
             float val = pieceValue(type);
             int pstIndex = color == WHITE ? i : (63 - i);
             float bonus = 0;
-            if (type == PAWN) bonus = PAWN_PST[pstIndex] * 0.01f;
-            else if (type == KNIGHT) bonus = KNIGHT_PST[pstIndex] * 0.01f;
+            switch (type) {
+                case PAWN: bonus = PAWN_PST[pstIndex] * 0.01f; break;
+                case KNIGHT: bonus = KNIGHT_PST[pstIndex] * 0.01f; break;
+                case BISHOP: bonus = BISHOP_PST[pstIndex] * 0.01f; break;
+                case ROOK: bonus = ROOK_PST[pstIndex] * 0.01f; break;
+                case QUEEN: bonus = QUEEN_PST[pstIndex] * 0.01f; break;
+                case KING: bonus = KING_PST[pstIndex] * 0.01f; break;
+            }
 
             float totalVal = val + bonus;
             if (color == WHITE) score += totalVal;
@@ -566,55 +616,218 @@ public class ChessEngine {
     private float pieceValue(int type) {
         switch (type) {
             case PAWN: return 1.0f;
-            case KNIGHT: return 3.0f;
-            case BISHOP: return 3.25f;
+            case KNIGHT: return 3.2f;
+            case BISHOP: return 3.3f;
             case ROOK: return 5.0f;
             case QUEEN: return 9.0f;
+            case KING: return 200.0f;
             default: return 0.0f;
         }
     }
 
-    public int[] getBotMove(int eloLevel) {
+    public List<int[]> getAllLegalMoves() {
         List<int[]> moves = new ArrayList<>();
-        int botColor = whiteToMove ? WHITE : BLACK;
-
+        int sideColor = whiteToMove ? WHITE : BLACK;
         for (int i = 0; i < 64; i++) {
-            if (board[i] != EMPTY && colorOf(board[i]) == botColor) {
+            if (board[i] != EMPTY && colorOf(board[i]) == sideColor) {
                 for (int to : getLegalMoves(i)) {
                     moves.add(new int[]{i, to});
                 }
             }
         }
+        return moves;
+    }
 
+    public List<int[]> getCaptureMoves() {
+        List<int[]> captures = new ArrayList<>();
+        int sideColor = whiteToMove ? WHITE : BLACK;
+        for (int i = 0; i < 64; i++) {
+            if (board[i] != EMPTY && colorOf(board[i]) == sideColor) {
+                for (int to : getLegalMoves(i)) {
+                    if (board[to] != EMPTY || to == enPassantSq) {
+                        captures.add(new int[]{i, to});
+                    }
+                }
+            }
+        }
+        return captures;
+    }
+
+    private void orderMoves(List<int[]> moves) {
+        // MVV-LVA move ordering: Most Valuable Victim - Least Valuable Attacker
+        moves.sort(new java.util.Comparator<int[]>() {
+            @Override
+            public int compare(int[] m1, int[] m2) {
+                int score1 = moveScore(m1);
+                int score2 = moveScore(m2);
+                return Integer.compare(score2, score1);
+            }
+
+            private int moveScore(int[] m) {
+                int victim = board[m[1]] != EMPTY ? typeOf(board[m[1]]) : 0;
+                int attacker = board[m[0]] != EMPTY ? typeOf(board[m[0]]) : 0;
+                if (victim > 0) {
+                    return 1000 + (victim * 10 - attacker);
+                }
+                return 0;
+            }
+        });
+    }
+
+    public boolean canOpponentCheckmateInOne() {
+        for (int[] m : getAllLegalMoves()) {
+            ChessEngine sim = cloneEngine();
+            sim.makeMove(m[0], m[1]);
+            if (sim.isGameOver && !"1/2-1/2".equals(sim.gameResult)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public float quiescence(float alpha, float beta, boolean maximizing, int maxDepth) {
+        float standPat = evaluate();
+        if (maxDepth <= 0) return standPat;
+
+        if (maximizing) {
+            if (standPat >= beta) return beta;
+            if (standPat > alpha) alpha = standPat;
+
+            List<int[]> captures = getCaptureMoves();
+            orderMoves(captures);
+            for (int[] m : captures) {
+                ChessEngine sim = cloneEngine();
+                sim.makeMove(m[0], m[1]);
+                float score = sim.quiescence(alpha, beta, false, maxDepth - 1);
+                if (score >= beta) return beta;
+                if (score > alpha) alpha = score;
+            }
+            return alpha;
+        } else {
+            if (standPat <= alpha) return alpha;
+            if (standPat < beta) beta = standPat;
+
+            List<int[]> captures = getCaptureMoves();
+            orderMoves(captures);
+            for (int[] m : captures) {
+                ChessEngine sim = cloneEngine();
+                sim.makeMove(m[0], m[1]);
+                float score = sim.quiescence(alpha, beta, true, maxDepth - 1);
+                if (score <= alpha) return alpha;
+                if (score < beta) beta = score;
+            }
+            return beta;
+        }
+    }
+
+    public float minimax(int depth, float alpha, float beta, boolean maximizing) {
+        if (isGameOver) {
+            int oppColor = maximizing ? WHITE : BLACK;
+            if (isKingInCheck(oppColor)) {
+                return maximizing ? (-100000f - depth) : (100000f + depth);
+            }
+            return 0f; // Stalemate
+        }
+
+        if (depth <= 0) {
+            return quiescence(alpha, beta, maximizing, 2);
+        }
+
+        List<int[]> moves = getAllLegalMoves();
+        if (moves.isEmpty()) {
+            int myColor = maximizing ? WHITE : BLACK;
+            if (isKingInCheck(myColor)) {
+                return maximizing ? (-100000f - depth) : (100000f + depth);
+            }
+            return 0f;
+        }
+
+        orderMoves(moves);
+
+        if (maximizing) {
+            float maxEval = -999999f;
+            for (int[] m : moves) {
+                ChessEngine sim = cloneEngine();
+                sim.makeMove(m[0], m[1]);
+                float eval = sim.minimax(depth - 1, alpha, beta, false);
+                maxEval = Math.max(maxEval, eval);
+                alpha = Math.max(alpha, eval);
+                if (beta <= alpha) break;
+            }
+            return maxEval;
+        } else {
+            float minEval = 999999f;
+            for (int[] m : moves) {
+                ChessEngine sim = cloneEngine();
+                sim.makeMove(m[0], m[1]);
+                float eval = sim.minimax(depth - 1, alpha, beta, true);
+                minEval = Math.min(minEval, eval);
+                beta = Math.min(beta, eval);
+                if (beta <= alpha) break;
+            }
+            return minEval;
+        }
+    }
+
+    public int[] getBotMove(int eloLevel) {
+        List<int[]> moves = getAllLegalMoves();
         if (moves.isEmpty()) return null;
 
+        boolean isWhite = whiteToMove;
         Random rng = new Random();
 
-        // Bot 100: 75% random, 25% greedy
-        if (eloLevel <= 100 && rng.nextFloat() < 0.75f) {
-            return moves.get(rng.nextInt(moves.size()));
-        }
-        // Bot 300: 45% random
-        if (eloLevel <= 300 && rng.nextFloat() < 0.45f) {
-            return moves.get(rng.nextInt(moves.size()));
+        // Bot 100: Safe beginner moves. Filters out any move that blunders immediate mate in 1!
+        if (eloLevel <= 100) {
+            List<int[]> safeMoves = new ArrayList<>();
+            for (int[] m : moves) {
+                ChessEngine sim = cloneEngine();
+                sim.makeMove(m[0], m[1]);
+                if (!sim.canOpponentCheckmateInOne()) {
+                    safeMoves.add(m);
+                }
+            }
+            if (!safeMoves.isEmpty() && rng.nextFloat() < 0.40f) {
+                return safeMoves.get(rng.nextInt(safeMoves.size()));
+            }
+            if (!safeMoves.isEmpty()) moves = safeMoves;
         }
 
-        // Greedy search with piece-square evaluation
+        // Calibrated depth:
+        // Bot 100: Depth 2
+        // Bot 300: Depth 2
+        // Bot 600: Depth 3
+        // Bot 1000: Depth 3 with Quiescence
+        // Bot 1500: Depth 4 with Quiescence & MVV-LVA (Defends Scholar's Mate with certainty!)
+        int searchDepth = 2;
+        if (eloLevel >= 1500) searchDepth = 4;
+        else if (eloLevel >= 600) searchDepth = 3;
+
+        orderMoves(moves);
+
         int[] bestMove = moves.get(0);
-        float bestScore = botColor == WHITE ? -9999f : 9999f;
+        float bestScore = isWhite ? -999999f : 999999f;
+        float alpha = -999999f;
+        float beta = 999999f;
 
         for (int[] m : moves) {
-            ChessEngine clone = cloneEngine();
-            clone.makeMove(m[0], m[1]);
-            float eval = clone.evaluate();
+            ChessEngine sim = cloneEngine();
+            sim.makeMove(m[0], m[1]);
+            float score = sim.minimax(searchDepth - 1, alpha, beta, !isWhite);
 
-            if (botColor == WHITE && eval > bestScore) {
-                bestScore = eval;
-                bestMove = m;
-            } else if (botColor == BLACK && eval < bestScore) {
-                bestScore = eval;
-                bestMove = m;
+            if (isWhite) {
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMove = m;
+                }
+                alpha = Math.max(alpha, bestScore);
+            } else {
+                if (score < bestScore) {
+                    bestScore = score;
+                    bestMove = m;
+                }
+                beta = Math.min(beta, bestScore);
             }
+            if (beta <= alpha) break;
         }
 
         return bestMove;

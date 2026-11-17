@@ -458,6 +458,13 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         txtOpponentClock.setText(String.format(Locale.US, "%02d:%02d", bMin, bSec));
     }
 
+    private AlertDialog.Builder createDialogBuilder() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            return new AlertDialog.Builder(this, isDarkMode ? AlertDialog.THEME_DEVICE_DEFAULT_DARK : AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+        }
+        return new AlertDialog.Builder(this);
+    }
+
     private void onGameOver() {
         clockRunning = false;
         timerHandler.removeCallbacks(clockRunnable);
@@ -490,7 +497,7 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         buildReviewStates();
 
         // Game over dialog
-        new AlertDialog.Builder(this)
+        createDialogBuilder()
             .setTitle("Game Finished")
             .setMessage("Result: " + engine.gameResult + " (" + engine.gameOverReason + ")\n"
                       + "New Rating: " + playerElo + " Elo\n\n"
@@ -589,8 +596,12 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         input.setText(playerName);
         input.setSingleLine(true);
         input.setPadding(30, 20, 30, 20);
+        if (isDarkMode) {
+            input.setTextColor(0xFFF8FAFC);
+            input.setHintTextColor(0xFF64748B);
+        }
 
-        new AlertDialog.Builder(this)
+        createDialogBuilder()
             .setTitle("Player Profile")
             .setMessage("Enter your display name (Rating starts at 100 Elo):")
             .setView(input)
@@ -611,11 +622,11 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
 
     private void showBotPickerDialog() {
         final String[] botOptions = {
-            "Bot 100 (Beginner)",
-            "Bot 300 (Casual)",
-            "Bot 600 (Club)",
-            "Bot 1000 (Intermediate)",
-            "Bot 1500 (Master)"
+            "Bot 100 (Beginner - Toby)",
+            "Bot 300 (Casual - Martin)",
+            "Bot 600 (Club - Elena)",
+            "Bot 1000 (Intermediate - Tactics)",
+            "Bot 1500 (Master - Alpha-Beta & Scholar Defense)"
         };
         final int[] botRatings = {100, 300, 600, 1000, 1500};
 
@@ -624,7 +635,7 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
             if (botRatings[i] == botLevel) { currentIdx = i; break; }
         }
 
-        new AlertDialog.Builder(this)
+        createDialogBuilder()
             .setTitle("Select Opponent")
             .setSingleChoiceItems(botOptions, currentIdx, new DialogInterface.OnClickListener() {
                 @Override
@@ -642,7 +653,7 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
 
     private void showResignDialog() {
         if (engine.isGameOver) return;
-        new AlertDialog.Builder(this)
+        createDialogBuilder()
             .setTitle("Resign Game")
             .setMessage("Are you sure you want to resign this match?")
             .setPositiveButton("Resign", new DialogInterface.OnClickListener() {
@@ -661,22 +672,28 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setPadding(36, 20, 36, 20);
 
+        int textPrimary = isDarkMode ? 0xFFF8FAFC : 0xFF0F172A;
+        int textSecondary = isDarkMode ? 0xFF94A3B8 : 0xFF475569;
+
         // Display Name input
         TextView lblName = new TextView(this);
         lblName.setText("Display Name");
         lblName.setTextSize(14f);
+        lblName.setTextColor(textSecondary);
         lblName.setPadding(0, 10, 0, 4);
         layout.addView(lblName);
 
         final EditText edtName = new EditText(this);
         edtName.setText(playerName);
+        edtName.setTextColor(textPrimary);
         edtName.setSingleLine(true);
         layout.addView(edtName);
 
         // Dark / White Mode toggle
         final CheckBox chkDarkMode = new CheckBox(this);
-        chkDarkMode.setText("Dark Mode (default: ON)");
+        chkDarkMode.setText("Dark Mode (Full OLED Dark)");
         chkDarkMode.setChecked(isDarkMode);
+        chkDarkMode.setTextColor(textPrimary);
         chkDarkMode.setPadding(0, 10, 0, 10);
         layout.addView(chkDarkMode);
 
@@ -684,6 +701,7 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         final CheckBox chkHaptics = new CheckBox(this);
         chkHaptics.setText("Haptic Vibration Feedback");
         chkHaptics.setChecked(hapticsEnabled);
+        chkHaptics.setTextColor(textPrimary);
         chkHaptics.setPadding(0, 4, 0, 10);
         layout.addView(chkHaptics);
 
@@ -691,15 +709,17 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         TextView lblTheme = new TextView(this);
         lblTheme.setText("Board Theme");
         lblTheme.setTextSize(14f);
+        lblTheme.setTextColor(textSecondary);
         lblTheme.setPadding(0, 10, 0, 4);
         layout.addView(lblTheme);
 
         final RadioGroup rgTheme = new RadioGroup(this);
-        final String[] themes = {"Emerald Green", "Minimal Slate", "Warm Wood", "Royal Ocean"};
+        final String[] themes = {"Emerald Green", "Minimal Slate", "Warm Wood", "Royal Ocean", "Midnight Dark (OLED)"};
         for (int i = 0; i < themes.length; i++) {
             RadioButton rb = new RadioButton(this);
             rb.setId(100 + i);
             rb.setText(themes[i]);
+            rb.setTextColor(textPrimary);
             if (i == boardTheme) rb.setChecked(true);
             rgTheme.addView(rb);
         }
@@ -709,23 +729,25 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         TextView lblServer = new TextView(this);
         lblServer.setText("Matchmaking Server URL");
         lblServer.setTextSize(14f);
+        lblServer.setTextColor(textSecondary);
         lblServer.setPadding(0, 14, 0, 4);
         layout.addView(lblServer);
 
         final EditText edtServer = new EditText(this);
         edtServer.setText(serverUrl);
+        edtServer.setTextColor(textPrimary);
         edtServer.setSingleLine(true);
         layout.addView(edtServer);
 
         // Credits Box
         TextView txtCredits = new TextView(this);
-        txtCredits.setText("\nLibreChess RS\nMade by Polskie and Gemini\nVersion 1.0.1\nClean, open source, no tracking");
+        txtCredits.setText("\nLibreChess RS\nMade by Polskie and Gemini\nVersion 1.1.0\nReal Chess Bots & Full Dark Mode");
         txtCredits.setTextSize(12f);
-        txtCredits.setTextColor(0xFF94A3B8);
+        txtCredits.setTextColor(textSecondary);
         txtCredits.setPadding(0, 10, 0, 10);
         layout.addView(txtCredits);
 
-        new AlertDialog.Builder(this)
+        createDialogBuilder()
             .setTitle("Settings")
             .setView(layout)
             .setPositiveButton("Save", new DialogInterface.OnClickListener() {

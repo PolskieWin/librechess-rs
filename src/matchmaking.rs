@@ -125,6 +125,7 @@ pub enum ServerMessage {
 }
 
 #[derive(Clone)]
+#[allow(dead_code)]
 pub struct QueuedPlayer {
     pub user_id: String,
     pub username: String,
@@ -513,8 +514,10 @@ impl Matchmaker {
             is_check: result_san.5,
         };
 
-        self.send_to_user(&white_id, move_msg.clone()).await;
-        if !is_bot_game {
+        if white_id != "bot" {
+            self.send_to_user(&white_id, move_msg.clone()).await;
+        }
+        if black_id != "bot" {
             self.send_to_user(&black_id, move_msg).await;
         }
 

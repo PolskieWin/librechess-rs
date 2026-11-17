@@ -1,6 +1,6 @@
 # LibreChess RS
 
-An open-source, lightweight chess app and server with a 100% native Android Canvas GUI, real-time matchmaking, classic board themes, post-game move review, and a base 100 Elo rating system.
+An open-source, lightweight chess app and server with a 100% native Android Canvas GUI, real-time matchmaking, classic and OLED board themes, post-game move review, calibrated real chess bots, and a base 100 Elo rating system.
 
 Made by Polskie and Gemini.
 
@@ -8,18 +8,23 @@ Made by Polskie and Gemini.
 
 ## Features
 
-- 100% Native Android GUI: Hardware-accelerated Canvas chessboard renderer with sharp vector piece graphics. Zero WebView and zero web wrapper.
-- Edge-to-Edge Experience: Fully transparent system status and navigation bars on modern Android (including Android 14, 15, and 16).
-- Haptic Feedback: Tactile vibration pulses on moves, captures, castling, and check.
-- Move Quality Analyzer: Post-game accuracy calculations, evaluation advantage graphs, and move classifications (Brilliant !!, Best, Good, Inaccuracy, Mistake, Blunder).
-- Offline Bot AI: Five difficulty levels (Bot 100, Bot 300, Bot 600, Bot 1000, Bot 1500) using piece-square evaluation tables.
-- Base 100 Elo System: All players start at 100 Elo rating. Ratings update live using standard Elo formulas with a floor at 100.
-- Simple Player Identification: Enter your player name directly to play and save statistics without passwords.
-- Real-Time Matchmaking Server: Fast asynchronous server built with Axum, Tokio, and Shakmaty chess engine validation.
-- Minimal Memory Footprint: Server starts in milliseconds and uses under 15MB RAM.
-- Board Themes: Emerald Green, Minimal Slate, Warm Wood, and Royal Ocean.
-- Appearance: Dark Mode (default) and White Mode toggle in settings.
-- Android APK: Ready-to-install signed 49KB native Android package included (`librechess-rs.apk`).
+- **100% Native Android GUI**: Hardware-accelerated Canvas chessboard renderer with sharp vector piece graphics. Zero WebView and zero web wrapper.
+- **Full Dark Mode**: Comprehensive dark theme with Deep Slate and Midnight OLED (pure black) modes across both the web interface and Android native views.
+- **Revamped Real Chess Bots**:
+  - Calibrated Elo bots: Toby (100), Martin (500), Elena (1000), Magnus (1500), and Grandmaster (2500+).
+  - Tactical Minimax with Alpha-Beta pruning, MVV-LVA move ordering, and Quiescence search.
+  - Immune to Scholar's Mate and cheap opening traps: Bot 1500 actively defends against 4. Qxf7# threats and punishes premature attacks.
+  - Persistent Stockfish 19 UCI integration with automatic fallback to high-speed native pure-Rust Shakmaty search.
+- **REST Bot Move API**: Query moves directly via `POST /api/bot/move` with FEN and bot level.
+- **Edge-to-Edge Experience**: Fully transparent system status and navigation bars on modern Android (including Android 14, 15, and 16).
+- **Haptic Feedback**: Tactile vibration pulses on moves, captures, castling, and check.
+- **Move Quality Analyzer**: Post-game accuracy calculations, evaluation advantage graphs, and move classifications (Brilliant !!, Best, Good, Inaccuracy, Mistake, Blunder).
+- **Offline Bot AI in Android**: Native Java Minimax Alpha-Beta engine for 100% offline play on your phone.
+- **Base 100 Elo System**: All players start at 100 Elo rating. Ratings update live using standard Elo formulas with a floor at 100.
+- **Simple Player Identification**: Enter your player name directly to play and save statistics without passwords.
+- **Real-Time Matchmaking Server**: Fast asynchronous server built with Axum, Tokio, and Shakmaty chess engine validation.
+- **Board Themes**: Emerald Green, Minimal Slate, Warm Wood, Royal Ocean, and Midnight Dark (OLED).
+- **Android APK**: Ready-to-install signed native Android package included (`librechess-rs.apk`).
 
 ---
 

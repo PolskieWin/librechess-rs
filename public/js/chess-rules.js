@@ -75,7 +75,7 @@ class ChessEngineClient {
   }
 
   getLegalMoves(sq) {
-    const fromIdx = typeof square === 'number' ? sq : this.sqToIdx(sq);
+    const fromIdx = typeof sq === 'number' ? sq : this.sqToIdx(sq);
     const piece = this.board[fromIdx];
     if (!piece || piece[0] !== this.turn) return [];
 

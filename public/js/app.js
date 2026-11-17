@@ -39,6 +39,8 @@ class LibreChessApp {
     localStorage.setItem('librechess_theme_mode', mode);
     if (mode === 'light') {
       document.documentElement.setAttribute('data-theme', 'light');
+    } else if (mode === 'oled') {
+      document.documentElement.setAttribute('data-theme', 'oled');
     } else {
       document.documentElement.removeAttribute('data-theme');
     }

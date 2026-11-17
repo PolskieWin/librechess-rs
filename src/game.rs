@@ -7,6 +7,7 @@ use std::str::FromStr;
 use std::time::Instant;
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub struct GameRoom {
     pub id: String,
     pub white_id: String,
@@ -93,6 +94,7 @@ impl GameRoom {
     }
 
     /// Update clocks on move
+    #[allow(dead_code)]
     pub fn update_clock_on_move(&mut self) -> Result<(), String> {
         let now = Instant::now();
         if let Some(prev) = self.last_move_time {

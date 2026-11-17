@@ -38,7 +38,8 @@ public class ChessBoardView extends View {
         {0xFFEEEED2, 0xFF769656}, // Emerald
         {0xFFCBD5E1, 0xFF475569}, // Slate
         {0xFFF0D9B5, 0xFFB58863}, // Wood
-        {0xFFDBEAFE, 0xFF2563EB}  // Ocean
+        {0xFFDBEAFE, 0xFF2563EB}, // Ocean
+        {0xFF334155, 0xFF0F172A}  // Midnight Dark (OLED)
     };
 
     private Paint lightSqPaint;

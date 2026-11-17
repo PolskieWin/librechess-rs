@@ -1,4 +1,4 @@
-use crate::crypto_utils::{generate_secure_token, hash_password, verify_password};
+use crate::crypto_utils::generate_secure_token;
 use crate::db::Database;
 use crate::matchmaking::{ClientMessage, Matchmaker, ServerMessage};
 use crate::models::{User, DEFAULT_STARTING_ELO};
@@ -30,6 +30,7 @@ pub struct AppState {
 #[derive(Deserialize)]
 pub struct AuthPayload {
     pub username: String,
+    #[allow(dead_code)]
     pub password: Option<String>,
 }
 
@@ -37,6 +38,18 @@ pub struct AuthPayload {
 pub struct AuthResponse {
     pub token: String,
     pub user: User,
+}
+
+#[derive(Deserialize)]
+pub struct BotMovePayload {
+    pub fen: String,
+    pub bot_level: Option<u32>,
+}
+
+#[derive(Serialize)]
+pub struct BotMoveResponse {
+    pub uci: String,
+    pub eval: f32,
 }
 
 #[derive(Deserialize)]
@@ -62,6 +75,7 @@ pub fn create_router(state: AppState) -> Router {
         .route("/api/games/:id/analysis", get(game_analysis_handler))
         .route("/api/games/:id/analyze", post(trigger_analysis_handler))
         .route("/api/leaderboard", get(leaderboard_handler))
+        .route("/api/bot/move", post(bot_move_handler))
         .route("/ws", get(ws_upgrade_handler))
         .nest_service("/", ServeDir::new("public"))
         .layer(cors)
@@ -247,6 +261,21 @@ async fn leaderboard_handler(
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
 
     Ok(Json(list))
+}
+
+async fn bot_move_handler(
+    State(state): State<AppState>,
+    Json(payload): Json<BotMovePayload>,
+) -> Result<Json<BotMoveResponse>, (StatusCode, String)> {
+    let level = payload.bot_level.unwrap_or(4);
+    let uci = state
+        .engine
+        .get_bot_move(&payload.fen, level)
+        .map_err(|e| (StatusCode::BAD_REQUEST, e))?;
+
+    let (eval, _) = state.engine.evaluate_position(&payload.fen, 6);
+
+    Ok(Json(BotMoveResponse { uci, eval }))
 }
 
 async fn ws_upgrade_handler(

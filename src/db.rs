@@ -171,6 +171,7 @@ impl Database {
         })
     }
 
+    #[allow(dead_code)]
     pub fn create_user(&self, username: &str, password_hash: &str, salt: &str) -> Result<User> {
         let conn = self.conn.lock().unwrap();
         let id = Uuid::new_v4().to_string();
@@ -245,6 +246,7 @@ impl Database {
         }
     }
 
+    #[allow(dead_code)]
     pub fn get_user_by_id(&self, user_id: &str) -> Result<Option<User>> {
         let conn = self.conn.lock().unwrap();
         let mut stmt = conn.prepare(
