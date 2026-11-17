@@ -18,7 +18,7 @@ import java.util.List;
 
 public class ChessBoardView extends View {
     public interface OnMoveListener {
-        void onMove(int from, int to);
+        void onMove(int from, int to, int promoType);
     }
 
     private ChessEngine engine;
@@ -28,6 +28,9 @@ public class ChessBoardView extends View {
 
     private int selectedSquare = -1;
     private List<Integer> legalDestinations = new ArrayList<>();
+    private int pendingPromotionFrom = -1;
+    private int pendingPromotionTo = -1;
+    private int pendingPromotionColor = ChessEngine.WHITE;
     private int lastFrom = -1;
     private int lastTo = -1;
     private int hintFrom = -1;
@@ -251,6 +254,8 @@ public class ChessBoardView extends View {
     public void clearHighlights() {
         selectedSquare = -1;
         legalDestinations.clear();
+        pendingPromotionFrom = -1;
+        pendingPromotionTo = -1;
         invalidate();
     }
 
@@ -369,6 +374,11 @@ public class ChessBoardView extends View {
                     canvas.drawCircle(cx, cy, sq * 0.42f, hintRingPaint);
                 }
             }
+        }
+
+        // Lichess-style in-board promotion popup overlay
+        if (pendingPromotionFrom != -1 && pendingPromotionTo != -1) {
+            drawPromotionOverlay(canvas, sq);
         }
     }
 
@@ -798,9 +808,112 @@ public class ChessBoardView extends View {
         }
     }
 
+    private int getPromotionPieceAt(float touchX, float touchY) {
+        if (pendingPromotionFrom == -1 || pendingPromotionTo == -1) return -1;
+        float sq = getWidth() / 8.0f;
+        int targetF = pendingPromotionTo % 8;
+        int targetR = pendingPromotionTo / 8;
+        int col = (!flipped) ? targetF : (7 - targetF);
+
+        int touchedCol = (int) (touchX / sq);
+        if (touchedCol != col) return -1;
+
+        int touchedRow = (int) (touchY / sq);
+        int[] choices = {ChessEngine.QUEEN, ChessEngine.KNIGHT, ChessEngine.ROOK, ChessEngine.BISHOP};
+
+        int displayRow = (!flipped) ? targetR : (7 - targetR);
+        if (displayRow == 0) {
+            if (touchedRow >= 0 && touchedRow < 4) {
+                return choices[touchedRow];
+            }
+        } else {
+            if (touchedRow <= 7 && touchedRow >= 4) {
+                return choices[7 - touchedRow];
+            }
+        }
+        return -1;
+    }
+
+    private void drawPromotionOverlay(Canvas canvas, float sq) {
+        if (pendingPromotionFrom == -1 || pendingPromotionTo == -1) return;
+
+        // Dim background scrim
+        Paint dimPaint = new Paint();
+        dimPaint.setColor(0x88000000);
+        canvas.drawRect(0, 0, getWidth(), getHeight(), dimPaint);
+
+        int targetF = pendingPromotionTo % 8;
+        int targetR = pendingPromotionTo / 8;
+        int col = (!flipped) ? targetF : (7 - targetF);
+        int displayRow = (!flipped) ? targetR : (7 - targetR);
+
+        float left = col * sq;
+        float right = left + sq;
+        float top, bottom;
+
+        if (displayRow == 0) {
+            top = 0;
+            bottom = 4 * sq;
+        } else {
+            top = 4 * sq;
+            bottom = 8 * sq;
+        }
+
+        // Material You Card Container
+        Paint cardPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        cardPaint.setStyle(Paint.Style.FILL);
+        cardPaint.setColor(0xFF1E293B);
+
+        Paint borderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        borderPaint.setStyle(Paint.Style.STROKE);
+        borderPaint.setStrokeWidth(2.5f * density);
+        borderPaint.setColor(0xFF06B6D4);
+
+        RectF cardRect = new RectF(left + 2, top + 2, right - 2, bottom - 2);
+        canvas.drawRoundRect(cardRect, 10 * density, 10 * density, cardPaint);
+        canvas.drawRoundRect(cardRect, 10 * density, 10 * density, borderPaint);
+
+        int[] choices = {ChessEngine.QUEEN, ChessEngine.KNIGHT, ChessEngine.ROOK, ChessEngine.BISHOP};
+        Paint dividerPaint = new Paint();
+        dividerPaint.setColor(0x33FFFFFF);
+        dividerPaint.setStrokeWidth(1.0f * density);
+
+        for (int i = 0; i < 4; i++) {
+            float slotTop = (displayRow == 0) ? (i * sq) : ((7 - i) * sq);
+            if (i > 0) {
+                float lineY = (displayRow == 0) ? slotTop : (slotTop + sq);
+                canvas.drawLine(left + 6, lineY, right - 6, lineY, dividerPaint);
+            }
+            int piece = pendingPromotionColor | choices[i];
+            drawPiece(canvas, piece, left, slotTop, sq);
+        }
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (engine == null || engine.isGameOver) return super.onTouchEvent(event);
+
+        if (pendingPromotionFrom != -1) {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                int promoPiece = getPromotionPieceAt(event.getX(), event.getY());
+                if (promoPiece != -1) {
+                    int from = pendingPromotionFrom;
+                    int to = pendingPromotionTo;
+                    pendingPromotionFrom = -1;
+                    pendingPromotionTo = -1;
+                    vibrate(30);
+                    invalidate();
+                    if (moveListener != null) {
+                        moveListener.onMove(from, to, promoPiece);
+                    }
+                } else {
+                    pendingPromotionFrom = -1;
+                    pendingPromotionTo = -1;
+                    invalidate();
+                }
+            }
+            return true;
+        }
 
         if (event.getAction() == MotionEvent.ACTION_UP) {
             float sq = getWidth() / 8.0f;
@@ -827,9 +940,17 @@ public class ChessBoardView extends View {
                     int from = selectedSquare;
                     selectedSquare = -1;
                     legalDestinations.clear();
-                    invalidate();
-                    if (moveListener != null) {
-                        moveListener.onMove(from, sqIdx);
+                    if (engine.isPromotionMove(from, sqIdx)) {
+                        pendingPromotionFrom = from;
+                        pendingPromotionTo = sqIdx;
+                        pendingPromotionColor = ChessEngine.colorOf(engine.board[from]);
+                        vibrate(25);
+                        invalidate();
+                    } else {
+                        invalidate();
+                        if (moveListener != null) {
+                            moveListener.onMove(from, sqIdx, ChessEngine.QUEEN);
+                        }
                     }
                 } else {
                     int p = engine.board[sqIdx];

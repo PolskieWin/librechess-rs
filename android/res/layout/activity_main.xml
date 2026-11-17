@@ -11,7 +11,7 @@
     <!-- Top Navigation Header -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="50dp"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
@@ -32,7 +32,7 @@
             android:background="@drawable/badge_flat"
             android:text="Polskie (100)"
             android:textColor="#94A3B8"
-            android:textSize="13sp"
+            android:textSize="12sp"
             android:clickable="true"
             android:focusable="true"
             android:layout_marginRight="8dp" />
@@ -40,280 +40,999 @@
         <Button
             android:id="@+id/btn_settings"
             android:layout_width="wrap_content"
-            android:layout_height="36dp"
+            android:layout_height="34dp"
             android:background="@drawable/btn_flat"
             android:text="Settings"
             android:textColor="#F8FAFC"
-            android:textSize="12sp"
+            android:textSize="11sp"
             android:minWidth="0dp"
             android:minHeight="0dp" />
     </LinearLayout>
 
-    <!-- Opponent Info Card -->
+    <!-- Material You Navigation Bar -->
     <LinearLayout
+        android:id="@+id/layout_nav_bar"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_height="38dp"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingLeft="6dp"
-        android:paddingRight="6dp">
-
-        <TextView
-            android:id="@+id/txt_opponent_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Bot 100"
-            android:textColor="#94A3B8"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/txt_opponent_clock"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="10:00"
-            android:textColor="#F8FAFC"
-            android:textSize="16sp"
-            android:typeface="monospace"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <!-- Center Chessboard -->
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_gravity="center">
-
-        <com.polskie.librechess.ChessBoardView
-            android:id="@+id/chess_board"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center" />
-    </FrameLayout>
-
-    <!-- Player Info Card -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingLeft="6dp"
-        android:paddingRight="6dp">
-
-        <TextView
-            android:id="@+id/txt_player_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Polskie (100)"
-            android:textColor="#38BDF8"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/txt_player_clock"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="10:00"
-            android:textColor="#F8FAFC"
-            android:textSize="16sp"
-            android:typeface="monospace"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <!-- Status & Move Evaluation Line -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:gravity="center"
-        android:paddingTop="2dp"
-        android:paddingBottom="4dp">
+        android:layout_marginBottom="6dp">
 
         <TextView
-            android:id="@+id/txt_status_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="White to move"
-            android:textColor="#38BDF8"
-            android:textSize="13sp" />
-
-        <TextView
-            android:id="@+id/txt_review_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="#A855F7"
+            android:id="@+id/tab_board"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Board"
+            android:textColor="#FFFFFF"
             android:textSize="12sp"
             android:textStyle="bold"
-            android:visibility="gone" />
+            android:background="@drawable/nav_tab_active"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_margin="2dp" />
+
+        <TextView
+            android:id="@+id/tab_play"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Play"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:background="@drawable/nav_tab_inactive"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_margin="2dp" />
+
+        <TextView
+            android:id="@+id/tab_bots"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Bots"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:background="@drawable/nav_tab_inactive"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_margin="2dp" />
+
+        <TextView
+            android:id="@+id/tab_analyzer"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1.1"
+            android:gravity="center"
+            android:text="Analyzer"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:background="@drawable/nav_tab_inactive"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_margin="2dp" />
     </LinearLayout>
 
-    <!-- Standard Gameplay Action Buttons -->
-    <LinearLayout
-        android:id="@+id/layout_game_controls"
+    <!-- Main Container Switching Between Views -->
+    <FrameLayout
+        android:id="@+id/main_content_container"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginBottom="8dp">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-        <Button
-            android:id="@+id/btn_new_game"
-            android:layout_width="0dp"
-            android:layout_height="38dp"
-            android:layout_weight="1"
-            android:layout_margin="2dp"
-            android:background="@drawable/btn_flat"
-            android:text="New"
-            android:textColor="#F8FAFC"
-            android:textSize="12sp"
-            android:minWidth="0dp"
-            android:minHeight="0dp" />
+        <!-- VIEW 1: ACTIVE BOARD MATCH -->
+        <LinearLayout
+            android:id="@+id/view_board"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btn_bot"
-            android:layout_width="0dp"
-            android:layout_height="38dp"
-            android:layout_weight="1"
-            android:layout_margin="2dp"
-            android:background="@drawable/btn_flat"
-            android:text="Bot"
-            android:textColor="#F8FAFC"
-            android:textSize="12sp"
-            android:minWidth="0dp"
-            android:minHeight="0dp" />
+            <!-- Opponent Info Card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp">
 
-        <Button
-            android:id="@+id/btn_flip"
-            android:layout_width="0dp"
-            android:layout_height="38dp"
-            android:layout_weight="1"
-            android:layout_margin="2dp"
-            android:background="@drawable/btn_flat"
-            android:text="Flip"
-            android:textColor="#F8FAFC"
-            android:textSize="12sp"
-            android:minWidth="0dp"
-            android:minHeight="0dp" />
+                <TextView
+                    android:id="@+id/txt_opponent_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Bot 100"
+                    android:textColor="#94A3B8"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btn_hint"
-            android:layout_width="0dp"
-            android:layout_height="38dp"
-            android:layout_weight="1"
-            android:layout_margin="2dp"
-            android:background="@drawable/btn_flat"
-            android:text="Hint"
-            android:textColor="#06B6D4"
-            android:textSize="12sp"
-            android:minWidth="0dp"
-            android:minHeight="0dp" />
+                <TextView
+                    android:id="@+id/txt_opponent_clock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10:00"
+                    android:textColor="#F8FAFC"
+                    android:textSize="16sp"
+                    android:typeface="monospace"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_resign"
-            android:layout_width="0dp"
-            android:layout_height="38dp"
-            android:layout_weight="1"
-            android:layout_margin="2dp"
-            android:background="@drawable/btn_flat"
-            android:text="Resign"
-            android:textColor="#F8FAFC"
-            android:textSize="12sp"
-            android:minWidth="0dp"
-            android:minHeight="0dp" />
+            <!-- Center Chessboard -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_gravity="center">
 
-        <Button
-            android:id="@+id/btn_review"
-            android:layout_width="0dp"
-            android:layout_height="38dp"
-            android:layout_weight="1"
-            android:layout_margin="2dp"
-            android:background="@drawable/btn_flat"
-            android:text="Review"
-            android:textColor="#A855F7"
-            android:textSize="12sp"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:visibility="gone" />
-    </LinearLayout>
+                <com.polskie.librechess.ChessBoardView
+                    android:id="@+id/chess_board"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center" />
+            </FrameLayout>
 
-    <!-- Review Navigation Bar (Visible only during post-game review) -->
-    <LinearLayout
-        android:id="@+id/layout_review_controls"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:visibility="gone"
-        android:layout_marginBottom="8dp">
+            <!-- Player Info Card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp">
 
-        <Button
-            android:id="@+id/btn_rev_start"
-            android:layout_width="0dp"
-            android:layout_height="38dp"
-            android:layout_weight="1"
-            android:layout_margin="2dp"
-            android:background="@drawable/btn_flat"
-            android:text="|&lt;"
-            android:textColor="#F8FAFC"
-            android:textSize="12sp"
-            android:minWidth="0dp"
-            android:minHeight="0dp" />
+                <TextView
+                    android:id="@+id/txt_player_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Polskie (100)"
+                    android:textColor="#38BDF8"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btn_rev_prev"
-            android:layout_width="0dp"
-            android:layout_height="38dp"
-            android:layout_weight="1"
-            android:layout_margin="2dp"
-            android:background="@drawable/btn_flat"
-            android:text="&lt;"
-            android:textColor="#F8FAFC"
-            android:textSize="12sp"
-            android:minWidth="0dp"
-            android:minHeight="0dp" />
+                <TextView
+                    android:id="@+id/txt_player_clock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10:00"
+                    android:textColor="#F8FAFC"
+                    android:textSize="16sp"
+                    android:typeface="monospace"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_rev_next"
-            android:layout_width="0dp"
-            android:layout_height="38dp"
-            android:layout_weight="1"
-            android:layout_margin="2dp"
-            android:background="@drawable/btn_flat"
-            android:text="&gt;"
-            android:textColor="#F8FAFC"
-            android:textSize="12sp"
-            android:minWidth="0dp"
-            android:minHeight="0dp" />
+            <!-- Status & Move Evaluation Line -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp">
 
-        <Button
-            android:id="@+id/btn_rev_end"
-            android:layout_width="0dp"
-            android:layout_height="38dp"
-            android:layout_weight="1"
-            android:layout_margin="2dp"
-            android:background="@drawable/btn_flat"
-            android:text="&gt;|"
-            android:textColor="#F8FAFC"
-            android:textSize="12sp"
-            android:minWidth="0dp"
-            android:minHeight="0dp" />
+                <TextView
+                    android:id="@+id/txt_status_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="White to move"
+                    android:textColor="#38BDF8"
+                    android:textSize="13sp" />
 
-        <Button
-            android:id="@+id/btn_rev_exit"
-            android:layout_width="0dp"
-            android:layout_height="38dp"
-            android:layout_weight="1.4"
-            android:layout_margin="2dp"
-            android:background="@drawable/btn_flat"
-            android:text="Exit"
-            android:textColor="#EF4444"
-            android:textSize="12sp"
-            android:minWidth="0dp"
-            android:minHeight="0dp" />
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/txt_review_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="#A855F7"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- Standard Gameplay Action Buttons -->
+            <LinearLayout
+                android:id="@+id/layout_game_controls"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="6dp">
+
+                <Button
+                    android:id="@+id/btn_new_game"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/btn_flat"
+                    android:text="New"
+                    android:textColor="#F8FAFC"
+                    android:textSize="12sp"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp" />
+
+                <Button
+                    android:id="@+id/btn_bot"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/btn_flat"
+                    android:text="Bot"
+                    android:textColor="#F8FAFC"
+                    android:textSize="12sp"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp" />
+
+                <Button
+                    android:id="@+id/btn_flip"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/btn_flat"
+                    android:text="Flip"
+                    android:textColor="#F8FAFC"
+                    android:textSize="12sp"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp" />
+
+                <Button
+                    android:id="@+id/btn_hint"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/btn_flat"
+                    android:text="Hint"
+                    android:textColor="#06B6D4"
+                    android:textSize="12sp"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp" />
+
+                <Button
+                    android:id="@+id/btn_resign"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/btn_flat"
+                    android:text="Resign"
+                    android:textColor="#F8FAFC"
+                    android:textSize="12sp"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp" />
+
+                <Button
+                    android:id="@+id/btn_review"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/btn_flat"
+                    android:text="Review"
+                    android:textColor="#A855F7"
+                    android:textSize="12sp"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- Review Navigation Bar -->
+            <LinearLayout
+                android:id="@+id/layout_review_controls"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:visibility="gone"
+                android:layout_marginBottom="6dp">
+
+                <Button
+                    android:id="@+id/btn_rev_start"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/btn_flat"
+                    android:text="|&lt;"
+                    android:textColor="#F8FAFC"
+                    android:textSize="12sp"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp" />
+
+                <Button
+                    android:id="@+id/btn_rev_prev"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/btn_flat"
+                    android:text="&lt;"
+                    android:textColor="#F8FAFC"
+                    android:textSize="12sp"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp" />
+
+                <Button
+                    android:id="@+id/btn_rev_next"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/btn_flat"
+                    android:text="&gt;"
+                    android:textColor="#F8FAFC"
+                    android:textSize="12sp"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp" />
+
+                <Button
+                    android:id="@+id/btn_rev_end"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/btn_flat"
+                    android:text="&gt;|"
+                    android:textColor="#F8FAFC"
+                    android:textSize="12sp"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp" />
+
+                <Button
+                    android:id="@+id/btn_rev_exit"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="1.3"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/btn_flat"
+                    android:text="Exit"
+                    android:textColor="#EF4444"
+                    android:textSize="12sp"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- VIEW 2: PLAY & MATCHMAKING (BULLET, BLITZ, RAPID + CUSTOM IP) -->
+        <ScrollView
+            android:id="@+id/view_play"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Live Matchmaking &amp; Clocks"
+                    android:textColor="#F8FAFC"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select time controls or pair with live server matchmaking."
+                    android:textColor="#94A3B8"
+                    android:textSize="13sp"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Bullet Cards -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <LinearLayout
+                        android:id="@+id/card_tc_bullet_1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:background="@drawable/card_material"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:layout_marginRight="4dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Bullet 1 | 0"
+                            android:textColor="#F8FAFC"
+                            android:textStyle="bold"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1 min lightning"
+                            android:textColor="#38BDF8"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/card_tc_bullet_2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:background="@drawable/card_material"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:layout_marginLeft="4dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Bullet 2 | 1"
+                            android:textColor="#F8FAFC"
+                            android:textStyle="bold"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2 min + 1s inc"
+                            android:textColor="#38BDF8"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Blitz Cards -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <LinearLayout
+                        android:id="@+id/card_tc_blitz_3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:background="@drawable/card_material"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:layout_marginRight="4dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Blitz 3 | 0"
+                            android:textColor="#F8FAFC"
+                            android:textStyle="bold"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="3 min standard"
+                            android:textColor="#10B981"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/card_tc_blitz_5"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:background="@drawable/card_material"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:layout_marginLeft="4dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Blitz 5 | 3"
+                            android:textColor="#F8FAFC"
+                            android:textStyle="bold"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="5 min + 3s inc"
+                            android:textColor="#10B981"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Rapid Cards -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="14dp">
+
+                    <LinearLayout
+                        android:id="@+id/card_tc_rapid_10"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:background="@drawable/card_material"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:layout_marginRight="4dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Rapid 10 | 0"
+                            android:textColor="#F8FAFC"
+                            android:textStyle="bold"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="10 min classic"
+                            android:textColor="#F59E0B"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/card_tc_rapid_15"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:background="@drawable/card_material"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:layout_marginLeft="4dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Rapid 15 | 10"
+                            android:textColor="#F8FAFC"
+                            android:textStyle="bold"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="15 min deep tactics"
+                            android:textColor="#F59E0B"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Custom IP Matchmaking Server Card -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_material">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Matchmaking Server Connection"
+                        android:textColor="#F8FAFC"
+                        android:textStyle="bold"
+                        android:textSize="15sp"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Connect to Termux server or remote host:"
+                        android:textColor="#94A3B8"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <EditText
+                        android:id="@+id/input_custom_ip"
+                        android:layout_width="match_parent"
+                        android:layout_height="42dp"
+                        android:background="@drawable/badge_flat"
+                        android:text="http://127.0.0.1:8080"
+                        android:textColor="#F8FAFC"
+                        android:textSize="13sp"
+                        android:singleLine="true"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:layout_marginBottom="10dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btn_save_ip"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/btn_primary_pill"
+                            android:text="Save IP"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp"
+                            android:layout_marginRight="6dp" />
+
+                        <Button
+                            android:id="@+id/btn_test_ip"
+                            android:layout_width="0dp"
+                            android:layout_height="36dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/btn_flat"
+                            android:text="Test Ping"
+                            android:textColor="#38BDF8"
+                            android:textSize="12sp"
+                            android:layout_marginLeft="6dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- VIEW 3: PLAY VS BOTS -->
+        <ScrollView
+            android:id="@+id/view_bots"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Play vs Engine Bots"
+                    android:textColor="#F8FAFC"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Calibrated bots with full tactics &amp; Scholar's defense."
+                    android:textColor="#94A3B8"
+                    android:textSize="13sp"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Bot 100 -->
+                <LinearLayout
+                    android:id="@+id/card_bot_100"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_material"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Toby (Beginner) • 100 Elo"
+                        android:textColor="#38BDF8"
+                        android:textStyle="bold"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Friendly beginner play, develops pieces, avoids hanging queen."
+                        android:textColor="#94A3B8"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <!-- Bot 300 -->
+                <LinearLayout
+                    android:id="@+id/card_bot_300"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_material"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Martin (Casual) • 300 Elo"
+                        android:textColor="#38BDF8"
+                        android:textStyle="bold"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Basic opening principles, center pawn control, and king safety."
+                        android:textColor="#94A3B8"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <!-- Bot 600 -->
+                <LinearLayout
+                    android:id="@+id/card_bot_600"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_material"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Elena (Club) • 600 Elo"
+                        android:textColor="#10B981"
+                        android:textStyle="bold"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Positional development, bishop pair dynamics, open rooks."
+                        android:textColor="#94A3B8"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <!-- Bot 1000 -->
+                <LinearLayout
+                    android:id="@+id/card_bot_1000"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_material"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tactics Bot • 1000 Elo"
+                        android:textColor="#F59E0B"
+                        android:textStyle="bold"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Calculates knight forks, pins to king and queen, and skewers."
+                        android:textColor="#94A3B8"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <!-- Bot 1500 -->
+                <LinearLayout
+                    android:id="@+id/card_bot_1500"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_material"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Magnus (Master) • 1500 Elo"
+                        android:textColor="#F97316"
+                        android:textStyle="bold"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Alpha-Beta deep calculation. Punishes Scholar's Mate traps!"
+                        android:textColor="#94A3B8"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <!-- Bot 2500 GM -->
+                <LinearLayout
+                    android:id="@+id/card_bot_2500"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_material"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_marginBottom="12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Grandmaster Engine • 2500+ Elo"
+                        android:textColor="#EF4444"
+                        android:textStyle="bold"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Full minimax tactical depth, quiescence search, and check evasions."
+                        android:textColor="#94A3B8"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- VIEW 4: STOCKFISH GAME ANALYZER -->
+        <ScrollView
+            android:id="@+id/view_analyzer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Stockfish Game Analyzer"
+                    android:textColor="#F8FAFC"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Review your games, check move accuracies, and spot blunders."
+                    android:textColor="#94A3B8"
+                    android:textSize="13sp"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Accuracy Overview Cards -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="10dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:background="@drawable/card_material"
+                        android:gravity="center"
+                        android:layout_marginRight="4dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="White Accuracy"
+                            android:textColor="#94A3B8"
+                            android:textSize="11sp" />
+                        <TextView
+                            android:id="@+id/txt_an_white_acc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--%"
+                            android:textColor="#FFFFFF"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:background="@drawable/card_material"
+                        android:gravity="center"
+                        android:layout_marginLeft="4dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Black Accuracy"
+                            android:textColor="#94A3B8"
+                            android:textSize="11sp" />
+                        <TextView
+                            android:id="@+id/txt_an_black_acc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--%"
+                            android:textColor="#FFFFFF"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Coach Assessment Card -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_material"
+                    android:layout_marginBottom="10dp">
+                    <TextView
+                        android:id="@+id/txt_an_summary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Play a game or import PGN below to generate a Stockfish tactical review."
+                        android:textColor="#38BDF8"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Actions: Review Last Game / Import PGN / Paste FEN -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="10dp">
+
+                    <Button
+                        android:id="@+id/btn_an_review_current"
+                        android:layout_width="0dp"
+                        android:layout_height="38dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_primary_pill"
+                        android:text="Review Game"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:layout_marginRight="4dp" />
+
+                    <Button
+                        android:id="@+id/btn_an_import_pgn"
+                        android:layout_width="0dp"
+                        android:layout_height="38dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_flat"
+                        android:text="Import PGN"
+                        android:textColor="#10B981"
+                        android:textSize="12sp"
+                        android:layout_marginLeft="4dp" />
+                </LinearLayout>
+
+                <!-- PGN Import Box -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_material"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Analyze Position (FEN or PGN)"
+                        android:textColor="#F8FAFC"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp" />
+
+                    <EditText
+                        android:id="@+id/input_an_notation"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="@drawable/badge_flat"
+                        android:hint="Paste FEN or PGN moves here..."
+                        android:textColorHint="#64748B"
+                        android:textColor="#F8FAFC"
+                        android:textSize="12sp"
+                        android:gravity="top|left"
+                        android:padding="8dp"
+                        android:layout_marginBottom="8dp" />
+
+                    <Button
+                        android:id="@+id/btn_an_execute"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:background="@drawable/btn_flat"
+                        android:text="Analyze with Engine"
+                        android:textColor="#06B6D4"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+    </FrameLayout>
 
 </LinearLayout>

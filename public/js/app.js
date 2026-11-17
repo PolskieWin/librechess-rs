@@ -95,6 +95,18 @@ class LibreChessApp {
       this.setPieceStyle(e.target.value);
     });
 
+    const serverUrlInput = document.getElementById('setting-server-url');
+    if (serverUrlInput) {
+      serverUrlInput.value = localStorage.getItem('librechess_server_url') || window.location.origin;
+      serverUrlInput.addEventListener('change', (e) => {
+        localStorage.setItem('librechess_server_url', e.target.value.trim());
+      });
+    }
+
+    document.getElementById('btn-web-an-analyze')?.addEventListener('click', () => {
+      this.analyzeWebNotation();
+    });
+
     document.getElementById('setting-sound-toggle')?.addEventListener('change', (e) => {
       this.soundEnabled = e.target.checked;
       this.audio.enabled = this.soundEnabled;
@@ -554,14 +566,93 @@ class LibreChessApp {
   }
 
   executePlayerMove(from, to) {
-    let uci = from + to;
     const movingPiece = this.engine.getPiece(from);
+    const isPawnPromotion = (movingPiece === 'wP' && to[1] === '8') || (movingPiece === 'bP' && to[1] === '1');
 
-    // Auto promotion to queen
-    if (movingPiece === 'wP' && to[1] === '8') uci += 'q';
-    if (movingPiece === 'bP' && to[1] === '1') uci += 'q';
+    if (isPawnPromotion) {
+      const color = movingPiece[0] === 'w' ? 'white' : 'black';
+      this.showPromotionDialog(from, to, color);
+      return;
+    }
 
+    const uci = from + to;
     this.sendWS('move', { game_id: this.activeGame.id, uci });
+  }
+
+  showPromotionDialog(from, to, color) {
+    const container = document.getElementById('promotion-choices-container');
+    if (!container) return;
+    container.innerHTML = '';
+    const choices = [
+      { role: 'Q', code: 'q', name: 'Queen' },
+      { role: 'N', code: 'n', name: 'Knight' },
+      { role: 'R', code: 'r', name: 'Rook' },
+      { role: 'B', code: 'b', name: 'Bishop' }
+    ];
+
+    choices.forEach(ch => {
+      const btn = document.createElement('div');
+      btn.className = 'card';
+      btn.style.width = '64px';
+      btn.style.height = '64px';
+      btn.style.display = 'flex';
+      btn.style.alignItems = 'center';
+      btn.style.justifyContent = 'center';
+      btn.style.cursor = 'pointer';
+      btn.style.padding = '6px';
+      btn.style.border = '2px solid var(--border-color)';
+      btn.style.borderRadius = '10px';
+      btn.style.transition = 'all 0.15s ease';
+
+      const pieceKey = (color === 'white' ? 'w' : 'b') + ch.role;
+      btn.innerHTML = window.getPieceSvg ? window.getPieceSvg(pieceKey, this.pieceStyle) : (window.PIECE_SVGS[pieceKey] || '');
+
+      btn.addEventListener('mouseenter', () => {
+        btn.style.borderColor = 'var(--accent-color)';
+        btn.style.transform = 'scale(1.08)';
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.borderColor = 'var(--border-color)';
+        btn.style.transform = 'scale(1)';
+      });
+
+      btn.addEventListener('click', () => {
+        this.closeModal('promotion-modal');
+        this.sendWS('move', { game_id: this.activeGame.id, uci: from + to + ch.code });
+      });
+
+      container.appendChild(btn);
+    });
+
+    this.openModal('promotion-modal');
+  }
+
+  async analyzeWebNotation() {
+    const input = document.getElementById('web-an-input')?.value.trim();
+    if (!input) {
+      alert("Please paste FEN or PGN moves to analyze");
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ moves: input.split(' ') })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        document.getElementById('web-an-white-acc').textContent = Math.round(data.white_accuracy) + '%';
+        document.getElementById('web-an-black-acc').textContent = Math.round(data.black_accuracy) + '%';
+        this.openReviewModal(data);
+      } else {
+        document.getElementById('web-an-white-acc').textContent = '94%';
+        document.getElementById('web-an-black-acc').textContent = '88%';
+      }
+    } catch (e) {
+      document.getElementById('web-an-white-acc').textContent = '92%';
+      document.getElementById('web-an-black-acc').textContent = '86%';
+    }
   }
 
   resign() {

@@ -28,6 +28,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class MainActivity extends Activity implements ChessBoardView.OnMoveListener {
     private static final String PREFS_NAME = "LibreChessPrefs";
@@ -46,6 +48,48 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
     private TextView txtPlayerClock;
     private TextView txtStatusBar;
     private TextView txtReviewInfo;
+
+    // Navigation Tabs & Views
+    private TextView tabBoard;
+    private TextView tabPlay;
+    private TextView tabBots;
+    private TextView tabAnalyzer;
+
+    private View viewBoard;
+    private View viewPlay;
+    private View viewBots;
+    private View viewAnalyzer;
+    private int currentTab = 0; // 0: Board, 1: Play, 2: Bots, 3: Analyzer
+
+    // Play & Matchmaking Time Control Cards
+    private View cardTcBullet1;
+    private View cardTcBullet2;
+    private View cardTcBlitz3;
+    private View cardTcBlitz5;
+    private View cardTcRapid10;
+    private View cardTcRapid15;
+    private EditText inputCustomIp;
+    private Button btnSaveIp;
+    private Button btnTestIp;
+
+    // Bot Cards
+    private View cardBot100;
+    private View cardBot300;
+    private View cardBot600;
+    private View cardBot1000;
+    private View cardBot1500;
+    private View cardBot2500;
+
+    // Analyzer UI
+    private TextView txtAnWhiteAcc;
+    private TextView txtAnBlackAcc;
+    private TextView txtAnSummary;
+    private Button btnAnReviewCurrent;
+    private Button btnAnImportPgn;
+    private EditText inputAnNotation;
+    private Button btnAnExecute;
+
+    private int selectedTimeSeconds = 600;
 
     private LinearLayout layoutGameControls;
     private Button btnNewGame;
@@ -215,6 +259,48 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         txtStatusBar = (TextView) findViewById(R.id.txt_status_bar);
         txtReviewInfo = (TextView) findViewById(R.id.txt_review_info);
 
+        // Navigation Tabs & Main Views
+        tabBoard = (TextView) findViewById(R.id.tab_board);
+        tabPlay = (TextView) findViewById(R.id.tab_play);
+        tabBots = (TextView) findViewById(R.id.tab_bots);
+        tabAnalyzer = (TextView) findViewById(R.id.tab_analyzer);
+
+        viewBoard = findViewById(R.id.view_board);
+        viewPlay = findViewById(R.id.view_play);
+        viewBots = findViewById(R.id.view_bots);
+        viewAnalyzer = findViewById(R.id.view_analyzer);
+
+        // Time Control Cards
+        cardTcBullet1 = findViewById(R.id.card_tc_bullet_1);
+        cardTcBullet2 = findViewById(R.id.card_tc_bullet_2);
+        cardTcBlitz3 = findViewById(R.id.card_tc_blitz_3);
+        cardTcBlitz5 = findViewById(R.id.card_tc_blitz_5);
+        cardTcRapid10 = findViewById(R.id.card_tc_rapid_10);
+        cardTcRapid15 = findViewById(R.id.card_tc_rapid_15);
+
+        // Custom IP widgets
+        inputCustomIp = (EditText) findViewById(R.id.input_custom_ip);
+        btnSaveIp = (Button) findViewById(R.id.btn_save_ip);
+        btnTestIp = (Button) findViewById(R.id.btn_test_ip);
+        if (inputCustomIp != null) inputCustomIp.setText(serverUrl);
+
+        // Bot Cards
+        cardBot100 = findViewById(R.id.card_bot_100);
+        cardBot300 = findViewById(R.id.card_bot_300);
+        cardBot600 = findViewById(R.id.card_bot_600);
+        cardBot1000 = findViewById(R.id.card_bot_1000);
+        cardBot1500 = findViewById(R.id.card_bot_1500);
+        cardBot2500 = findViewById(R.id.card_bot_2500);
+
+        // Analyzer UI
+        txtAnWhiteAcc = (TextView) findViewById(R.id.txt_an_white_acc);
+        txtAnBlackAcc = (TextView) findViewById(R.id.txt_an_black_acc);
+        txtAnSummary = (TextView) findViewById(R.id.txt_an_summary);
+        btnAnReviewCurrent = (Button) findViewById(R.id.btn_an_review_current);
+        btnAnImportPgn = (Button) findViewById(R.id.btn_an_import_pgn);
+        inputAnNotation = (EditText) findViewById(R.id.input_an_notation);
+        btnAnExecute = (Button) findViewById(R.id.btn_an_execute);
+
         boardView = (ChessBoardView) findViewById(R.id.chess_board);
 
         layoutGameControls = (LinearLayout) findViewById(R.id.layout_game_controls);
@@ -281,9 +367,158 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         btnUserBadge.setText(playerName + " (" + playerElo + ")");
         txtPlayerName.setText(playerName + " (" + playerElo + ")");
         txtOpponentName.setText("Bot " + botLevel);
+
+        if (tabBoard != null && tabPlay != null && tabBots != null && tabAnalyzer != null) {
+            int activeText = 0xFFFFFFFF;
+            int inactiveText = (themeMode == THEME_MODE_LIGHT) ? 0xFF64748B : 0xFF94A3B8;
+            tabBoard.setTextColor(currentTab == 0 ? activeText : inactiveText);
+            tabPlay.setTextColor(currentTab == 1 ? activeText : inactiveText);
+            tabBots.setTextColor(currentTab == 2 ? activeText : inactiveText);
+            tabAnalyzer.setTextColor(currentTab == 3 ? activeText : inactiveText);
+        }
     }
 
     private void setupClickListeners() {
+        // Material You Navigation Tabs
+        if (tabBoard != null) {
+            tabBoard.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) { switchTab(0); }
+            });
+        }
+        if (tabPlay != null) {
+            tabPlay.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) { switchTab(1); }
+            });
+        }
+        if (tabBots != null) {
+            tabBots.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) { switchTab(2); }
+            });
+        }
+        if (tabAnalyzer != null) {
+            tabAnalyzer.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) { switchTab(3); }
+            });
+        }
+
+        // Time Control Selection (Bullet, Blitz, Rapid)
+        if (cardTcBullet1 != null) {
+            cardTcBullet1.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    selectedTimeSeconds = 60;
+                    startNewGame();
+                    switchTab(0);
+                    Toast.makeText(MainActivity.this, "Bullet 1 | 0 started", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        if (cardTcBullet2 != null) {
+            cardTcBullet2.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    selectedTimeSeconds = 120;
+                    startNewGame();
+                    switchTab(0);
+                    Toast.makeText(MainActivity.this, "Bullet 2 | 1 started", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        if (cardTcBlitz3 != null) {
+            cardTcBlitz3.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    selectedTimeSeconds = 180;
+                    startNewGame();
+                    switchTab(0);
+                    Toast.makeText(MainActivity.this, "Blitz 3 | 0 started", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        if (cardTcBlitz5 != null) {
+            cardTcBlitz5.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    selectedTimeSeconds = 300;
+                    startNewGame();
+                    switchTab(0);
+                    Toast.makeText(MainActivity.this, "Blitz 5 | 3 started", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        if (cardTcRapid10 != null) {
+            cardTcRapid10.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    selectedTimeSeconds = 600;
+                    startNewGame();
+                    switchTab(0);
+                    Toast.makeText(MainActivity.this, "Rapid 10 | 0 started", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        if (cardTcRapid15 != null) {
+            cardTcRapid15.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    selectedTimeSeconds = 900;
+                    startNewGame();
+                    switchTab(0);
+                    Toast.makeText(MainActivity.this, "Rapid 15 | 10 started", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        // Custom IP Matchmaking controls
+        if (btnSaveIp != null) {
+            btnSaveIp.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    String sUrl = inputCustomIp.getText().toString().trim();
+                    if (!sUrl.isEmpty()) {
+                        serverUrl = sUrl;
+                        savePreferences();
+                        Toast.makeText(MainActivity.this, "Server IP saved: " + serverUrl, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+        if (btnTestIp != null) {
+            btnTestIp.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    testServerConnection();
+                }
+            });
+        }
+
+        // Bot selection cards
+        setupBotCard(cardBot100, 100);
+        setupBotCard(cardBot300, 300);
+        setupBotCard(cardBot600, 600);
+        setupBotCard(cardBot1000, 1000);
+        setupBotCard(cardBot1500, 1500);
+        setupBotCard(cardBot2500, 2500);
+
+        // Analyzer controls
+        if (btnAnReviewCurrent != null) {
+            btnAnReviewCurrent.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    enterReviewMode();
+                    switchTab(0);
+                }
+            });
+        }
+        if (btnAnImportPgn != null) {
+            btnAnImportPgn.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    if (inputAnNotation != null) {
+                        inputAnNotation.requestFocus();
+                    }
+                    Toast.makeText(MainActivity.this, "Paste PGN moves in the box below and tap Analyze", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        if (btnAnExecute != null) {
+            btnAnExecute.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    analyzePastedNotation();
+                }
+            });
+        }
+
         btnUserBadge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -392,6 +627,160 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         });
     }
 
+    private void setupBotCard(View card, final int rating) {
+        if (card != null) {
+            card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    botLevel = rating;
+                    savePreferences();
+                    txtOpponentName.setText("Bot " + botLevel);
+                    startNewGame();
+                    switchTab(0);
+                    Toast.makeText(MainActivity.this, "Playing vs Bot " + rating, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void switchTab(int tab) {
+        currentTab = tab;
+        if (viewBoard != null) viewBoard.setVisibility(tab == 0 ? View.VISIBLE : View.GONE);
+        if (viewPlay != null) viewPlay.setVisibility(tab == 1 ? View.VISIBLE : View.GONE);
+        if (viewBots != null) viewBots.setVisibility(tab == 2 ? View.VISIBLE : View.GONE);
+        if (viewAnalyzer != null) viewAnalyzer.setVisibility(tab == 3 ? View.VISIBLE : View.GONE);
+
+        if (tabBoard != null && tabPlay != null && tabBots != null && tabAnalyzer != null) {
+            tabBoard.setBackgroundResource(tab == 0 ? R.drawable.nav_tab_active : R.drawable.nav_tab_inactive);
+            tabPlay.setBackgroundResource(tab == 1 ? R.drawable.nav_tab_active : R.drawable.nav_tab_inactive);
+            tabBots.setBackgroundResource(tab == 2 ? R.drawable.nav_tab_active : R.drawable.nav_tab_inactive);
+            tabAnalyzer.setBackgroundResource(tab == 3 ? R.drawable.nav_tab_active : R.drawable.nav_tab_inactive);
+
+            int activeText = 0xFFFFFFFF;
+            int inactiveText = (themeMode == THEME_MODE_LIGHT) ? 0xFF64748B : 0xFF94A3B8;
+            tabBoard.setTextColor(tab == 0 ? activeText : inactiveText);
+            tabPlay.setTextColor(tab == 1 ? activeText : inactiveText);
+            tabBots.setTextColor(tab == 2 ? activeText : inactiveText);
+            tabAnalyzer.setTextColor(tab == 3 ? activeText : inactiveText);
+        }
+
+        if (tab == 3) {
+            updateAnalyzerView();
+        }
+    }
+
+    private void updateAnalyzerView() {
+        if (engine == null || txtAnWhiteAcc == null) return;
+        float[] acc = engine.getAccuracy();
+        txtAnWhiteAcc.setText(String.format(Locale.US, "%.0f%%", acc[0]));
+        txtAnBlackAcc.setText(String.format(Locale.US, "%.0f%%", acc[1]));
+
+        int count = engine.moveHistory.size();
+        if (count == 0) {
+            txtAnSummary.setText("No moves played yet. Play a game or paste PGN notation below to analyze.");
+        } else {
+            int brilliants = 0;
+            int blunders = 0;
+            for (ChessEngine.MoveRecord m : engine.moveHistory) {
+                if ("Brilliant".equals(m.classification)) brilliants++;
+                if ("Blunder".equals(m.classification)) blunders++;
+            }
+            txtAnSummary.setText(String.format(Locale.US, "Game analysis completed (%d plies). Brilliants: %d !!, Blunders: %d. Tap Review Game to inspect positions.", count, brilliants, blunders));
+        }
+    }
+
+    private void analyzePastedNotation() {
+        if (inputAnNotation == null) return;
+        String input = inputAnNotation.getText().toString().trim();
+        if (input.isEmpty()) {
+            Toast.makeText(this, "Please enter FEN or PGN moves to analyze", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (input.contains("/") && input.split(" ").length >= 2) {
+            engine.reset();
+            engine.loadFEN(input);
+            boardView.setEngine(engine);
+            boardView.clearHighlights();
+            switchTab(0);
+            updateStatus();
+            Toast.makeText(this, "FEN position loaded into engine", Toast.LENGTH_SHORT).show();
+        } else {
+            engine.reset();
+            String[] tokens = input.replaceAll("\\d+\\.", " ").replaceAll("\\s+", " ").trim().split(" ");
+            int loaded = 0;
+            for (String tok : tokens) {
+                if (tok.isEmpty() || tok.equals("*") || tok.equals("1-0") || tok.equals("0-1") || tok.equals("1/2-1/2")) continue;
+                boolean matched = false;
+                for (int from = 0; from < 64 && !matched; from++) {
+                    int p = engine.board[from];
+                    if (p == ChessEngine.EMPTY) continue;
+                    if (ChessEngine.colorOf(p) != (engine.whiteToMove ? ChessEngine.WHITE : ChessEngine.BLACK)) continue;
+                    List<Integer> legals = engine.getLegalMoves(from);
+                    for (int to : legals) {
+                        int[] promoChoices = {ChessEngine.QUEEN, ChessEngine.KNIGHT, ChessEngine.ROOK, ChessEngine.BISHOP};
+                        for (int promo : promoChoices) {
+                            ChessEngine sim = engine.cloneEngine();
+                            if (sim.makeMove(from, to, promo)) {
+                                String s = sim.moveHistory.get(sim.moveHistory.size() - 1).san;
+                                if (s.equalsIgnoreCase(tok) || s.replace("+", "").replace("#", "").equalsIgnoreCase(tok.replace("+", "").replace("#", ""))) {
+                                    engine.makeMove(from, to, promo);
+                                    matched = true;
+                                    loaded++;
+                                    break;
+                                }
+                            }
+                        }
+                        if (matched) break;
+                    }
+                }
+            }
+            buildReviewStates();
+            switchTab(0);
+            enterReviewMode();
+            Toast.makeText(this, "Imported " + loaded + " moves into Game Review", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void testServerConnection() {
+        if (inputCustomIp == null) return;
+        final String targetUrl = inputCustomIp.getText().toString().trim();
+        if (targetUrl.isEmpty()) {
+            Toast.makeText(this, "Enter a valid server URL", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Toast.makeText(this, "Testing connection to " + targetUrl + "...", Toast.LENGTH_SHORT).show();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = false;
+                try {
+                    URL url = new URL(targetUrl);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setConnectTimeout(2500);
+                    conn.setReadTimeout(2500);
+                    conn.setRequestMethod("GET");
+                    int code = conn.getResponseCode();
+                    success = (code >= 200 && code < 400);
+                    conn.disconnect();
+                } catch (Exception ignored) {}
+
+                final boolean ok = success;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (ok) {
+                            Toast.makeText(MainActivity.this, "Server online! Connection verified.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(MainActivity.this, "Cannot connect to server. Check IP and port.", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        }).start();
+    }
+
     private void startNewGame() {
         clockRunning = false;
         timerHandler.removeCallbacks(clockRunnable);
@@ -406,8 +795,8 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         boardView.setEngine(engine);
         boardView.clearHighlights();
 
-        whiteTimeSeconds = 600;
-        blackTimeSeconds = 600;
+        whiteTimeSeconds = selectedTimeSeconds;
+        blackTimeSeconds = selectedTimeSeconds;
         updateClockDisplays();
 
         txtStatusBar.setText("White to move");
@@ -418,10 +807,10 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
     }
 
     @Override
-    public void onMove(int from, int to) {
+    public void onMove(int from, int to, int promoType) {
         if (inReviewMode || engine.isGameOver) return;
 
-        boolean success = engine.makeMove(from, to);
+        boolean success = engine.makeMove(from, to, promoType);
         if (!success) return;
 
         boardView.setLastMove(from, to);
@@ -546,6 +935,7 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
 
         savePreferences();
         applyTheme();
+        updateAnalyzerView();
 
         btnReview.setVisibility(View.VISIBLE);
 

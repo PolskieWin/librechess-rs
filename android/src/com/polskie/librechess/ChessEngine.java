@@ -335,7 +335,21 @@ public class ChessEngine {
         return legal;
     }
 
+    public boolean isPromotionMove(int from, int to) {
+        if (from < 0 || from >= 64 || to < 0 || to >= 64) return false;
+        int p = board[from];
+        if (p == EMPTY) return false;
+        int type = typeOf(p);
+        if (type != PAWN) return false;
+        int color = colorOf(p);
+        return (color == WHITE && to / 8 == 0) || (color == BLACK && to / 8 == 7);
+    }
+
     public boolean makeMove(int from, int to) {
+        return makeMove(from, to, QUEEN);
+    }
+
+    public boolean makeMove(int from, int to, int promoType) {
         if (isGameOver) return false;
         List<Integer> legal = getLegalMoves(from);
         if (!legal.contains(to)) return false;
@@ -392,13 +406,14 @@ public class ChessEngine {
         board[to] = p;
         board[from] = EMPTY;
 
-        // Auto Queen promotion
+        // Pawn promotion (Queen, Knight, Rook, Bishop)
         if (type == PAWN) {
+            int pType = (promoType == KNIGHT || promoType == ROOK || promoType == BISHOP) ? promoType : QUEEN;
             if (color == WHITE && to / 8 == 0) {
-                promotion = WHITE | QUEEN;
+                promotion = WHITE | pType;
                 board[to] = promotion;
             } else if (color == BLACK && to / 8 == 7) {
-                promotion = BLACK | QUEEN;
+                promotion = BLACK | pType;
                 board[to] = promotion;
             }
         }
@@ -498,7 +513,13 @@ public class ChessEngine {
         String toSq = squareName(to);
         if (type == PAWN) {
             String s = isCapture ? squareName(from).substring(0, 1) + "x" + toSq : toSq;
-            if (promotion != EMPTY) s += "=Q";
+            if (promotion != EMPTY) {
+                int pType = typeOf(promotion);
+                if (pType == KNIGHT) s += "=N";
+                else if (pType == ROOK) s += "=R";
+                else if (pType == BISHOP) s += "=B";
+                else s += "=Q";
+            }
             return s;
         }
 
