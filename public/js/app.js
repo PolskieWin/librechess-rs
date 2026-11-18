@@ -684,7 +684,7 @@ class LibreChessApp {
     const banner = document.getElementById('hint-banner');
     if (banner) {
       banner.style.display = 'block';
-      banner.textContent = '💡 Calculating best tactical move...';
+      banner.textContent = 'Calculating best tactical move...';
     }
 
     try {
@@ -704,11 +704,11 @@ class LibreChessApp {
 
         const evalText = (typeof data.eval === 'number') ? ` (Eval: ${(data.eval / 100).toFixed(1)})` : '';
         if (banner) {
-          banner.textContent = `💡 Hint: Play ${data.uci.toUpperCase()}${evalText} - Best tactical move.`;
+          banner.textContent = `Hint: Play ${data.uci.toUpperCase()}${evalText} - Best tactical move.`;
         }
       }
     } catch (err) {
-      if (banner) banner.textContent = '💡 Hint could not be calculated.';
+      if (banner) banner.textContent = 'Hint could not be calculated.';
     }
   }
 
@@ -719,7 +719,7 @@ class LibreChessApp {
       const banner = document.getElementById('hint-banner');
       if (banner) {
         banner.style.display = 'block';
-        banner.textContent = '📋 FEN copied to clipboard!';
+        banner.textContent = 'FEN copied to clipboard!';
         setTimeout(() => { if (banner.textContent.includes('copied')) banner.style.display = 'none'; }, 2500);
       }
     });
@@ -737,7 +737,7 @@ class LibreChessApp {
       const banner = document.getElementById('hint-banner');
       if (banner) {
         banner.style.display = 'block';
-        banner.textContent = '📋 PGN copied to clipboard!';
+        banner.textContent = 'PGN copied to clipboard!';
         setTimeout(() => { if (banner.textContent.includes('copied')) banner.style.display = 'none'; }, 2500);
       }
     });

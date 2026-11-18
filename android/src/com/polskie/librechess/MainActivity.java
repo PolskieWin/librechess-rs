@@ -597,7 +597,7 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
                 ChessEngine.TacticalHint hint = engine.getTacticalHint();
                 if (hint != null) {
                     boardView.setHint(hint.from, hint.to);
-                    txtStatusBar.setText("💡 " + hint.san + " • " + hint.explanation);
+                    txtStatusBar.setText("[HINT] " + hint.san + " • " + hint.explanation);
                     txtStatusBar.setTextColor(0xFF06B6D4);
                     boardView.vibrate(25);
                 }
