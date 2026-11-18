@@ -50,9 +50,12 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
     private boolean isPlayerWhite = true;
     private TextView txtOpponentName;
     private TextView txtOpponentClock;
+    private TextView txtOpponentCaptured;
     private TextView txtPlayerName;
     private TextView txtPlayerClock;
+    private TextView txtPlayerCaptured;
     private TextView txtStatusBar;
+    private TextView txtOpeningName;
     private TextView txtReviewInfo;
 
     // Navigation Tabs & Views
@@ -113,26 +116,42 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
     private Button btnRevExit;
 
     // State & Preferences
-    public static final int THEME_MODE_DEEP_SLATE = 0;
+    public static final int THEME_MODE_MATERIAL_ORANGE = 0;
     public static final int THEME_MODE_OLED = 1;
     public static final int THEME_MODE_LIGHT = 2;
     public static final String[] THEME_MODE_NAMES = {
-        "Deep Slate Dark (#0F172A)",
+        "Material You Orange (#18110B)",
         "Midnight OLED Pure Black (#000000)",
-        "Clean Light Mode"
+        "Material You Warm Light"
     };
 
     private SharedPreferences prefs;
     private String playerName = "Polskie";
     private int playerElo = 100;
-    private int themeMode = THEME_MODE_DEEP_SLATE;
+    private int themeMode = THEME_MODE_MATERIAL_ORANGE;
     private boolean isDarkMode = true;
     private int boardTheme = 0;
     private int pieceStyle = 0; // 0: Lichess, 1: Modern, 2: Tournament
     private boolean showThreats = true;
+    private boolean showEvalBar = true;
+    private boolean soundEnabled = true;
     private boolean hapticsEnabled = true;
     private int botLevel = 100;
     private String serverUrl = "http://127.0.0.1:8080";
+
+    // Native Audio Engine
+    private android.media.SoundPool soundPool;
+    private int soundMoveId;
+    private int soundCaptureId;
+    private int soundCheckId;
+    private int soundCastleId;
+    private int soundPromoteId;
+    private int soundGameStartId;
+    private int soundGameEndId;
+    private int soundBlunderId;
+
+    // Master Openings Repertoire Database
+    private java.util.Map<String, String> openingsMap = new java.util.HashMap<>();
 
     // Game Clocks
     private Handler timerHandler = new Handler(Looper.getMainLooper());
@@ -196,7 +215,11 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         boardView.setBoardTheme(boardTheme);
         boardView.setPieceStyle(pieceStyle);
         boardView.setShowThreats(showThreats);
+        boardView.setShowEvalBar(showEvalBar);
         boardView.setHapticsEnabled(hapticsEnabled);
+
+        initSoundPool();
+        initOpenings();
 
         setupClickListeners();
         startNewGame();
@@ -228,11 +251,13 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
     private void loadPreferences() {
         playerName = prefs.getString("player_name", "Polskie");
         playerElo = prefs.getInt("player_elo", 100);
-        themeMode = prefs.getInt("theme_mode", prefs.getBoolean("is_dark_mode", true) ? THEME_MODE_DEEP_SLATE : THEME_MODE_LIGHT);
+        themeMode = prefs.getInt("theme_mode", prefs.getBoolean("is_dark_mode", true) ? THEME_MODE_MATERIAL_ORANGE : THEME_MODE_LIGHT);
         isDarkMode = (themeMode != THEME_MODE_LIGHT);
         boardTheme = prefs.getInt("board_theme", 0);
         pieceStyle = prefs.getInt("piece_style", 0);
         showThreats = prefs.getBoolean("show_threats", true);
+        showEvalBar = prefs.getBoolean("show_eval_bar", true);
+        soundEnabled = prefs.getBoolean("sound_enabled", true);
         hapticsEnabled = prefs.getBoolean("haptics_enabled", true);
         botLevel = prefs.getInt("bot_level", 100);
         serverUrl = prefs.getString("server_url", "http://127.0.0.1:8080");
@@ -247,6 +272,8 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         editor.putInt("board_theme", boardTheme);
         editor.putInt("piece_style", pieceStyle);
         editor.putBoolean("show_threats", showThreats);
+        editor.putBoolean("show_eval_bar", showEvalBar);
+        editor.putBoolean("sound_enabled", soundEnabled);
         editor.putBoolean("haptics_enabled", hapticsEnabled);
         editor.putInt("bot_level", botLevel);
         editor.putString("server_url", serverUrl);
@@ -261,9 +288,12 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         btnStyle = (Button) findViewById(R.id.btn_style);
         txtOpponentName = (TextView) findViewById(R.id.txt_opponent_name);
         txtOpponentClock = (TextView) findViewById(R.id.txt_opponent_clock);
+        txtOpponentCaptured = (TextView) findViewById(R.id.txt_opponent_captured);
         txtPlayerName = (TextView) findViewById(R.id.txt_player_name);
         txtPlayerClock = (TextView) findViewById(R.id.txt_player_clock);
+        txtPlayerCaptured = (TextView) findViewById(R.id.txt_player_captured);
         txtStatusBar = (TextView) findViewById(R.id.txt_status_bar);
+        txtOpeningName = (TextView) findViewById(R.id.txt_opening_name);
         txtReviewInfo = (TextView) findViewById(R.id.txt_review_info);
 
         // Navigation Tabs & Main Views
@@ -358,15 +388,15 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
             textSecondaryColor = 0xFF94A3B8;
             clockColor = 0xFF22C55E; // High-contrast green clock for OLED Pure Black
         } else if (themeMode == THEME_MODE_LIGHT) {
-            bgColor = 0xFFF8FAFC;
-            textTitleColor = 0xFF0F172A;
-            textSecondaryColor = 0xFF475569;
-            clockColor = 0xFF0F172A;
-        } else { // THEME_MODE_DEEP_SLATE
-            bgColor = 0xFF0F172A;
+            bgColor = 0xFFFFF8F3;
+            textTitleColor = 0xFF2D1600;
+            textSecondaryColor = 0xFF7D5230;
+            clockColor = 0xFFD94800;
+        } else { // THEME_MODE_MATERIAL_ORANGE
+            bgColor = 0xFF18110B;
             textTitleColor = 0xFFF8FAFC;
-            textSecondaryColor = 0xFF94A3B8;
-            clockColor = 0xFF38BDF8;
+            textSecondaryColor = 0xFFD8B498;
+            clockColor = 0xFFFF7A00;
         }
 
         rootLayout.setBackgroundColor(bgColor);
@@ -375,18 +405,134 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         txtPlayerClock.setTextColor(clockColor);
         txtOpponentName.setTextColor(textSecondaryColor);
 
+        if (txtOpeningName != null) {
+            txtOpeningName.setTextColor((themeMode == THEME_MODE_LIGHT) ? 0xFF8A4600 : 0xFFD8B498);
+        }
+        if (txtPlayerCaptured != null) {
+            txtPlayerCaptured.setTextColor(clockColor);
+        }
+        if (txtOpponentCaptured != null) {
+            txtOpponentCaptured.setTextColor(clockColor);
+        }
+
         btnUserBadge.setText(playerName + " (" + playerElo + ")");
         txtPlayerName.setText(playerName + " (" + playerElo + ")");
         txtOpponentName.setText("Bot " + botLevel);
 
         if (tabBoard != null && tabPlay != null && tabBots != null && tabAnalyzer != null) {
             int activeText = 0xFFFFFFFF;
-            int inactiveText = (themeMode == THEME_MODE_LIGHT) ? 0xFF64748B : 0xFF94A3B8;
+            int inactiveText = (themeMode == THEME_MODE_LIGHT) ? 0xFF7D5230 : 0xFFD8B498;
             tabBoard.setTextColor(currentTab == 0 ? activeText : inactiveText);
             tabPlay.setTextColor(currentTab == 1 ? activeText : inactiveText);
             tabBots.setTextColor(currentTab == 2 ? activeText : inactiveText);
             tabAnalyzer.setTextColor(currentTab == 3 ? activeText : inactiveText);
         }
+    }
+
+    private void initSoundPool() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            soundPool = new android.media.SoundPool.Builder()
+                .setMaxStreams(4)
+                .setAudioAttributes(new android.media.AudioAttributes.Builder()
+                    .setUsage(android.media.AudioAttributes.USAGE_GAME)
+                    .setContentType(android.media.AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build())
+                .build();
+        } else {
+            soundPool = new android.media.SoundPool(4, android.media.AudioManager.STREAM_MUSIC, 0);
+        }
+        soundMoveId = soundPool.load(this, R.raw.sound_move, 1);
+        soundCaptureId = soundPool.load(this, R.raw.sound_capture, 1);
+        soundCheckId = soundPool.load(this, R.raw.sound_check, 1);
+        soundCastleId = soundPool.load(this, R.raw.sound_castle, 1);
+        soundPromoteId = soundPool.load(this, R.raw.sound_promote, 1);
+        soundGameStartId = soundPool.load(this, R.raw.sound_game_start, 1);
+        soundGameEndId = soundPool.load(this, R.raw.sound_game_end, 1);
+        soundBlunderId = soundPool.load(this, R.raw.sound_blunder, 1);
+    }
+
+    private void playSound(int soundId) {
+        if (!soundEnabled || soundPool == null || soundId == 0) return;
+        soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f);
+    }
+
+    private void initOpenings() {
+        try {
+            java.io.InputStream is = getAssets().open("openings.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            String json = new String(buffer, "UTF-8");
+            org.json.JSONArray array = new org.json.JSONArray(json);
+            for (int i = 0; i < array.length(); i++) {
+                org.json.JSONObject obj = array.getJSONObject(i);
+                String moves = obj.getString("moves").trim();
+                String eco = obj.getString("eco");
+                String name = obj.getString("name");
+                openingsMap.put(moves, eco + " " + name);
+            }
+        } catch (Exception ignored) {}
+    }
+
+    private void updateOpeningDisplay() {
+        if (txtOpeningName == null) return;
+        String currentMoves = engine.getMovesSANString();
+        String match = null;
+        if (!currentMoves.isEmpty()) {
+            String[] parts = currentMoves.split(" ");
+            StringBuilder checkSeq = new StringBuilder();
+            for (int i = 0; i < parts.length; i++) {
+                if (i > 0) checkSeq.append(" ");
+                checkSeq.append(parts[i]);
+                String lookup = openingsMap.get(checkSeq.toString());
+                if (lookup != null) {
+                    match = lookup;
+                }
+            }
+        }
+        if (match != null) {
+            txtOpeningName.setText(match);
+            txtOpeningName.setVisibility(View.VISIBLE);
+        } else if (currentMoves.isEmpty()) {
+            txtOpeningName.setText("Standard Starting Position");
+            txtOpeningName.setVisibility(View.VISIBLE);
+        } else {
+            txtOpeningName.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateCapturedPiecesDisplay() {
+        if (txtPlayerCaptured == null || txtOpponentCaptured == null) return;
+        int playerSide = isPlayerWhite ? ChessEngine.WHITE : ChessEngine.BLACK;
+        int opponentSide = isPlayerWhite ? ChessEngine.BLACK : ChessEngine.WHITE;
+
+        List<Integer> playerCaptures = engine.getCapturedPieces(playerSide);
+        List<Integer> opponentCaptures = engine.getCapturedPieces(opponentSide);
+
+        int playerDiff = engine.getMaterialDifferential(playerSide);
+        int opponentDiff = engine.getMaterialDifferential(opponentSide);
+
+        txtPlayerCaptured.setText(formatCaptured(playerCaptures, playerDiff));
+        txtOpponentCaptured.setText(formatCaptured(opponentCaptures, opponentDiff));
+    }
+
+    private String formatCaptured(List<Integer> pieces, int diff) {
+        StringBuilder sb = new StringBuilder();
+        for (int p : pieces) {
+            int type = ChessEngine.typeOf(p);
+            switch (type) {
+                case ChessEngine.QUEEN: sb.append("♛"); break;
+                case ChessEngine.ROOK: sb.append("♜"); break;
+                case ChessEngine.BISHOP: sb.append("♝"); break;
+                case ChessEngine.KNIGHT: sb.append("♞"); break;
+                case ChessEngine.PAWN: sb.append("♟"); break;
+            }
+        }
+        if (diff > 0) {
+            sb.append(" +").append(diff);
+        }
+        return sb.toString();
     }
 
     private void setupClickListeners() {
@@ -845,14 +991,17 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         whiteTimeSeconds = selectedTimeSeconds;
         blackTimeSeconds = selectedTimeSeconds;
         updateClockDisplays();
+        updateOpeningDisplay();
+        updateCapturedPiecesDisplay();
+        playSound(soundGameStartId);
 
         boolean botStarts = (!isPlayerWhite && engine.whiteToMove);
         if (botStarts) {
             txtStatusBar.setText("Bot thinking...");
-            txtStatusBar.setTextColor(0xFF38BDF8);
+            txtStatusBar.setTextColor(0xFFFF7A00);
         } else {
             txtStatusBar.setText("White to move");
-            txtStatusBar.setTextColor(0xFF38BDF8);
+            txtStatusBar.setTextColor(0xFFFF7A00);
         }
 
         clockRunning = true;
@@ -880,9 +1029,23 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         boardView.setLastMove(from, to);
         boardView.clearHighlights();
 
-        // Check if capture or castling for haptics
+        // Audio & Haptic triggers
         if (engine.moveHistory.size() > 0) {
             ChessEngine.MoveRecord last = engine.moveHistory.get(engine.moveHistory.size() - 1);
+            if (engine.isGameOver) {
+                playSound(soundGameEndId);
+            } else if (engine.isKingInCheck(engine.whiteToMove ? ChessEngine.WHITE : ChessEngine.BLACK)) {
+                playSound(soundCheckId);
+            } else if (last.promotion != ChessEngine.EMPTY) {
+                playSound(soundPromoteId);
+            } else if (last.isCastling) {
+                playSound(soundCastleId);
+            } else if (last.captured != ChessEngine.EMPTY) {
+                playSound(soundCaptureId);
+            } else {
+                playSound(soundMoveId);
+            }
+
             if (last.captured != ChessEngine.EMPTY) {
                 boardView.vibrate(40);
             } else if (last.isCastling) {
@@ -924,6 +1087,20 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
 
             if (engine.moveHistory.size() > 0) {
                 ChessEngine.MoveRecord last = engine.moveHistory.get(engine.moveHistory.size() - 1);
+                if (engine.isGameOver) {
+                    playSound(soundGameEndId);
+                } else if (engine.isKingInCheck(engine.whiteToMove ? ChessEngine.WHITE : ChessEngine.BLACK)) {
+                    playSound(soundCheckId);
+                } else if (last.promotion != ChessEngine.EMPTY) {
+                    playSound(soundPromoteId);
+                } else if (last.isCastling) {
+                    playSound(soundCastleId);
+                } else if (last.captured != ChessEngine.EMPTY) {
+                    playSound(soundCaptureId);
+                } else {
+                    playSound(soundMoveId);
+                }
+
                 if (last.captured != ChessEngine.EMPTY) {
                     boardView.vibrate(35);
                 } else {
@@ -947,7 +1124,7 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
             turnText += " (Check!)";
             txtStatusBar.setTextColor(0xFFEF4444);
         } else {
-            txtStatusBar.setTextColor(0xFF38BDF8);
+            txtStatusBar.setTextColor(0xFFFF7A00);
         }
 
         if (engine.moveHistory.size() > 0) {
@@ -956,6 +1133,9 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         } else {
             txtStatusBar.setText(turnText);
         }
+
+        updateOpeningDisplay();
+        updateCapturedPiecesDisplay();
     }
 
     private void updateClockDisplays() {
@@ -999,6 +1179,7 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
             boardView.vibrate(80);
         }
 
+        playSound(soundGameEndId);
         savePreferences();
         applyTheme();
         updateAnalyzerView();
@@ -1073,10 +1254,10 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
             boardView.setLastMove(rec.from, rec.to);
 
             String tag = "[" + rec.classification + "]";
-            int tagColor = 0xFF38BDF8;
+            int tagColor = 0xFFFF7A00;
             if ("Brilliant".equals(rec.classification)) {
                 tag = "[!! Brilliant !!]";
-                tagColor = 0xFF06B6D4;
+                tagColor = 0xFFFF9E0B;
             } else if ("Best".equals(rec.classification)) {
                 tagColor = 0xFF10B981;
             } else if ("Inaccuracy".equals(rec.classification)) {
@@ -1085,6 +1266,7 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
                 tagColor = 0xFFFB923C;
             } else if ("Blunder".equals(rec.classification)) {
                 tagColor = 0xFFEF4444;
+                playSound(soundBlunderId);
             }
 
             txtReviewInfo.setTextColor(tagColor);
@@ -1108,6 +1290,8 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
             boardView.setLastMove(last.from, last.to);
         }
         boardView.clearHighlights();
+        updateOpeningDisplay();
+        updateCapturedPiecesDisplay();
     }
 
     private void showNameDialog() {
@@ -1198,15 +1382,15 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         playerColorPreference = pref;
         if (btnColorWhite != null) {
             btnColorWhite.setBackgroundResource(pref == 0 ? R.drawable.nav_tab_active : R.drawable.nav_tab_inactive);
-            btnColorWhite.setTextColor(pref == 0 ? 0xFF38BDF8 : 0xFF94A3B8);
+            btnColorWhite.setTextColor(pref == 0 ? 0xFFFF7A00 : 0xFF94A3B8);
         }
         if (btnColorRandom != null) {
             btnColorRandom.setBackgroundResource(pref == 1 ? R.drawable.nav_tab_active : R.drawable.nav_tab_inactive);
-            btnColorRandom.setTextColor(pref == 1 ? 0xFF38BDF8 : 0xFF94A3B8);
+            btnColorRandom.setTextColor(pref == 1 ? 0xFFFF7A00 : 0xFF94A3B8);
         }
         if (btnColorBlack != null) {
             btnColorBlack.setBackgroundResource(pref == 2 ? R.drawable.nav_tab_active : R.drawable.nav_tab_inactive);
-            btnColorBlack.setTextColor(pref == 2 ? 0xFF38BDF8 : 0xFF94A3B8);
+            btnColorBlack.setTextColor(pref == 2 ? 0xFFFF7A00 : 0xFF94A3B8);
         }
     }
 
@@ -1367,7 +1551,7 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
         Button btnCopyFen = new Button(this);
         btnCopyFen.setText("Copy FEN");
         btnCopyFen.setTextSize(12f);
-        btnCopyFen.setTextColor(0xFF06B6D4);
+        btnCopyFen.setTextColor(0xFFFF7A00);
         btnCopyFen.setBackgroundResource(R.drawable.btn_flat);
         LinearLayout.LayoutParams lpFen = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
         lpFen.setMargins(0, 0, 8, 0);
@@ -1469,5 +1653,9 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
     protected void onDestroy() {
         super.onDestroy();
         timerHandler.removeCallbacks(clockRunnable);
+        if (soundPool != null) {
+            soundPool.release();
+            soundPool = null;
+        }
     }
 }

@@ -36,9 +36,15 @@ public class ChessBoardView extends View {
     private int hintFrom = -1;
     private int hintTo = -1;
     private boolean showThreats = true;
+    private boolean showEvalBar = true;
     private boolean flipped = false;
     private int boardTheme = 0;
     private int pieceStyle = 0; // 0: Lichess (cburnett), 1: Modern Minimal
+
+    private Paint evalWhitePaint;
+    private Paint evalBlackPaint;
+    private Paint evalTextPaint;
+    private Paint evalBorderPaint;
 
     public static final int PIECE_STYLE_LICHESS = 0;
     public static final int PIECE_STYLE_MODERN = 1;
@@ -112,19 +118,19 @@ public class ChessBoardView extends View {
         darkSqPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         selectPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        selectPaint.setColor(0x77F59E0B); // Amber translucent
+        selectPaint.setColor(0x77FF7A00); // Material You Orange translucent
         selectPaint.setStyle(Paint.Style.FILL);
 
         lastMovePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        lastMovePaint.setColor(0x5538BDF8); // Sky blue translucent
+        lastMovePaint.setColor(0x55F97316); // Warm Amber-Orange translucent
         lastMovePaint.setStyle(Paint.Style.FILL);
 
         hintPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        hintPaint.setColor(0x6606B6D4); // Cyan translucent
+        hintPaint.setColor(0x66FB923C); // Light Orange translucent
         hintPaint.setStyle(Paint.Style.FILL);
 
         hintRingPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        hintRingPaint.setColor(0xEE06B6D4); // Cyan solid ring
+        hintRingPaint.setColor(0xEEFF7A00); // Material You Orange solid ring
         hintRingPaint.setStyle(Paint.Style.STROKE);
         hintRingPaint.setStrokeWidth(3.5f * density);
 
@@ -137,11 +143,11 @@ public class ChessBoardView extends View {
         checkPaint.setStyle(Paint.Style.FILL);
 
         legalDotPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        legalDotPaint.setColor(0x6610B981); // Emerald translucent dot
+        legalDotPaint.setColor(0x88FF7A00); // Material You Orange legal move dot
         legalDotPaint.setStyle(Paint.Style.FILL);
 
         legalRingPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        legalRingPaint.setColor(0x99EF4444); // Crimson ring
+        legalRingPaint.setColor(0xBBEF4444); // Crimson capture ring
         legalRingPaint.setStyle(Paint.Style.STROKE);
         legalRingPaint.setStrokeWidth(3.5f * density);
 
@@ -170,6 +176,25 @@ public class ChessBoardView extends View {
         pieceDetailStroke = new Paint(Paint.ANTI_ALIAS_FLAG);
         pieceDetailStroke.setStyle(Paint.Style.STROKE);
         pieceDetailStroke.setStrokeWidth(1.6f * density);
+
+        evalWhitePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        evalWhitePaint.setColor(0xFFF8FAFC);
+        evalWhitePaint.setStyle(Paint.Style.FILL);
+
+        evalBlackPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        evalBlackPaint.setColor(0xFF1E1B18);
+        evalBlackPaint.setStyle(Paint.Style.FILL);
+
+        evalTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        evalTextPaint.setColor(0xFFFF7A00);
+        evalTextPaint.setTextSize(9f * density);
+        evalTextPaint.setFakeBoldText(true);
+        evalTextPaint.setTextAlign(Paint.Align.CENTER);
+
+        evalBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        evalBorderPaint.setColor(0x44FF7A00);
+        evalBorderPaint.setStyle(Paint.Style.STROKE);
+        evalBorderPaint.setStrokeWidth(1.2f * density);
 
         updateThemePaints();
     }
@@ -217,6 +242,15 @@ public class ChessBoardView extends View {
 
     public boolean isShowThreats() {
         return this.showThreats;
+    }
+
+    public void setShowEvalBar(boolean show) {
+        this.showEvalBar = show;
+        invalidate();
+    }
+
+    public boolean isShowEvalBar() {
+        return this.showEvalBar;
     }
 
     public void setHint(int from, int to) {
@@ -284,7 +318,44 @@ public class ChessBoardView extends View {
         super.onDraw(canvas);
         if (engine == null) return;
 
-        float sq = getWidth() / 8.0f;
+        float evalBarWidth = showEvalBar ? (14.0f * density) : 0f;
+        float evalGap = showEvalBar ? (5.0f * density) : 0f;
+        float boardOffset = evalBarWidth + evalGap;
+        float sq = (getWidth() - boardOffset) / 8.0f;
+
+        // Draw Chess.com-style live evaluation bar
+        if (showEvalBar) {
+            float evalHeight = sq * 8.0f;
+            float barLeft = 1.0f * density;
+            float barRight = barLeft + evalBarWidth;
+            float barTop = 0;
+            float barBottom = evalHeight;
+
+            float score = engine.evaluate();
+            if (flipped) score = -score;
+            float clamped = Math.max(-10.0f, Math.min(10.0f, score));
+            float whiteRatio = 0.5f + (clamped / 20.0f);
+            float splitY = barBottom - (evalHeight * whiteRatio);
+
+            // Draw Black advantage (top portion)
+            canvas.drawRoundRect(new RectF(barLeft, barTop, barRight, barBottom), 6 * density, 6 * density, evalBlackPaint);
+
+            // Draw White advantage (bottom portion)
+            canvas.save();
+            canvas.clipRect(new RectF(barLeft, splitY, barRight, barBottom));
+            canvas.drawRoundRect(new RectF(barLeft, barTop, barRight, barBottom), 6 * density, 6 * density, evalWhitePaint);
+            canvas.restore();
+
+            // Orange subtle border
+            canvas.drawRoundRect(new RectF(barLeft, barTop, barRight, barBottom), 6 * density, 6 * density, evalBorderPaint);
+
+            // Evaluation score label
+            String evalStr = (Math.abs(score) < 0.1f) ? "0.0" : String.format(java.util.Locale.US, "%+.1f", score);
+            float textY = (splitY > evalHeight * 0.5f) ? (barTop + 13 * density) : (barBottom - 5 * density);
+            evalTextPaint.setColor((splitY > evalHeight * 0.5f) ? 0xFFF8FAFC : 0xFF1E1B18);
+            canvas.drawText(evalStr, (barLeft + barRight) * 0.5f, textY, evalTextPaint);
+        }
+
         int checkKingSq = -1;
         if (engine.isKingInCheck(ChessEngine.WHITE)) {
             for (int i = 0; i < 64; i++) {
@@ -303,7 +374,7 @@ public class ChessBoardView extends View {
         for (int r = 0; r < 8; r++) {
             for (int f = 0; f < 8; f++) {
                 int sqIdx = (!flipped) ? (r * 8 + f) : ((7 - r) * 8 + (7 - f));
-                float left = f * sq;
+                float left = boardOffset + f * sq;
                 float top = r * sq;
                 float right = left + sq;
                 float bottom = top + sq;
@@ -378,7 +449,7 @@ public class ChessBoardView extends View {
 
         // Lichess-style in-board promotion popup overlay
         if (pendingPromotionFrom != -1 && pendingPromotionTo != -1) {
-            drawPromotionOverlay(canvas, sq);
+            drawPromotionOverlay(canvas, sq, boardOffset);
         }
     }
 
@@ -389,12 +460,15 @@ public class ChessBoardView extends View {
 
     private int getPromotionPieceAt(float touchX, float touchY) {
         if (pendingPromotionFrom == -1 || pendingPromotionTo == -1) return -1;
-        float sq = getWidth() / 8.0f;
+        float evalBarWidth = showEvalBar ? (14.0f * density) : 0f;
+        float evalGap = showEvalBar ? (5.0f * density) : 0f;
+        float boardOffset = evalBarWidth + evalGap;
+        float sq = (getWidth() - boardOffset) / 8.0f;
         int targetF = pendingPromotionTo % 8;
         int targetR = pendingPromotionTo / 8;
         int col = (!flipped) ? targetF : (7 - targetF);
 
-        int touchedCol = (int) (touchX / sq);
+        int touchedCol = (int) ((touchX - boardOffset) / sq);
         if (touchedCol != col) return -1;
 
         int touchedRow = (int) (touchY / sq);
@@ -413,7 +487,7 @@ public class ChessBoardView extends View {
         return -1;
     }
 
-    private void drawPromotionOverlay(Canvas canvas, float sq) {
+    private void drawPromotionOverlay(Canvas canvas, float sq, float boardOffset) {
         if (pendingPromotionFrom == -1 || pendingPromotionTo == -1) return;
 
         // Dim background scrim
@@ -426,7 +500,7 @@ public class ChessBoardView extends View {
         int col = (!flipped) ? targetF : (7 - targetF);
         int displayRow = (!flipped) ? targetR : (7 - targetR);
 
-        float left = col * sq;
+        float left = boardOffset + col * sq;
         float right = left + sq;
         float top, bottom;
 
@@ -441,12 +515,12 @@ public class ChessBoardView extends View {
         // Material You Card Container
         Paint cardPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         cardPaint.setStyle(Paint.Style.FILL);
-        cardPaint.setColor(0xFF1E293B);
+        cardPaint.setColor(0xFF241A13);
 
         Paint borderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         borderPaint.setStyle(Paint.Style.STROKE);
         borderPaint.setStrokeWidth(2.5f * density);
-        borderPaint.setColor(0xFF06B6D4);
+        borderPaint.setColor(0xFFFF7A00);
 
         RectF cardRect = new RectF(left + 2, top + 2, right - 2, bottom - 2);
         canvas.drawRoundRect(cardRect, 10 * density, 10 * density, cardPaint);
@@ -495,8 +569,13 @@ public class ChessBoardView extends View {
         }
 
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            float sq = getWidth() / 8.0f;
-            int f = (int) (event.getX() / sq);
+            float evalBarWidth = showEvalBar ? (14.0f * density) : 0f;
+            float evalGap = showEvalBar ? (5.0f * density) : 0f;
+            float boardOffset = evalBarWidth + evalGap;
+            float sq = (getWidth() - boardOffset) / 8.0f;
+
+            if (event.getX() < boardOffset) return true; // touched eval bar area
+            int f = (int) ((event.getX() - boardOffset) / sq);
             int r = (int) (event.getY() / sq);
 
             if (f < 0 || f > 7 || r < 0 || r > 7) return true;

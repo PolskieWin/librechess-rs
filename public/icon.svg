@@ -1,6 +1,71 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <rect width="512" height="512" rx="128" fill="#181a1d"/>
-  <path d="M260 90 C360 95 400 160 395 380 L170 380 C170 300 240 280 230 190 C230 160 190 200 170 215 C150 190 175 160 190 140 C170 140 150 160 140 175 C140 140 180 110 235 95 Z" fill="#ffffff"/>
-  <circle cx="215" cy="180" r="16" fill="#181a1d"/>
-  <rect x="140" y="380" width="280" height="36" rx="10" fill="#388e3c"/>
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF8C1A"/>
+      <stop offset="45%" stop-color="#FF6A00"/>
+      <stop offset="100%" stop-color="#D94800"/>
+    </linearGradient>
+    <linearGradient id="knightGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#FCE7D6"/>
+    </linearGradient>
+    <linearGradient id="shadowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3D1D09" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#210F04" stop-opacity="0.45"/>
+    </linearGradient>
+    <linearGradient id="accentGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFE8D6" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#FFA866" stop-opacity="0.2"/>
+    </linearGradient>
+    <filter id="dropShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="16" stdDeviation="14" flood-color="#541B00" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <!-- Material You Squircle Background -->
+  <rect x="16" y="16" width="480" height="480" rx="120" ry="120" fill="url(#bgGrad)"/>
+
+  <!-- Inner Soft Accent Ring -->
+  <rect x="24" y="24" width="464" height="464" rx="112" ry="112" fill="none" stroke="url(#accentGlow)" stroke-width="4"/>
+
+  <!-- Knight Shadow Layer -->
+  <g filter="url(#dropShadow)">
+    <!-- Base Pedestal -->
+    <path d="M120 408 C120 392, 140 380, 168 380 L344 380 C372 380, 392 392, 392 408 L392 418 C392 426, 384 432, 372 432 L140 432 C128 432, 120 426, 120 418 Z" fill="url(#knightGrad)"/>
+    <path d="M148 376 L364 376 C372 376, 376 368, 368 360 L344 336 L168 336 L144 360 C136 368, 140 376, 148 376 Z" fill="url(#knightGrad)"/>
+
+    <!-- Knight Head & Mane Geometry -->
+    <path d="M168 336
+             C168 336, 172 290, 196 264
+             C212 246, 218 232, 212 216
+             C206 200, 178 204, 164 212
+             C156 216, 148 214, 148 206
+             C148 196, 162 178, 180 164
+             C194 154, 206 142, 208 126
+             C210 110, 204 96, 204 88
+             C204 80, 212 76, 218 80
+             C228 88, 238 108, 246 108
+             C252 108, 260 92, 274 76
+             C280 70, 290 74, 288 84
+             C286 100, 278 120, 286 128
+             C294 136, 316 128, 332 144
+             C348 160, 348 184, 340 204
+             C332 224, 314 246, 328 280
+             C336 298, 344 316, 344 336
+             Z" fill="url(#knightGrad)"/>
+
+    <!-- Mane Dorsal Crest Detail -->
+    <path d="M280 92 C296 112, 306 136, 320 156 C310 154, 298 152, 288 156 C282 142, 276 128, 276 116 Z" fill="url(#shadowGrad)"/>
+    <path d="M298 174 C314 194, 324 218, 332 244 C322 240, 310 238, 302 242 C298 224, 294 206, 294 192 Z" fill="url(#shadowGrad)"/>
+
+    <!-- Snout & Jawline Detail -->
+    <path d="M164 212 C184 202, 212 208, 224 228 C232 242, 232 258, 222 272 C210 288, 184 314, 172 336 L168 336 Z" fill="url(#shadowGrad)"/>
+
+    <!-- Knight Eye -->
+    <ellipse cx="236" cy="156" rx="14" ry="10" transform="rotate(-15 236 156)" fill="#D94800"/>
+    <circle cx="238" cy="154" r="5" fill="#FFFFFF"/>
+    
+    <!-- Nostril Detail -->
+    <ellipse cx="172" cy="190" rx="5" ry="8" transform="rotate(25 172 190)" fill="#D94800"/>
+  </g>
 </svg>

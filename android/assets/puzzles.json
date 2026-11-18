@@ -1,0 +1,1300 @@
+[
+  {
+    "id": 1,
+    "theme": "Back Rank Mate",
+    "rating": 800,
+    "fen": "6k1/5ppp/8/8/8/8/4QPPP/6K1 w - - 0 1",
+    "solution": [
+      "Qe8#"
+    ],
+    "turn": "w",
+    "description": "White to move and deliver immediate back-rank mate."
+  },
+  {
+    "id": 2,
+    "theme": "Knight Fork",
+    "rating": 950,
+    "fen": "r1b1k2r/pppp1ppp/8/4q3/1bP5/2N1P3/PP3PPP/R2QKB1R w KQkq - 0 1",
+    "solution": [
+      "Qa4+",
+      "Nc6",
+      "Qxb4"
+    ],
+    "turn": "w",
+    "description": "Fork king and undefended bishop."
+  },
+  {
+    "id": 3,
+    "theme": "Queen Smothered Mate",
+    "rating": 1200,
+    "fen": "6k1/5ppp/8/8/8/8/5QPP/4N1K1 w - - 0 1",
+    "solution": [
+      "Qf7+",
+      "Kh8",
+      "Qf8#"
+    ],
+    "turn": "w",
+    "description": "Drive king to corner for checkmate."
+  },
+  {
+    "id": 4,
+    "theme": "Absolute Pin",
+    "rating": 1050,
+    "fen": "r1bqk2r/ppppbppp/2n5/4P3/2B5/2P2N2/P4PPP/R1BQK2R w KQkq - 0 1",
+    "solution": [
+      "Qd5",
+      "O-O",
+      "Qxf7#"
+    ],
+    "turn": "w",
+    "description": "Scholar attack battery on f7."
+  },
+  {
+    "id": 5,
+    "theme": "Skewer",
+    "rating": 1150,
+    "fen": "8/8/8/8/3k4/8/1R6/2K4r w - - 0 1",
+    "solution": [
+      "Kd2",
+      "Rh2+",
+      "Kc1",
+      "Rxb2"
+    ],
+    "turn": "w",
+    "description": "Defend and skewer rooks."
+  },
+  {
+    "id": 6,
+    "theme": "Discovered Check",
+    "rating": 1300,
+    "fen": "r1b2rk1/pp3ppp/2n5/3q4/3N4/8/PPP2PPP/R1BQK2R w KQ - 0 1",
+    "solution": [
+      "Nxc6",
+      "Qxc6"
+    ],
+    "turn": "w",
+    "description": "Winning piece discovery in center."
+  },
+  {
+    "id": 7,
+    "theme": "Anastasia Mate",
+    "rating": 1400,
+    "fen": "5rk1/1p3ppp/8/3N4/8/8/5PPP/4R1K1 w - - 0 1",
+    "solution": [
+      "Ne7+",
+      "Kh8",
+      "Re3"
+    ],
+    "turn": "w",
+    "description": "Knight coordinate with rook on e-file."
+  },
+  {
+    "id": 8,
+    "theme": "Boden Mate",
+    "rating": 1450,
+    "fen": "2kr3r/pppn1ppp/8/8/1b1PB3/8/PP3PPP/R1BK3R w - - 0 1",
+    "solution": [
+      "Bg5",
+      "f6",
+      "Bxf6"
+    ],
+    "turn": "w",
+    "description": "Criss-crossing bishop diagonals."
+  },
+  {
+    "id": 9,
+    "theme": "Tactical Pin & Fork",
+    "rating": 835,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 9 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #9: Find the most accurate master continuation."
+  },
+  {
+    "id": 10,
+    "theme": "Tactical Mastery",
+    "rating": 850,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 10 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #10: Find the most accurate master continuation."
+  },
+  {
+    "id": 11,
+    "theme": "Tactical Pin & Fork",
+    "rating": 865,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 11 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #11: Find the most accurate master continuation."
+  },
+  {
+    "id": 12,
+    "theme": "Tactical Mastery",
+    "rating": 880,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 12 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #12: Find the most accurate master continuation."
+  },
+  {
+    "id": 13,
+    "theme": "Tactical Pin & Fork",
+    "rating": 895,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 13 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #13: Find the most accurate master continuation."
+  },
+  {
+    "id": 14,
+    "theme": "Tactical Mastery",
+    "rating": 910,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 14 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #14: Find the most accurate master continuation."
+  },
+  {
+    "id": 15,
+    "theme": "Tactical Pin & Fork",
+    "rating": 925,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 15 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #15: Find the most accurate master continuation."
+  },
+  {
+    "id": 16,
+    "theme": "Tactical Mastery",
+    "rating": 940,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 16 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #16: Find the most accurate master continuation."
+  },
+  {
+    "id": 17,
+    "theme": "Tactical Pin & Fork",
+    "rating": 955,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 17 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #17: Find the most accurate master continuation."
+  },
+  {
+    "id": 18,
+    "theme": "Tactical Mastery",
+    "rating": 970,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 18 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #18: Find the most accurate master continuation."
+  },
+  {
+    "id": 19,
+    "theme": "Tactical Pin & Fork",
+    "rating": 985,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 19 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #19: Find the most accurate master continuation."
+  },
+  {
+    "id": 20,
+    "theme": "Tactical Mastery",
+    "rating": 1000,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 20 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #20: Find the most accurate master continuation."
+  },
+  {
+    "id": 21,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1015,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 21 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #21: Find the most accurate master continuation."
+  },
+  {
+    "id": 22,
+    "theme": "Tactical Mastery",
+    "rating": 1030,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 22 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #22: Find the most accurate master continuation."
+  },
+  {
+    "id": 23,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1045,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 23 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #23: Find the most accurate master continuation."
+  },
+  {
+    "id": 24,
+    "theme": "Tactical Mastery",
+    "rating": 1060,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 24 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #24: Find the most accurate master continuation."
+  },
+  {
+    "id": 25,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1075,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 25 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #25: Find the most accurate master continuation."
+  },
+  {
+    "id": 26,
+    "theme": "Tactical Mastery",
+    "rating": 1090,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 26 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #26: Find the most accurate master continuation."
+  },
+  {
+    "id": 27,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1105,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 27 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #27: Find the most accurate master continuation."
+  },
+  {
+    "id": 28,
+    "theme": "Tactical Mastery",
+    "rating": 1120,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 28 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #28: Find the most accurate master continuation."
+  },
+  {
+    "id": 29,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1135,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 29 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #29: Find the most accurate master continuation."
+  },
+  {
+    "id": 30,
+    "theme": "Tactical Mastery",
+    "rating": 1150,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 30 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #30: Find the most accurate master continuation."
+  },
+  {
+    "id": 31,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1165,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 31 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #31: Find the most accurate master continuation."
+  },
+  {
+    "id": 32,
+    "theme": "Tactical Mastery",
+    "rating": 1180,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 32 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #32: Find the most accurate master continuation."
+  },
+  {
+    "id": 33,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1195,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 33 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #33: Find the most accurate master continuation."
+  },
+  {
+    "id": 34,
+    "theme": "Tactical Mastery",
+    "rating": 1210,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 34 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #34: Find the most accurate master continuation."
+  },
+  {
+    "id": 35,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1225,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 35 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #35: Find the most accurate master continuation."
+  },
+  {
+    "id": 36,
+    "theme": "Tactical Mastery",
+    "rating": 1240,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 36 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #36: Find the most accurate master continuation."
+  },
+  {
+    "id": 37,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1255,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 37 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #37: Find the most accurate master continuation."
+  },
+  {
+    "id": 38,
+    "theme": "Tactical Mastery",
+    "rating": 1270,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 38 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #38: Find the most accurate master continuation."
+  },
+  {
+    "id": 39,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1285,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 39 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #39: Find the most accurate master continuation."
+  },
+  {
+    "id": 40,
+    "theme": "Tactical Mastery",
+    "rating": 1300,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 40 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #40: Find the most accurate master continuation."
+  },
+  {
+    "id": 41,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1315,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 41 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #41: Find the most accurate master continuation."
+  },
+  {
+    "id": 42,
+    "theme": "Tactical Mastery",
+    "rating": 1330,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 42 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #42: Find the most accurate master continuation."
+  },
+  {
+    "id": 43,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1345,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 43 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #43: Find the most accurate master continuation."
+  },
+  {
+    "id": 44,
+    "theme": "Tactical Mastery",
+    "rating": 1360,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 44 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #44: Find the most accurate master continuation."
+  },
+  {
+    "id": 45,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1375,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 45 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #45: Find the most accurate master continuation."
+  },
+  {
+    "id": 46,
+    "theme": "Tactical Mastery",
+    "rating": 1390,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 46 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #46: Find the most accurate master continuation."
+  },
+  {
+    "id": 47,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1405,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 47 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #47: Find the most accurate master continuation."
+  },
+  {
+    "id": 48,
+    "theme": "Tactical Mastery",
+    "rating": 1420,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 48 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #48: Find the most accurate master continuation."
+  },
+  {
+    "id": 49,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1435,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 49 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #49: Find the most accurate master continuation."
+  },
+  {
+    "id": 50,
+    "theme": "Tactical Mastery",
+    "rating": 1450,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 50 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #50: Find the most accurate master continuation."
+  },
+  {
+    "id": 51,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1465,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 51 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #51: Find the most accurate master continuation."
+  },
+  {
+    "id": 52,
+    "theme": "Tactical Mastery",
+    "rating": 1480,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 52 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #52: Find the most accurate master continuation."
+  },
+  {
+    "id": 53,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1495,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 53 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #53: Find the most accurate master continuation."
+  },
+  {
+    "id": 54,
+    "theme": "Tactical Mastery",
+    "rating": 1510,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 54 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #54: Find the most accurate master continuation."
+  },
+  {
+    "id": 55,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1525,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 55 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #55: Find the most accurate master continuation."
+  },
+  {
+    "id": 56,
+    "theme": "Tactical Mastery",
+    "rating": 1540,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 56 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #56: Find the most accurate master continuation."
+  },
+  {
+    "id": 57,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1555,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 57 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #57: Find the most accurate master continuation."
+  },
+  {
+    "id": 58,
+    "theme": "Tactical Mastery",
+    "rating": 1570,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 58 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #58: Find the most accurate master continuation."
+  },
+  {
+    "id": 59,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1585,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 59 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #59: Find the most accurate master continuation."
+  },
+  {
+    "id": 60,
+    "theme": "Tactical Mastery",
+    "rating": 1600,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 60 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #60: Find the most accurate master continuation."
+  },
+  {
+    "id": 61,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1615,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 61 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #61: Find the most accurate master continuation."
+  },
+  {
+    "id": 62,
+    "theme": "Tactical Mastery",
+    "rating": 1630,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 62 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #62: Find the most accurate master continuation."
+  },
+  {
+    "id": 63,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1645,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 63 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #63: Find the most accurate master continuation."
+  },
+  {
+    "id": 64,
+    "theme": "Tactical Mastery",
+    "rating": 1660,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 64 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #64: Find the most accurate master continuation."
+  },
+  {
+    "id": 65,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1675,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 65 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #65: Find the most accurate master continuation."
+  },
+  {
+    "id": 66,
+    "theme": "Tactical Mastery",
+    "rating": 1690,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 66 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #66: Find the most accurate master continuation."
+  },
+  {
+    "id": 67,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1705,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 67 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #67: Find the most accurate master continuation."
+  },
+  {
+    "id": 68,
+    "theme": "Tactical Mastery",
+    "rating": 1720,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 68 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #68: Find the most accurate master continuation."
+  },
+  {
+    "id": 69,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1735,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 69 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #69: Find the most accurate master continuation."
+  },
+  {
+    "id": 70,
+    "theme": "Tactical Mastery",
+    "rating": 1750,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 70 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #70: Find the most accurate master continuation."
+  },
+  {
+    "id": 71,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1765,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 71 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #71: Find the most accurate master continuation."
+  },
+  {
+    "id": 72,
+    "theme": "Tactical Mastery",
+    "rating": 1780,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 72 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #72: Find the most accurate master continuation."
+  },
+  {
+    "id": 73,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1795,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 73 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #73: Find the most accurate master continuation."
+  },
+  {
+    "id": 74,
+    "theme": "Tactical Mastery",
+    "rating": 1810,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 74 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #74: Find the most accurate master continuation."
+  },
+  {
+    "id": 75,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1825,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 75 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #75: Find the most accurate master continuation."
+  },
+  {
+    "id": 76,
+    "theme": "Tactical Mastery",
+    "rating": 1840,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 76 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #76: Find the most accurate master continuation."
+  },
+  {
+    "id": 77,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1855,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 77 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #77: Find the most accurate master continuation."
+  },
+  {
+    "id": 78,
+    "theme": "Tactical Mastery",
+    "rating": 1870,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 78 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #78: Find the most accurate master continuation."
+  },
+  {
+    "id": 79,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1885,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 79 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #79: Find the most accurate master continuation."
+  },
+  {
+    "id": 80,
+    "theme": "Tactical Mastery",
+    "rating": 1900,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 80 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #80: Find the most accurate master continuation."
+  },
+  {
+    "id": 81,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1915,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 81 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #81: Find the most accurate master continuation."
+  },
+  {
+    "id": 82,
+    "theme": "Tactical Mastery",
+    "rating": 1930,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 82 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #82: Find the most accurate master continuation."
+  },
+  {
+    "id": 83,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1945,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 83 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #83: Find the most accurate master continuation."
+  },
+  {
+    "id": 84,
+    "theme": "Tactical Mastery",
+    "rating": 1960,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 84 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #84: Find the most accurate master continuation."
+  },
+  {
+    "id": 85,
+    "theme": "Tactical Pin & Fork",
+    "rating": 1975,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 85 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #85: Find the most accurate master continuation."
+  },
+  {
+    "id": 86,
+    "theme": "Tactical Mastery",
+    "rating": 1990,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 86 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #86: Find the most accurate master continuation."
+  },
+  {
+    "id": 87,
+    "theme": "Tactical Pin & Fork",
+    "rating": 2005,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 87 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #87: Find the most accurate master continuation."
+  },
+  {
+    "id": 88,
+    "theme": "Tactical Mastery",
+    "rating": 2020,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 88 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #88: Find the most accurate master continuation."
+  },
+  {
+    "id": 89,
+    "theme": "Tactical Pin & Fork",
+    "rating": 2035,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 89 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #89: Find the most accurate master continuation."
+  },
+  {
+    "id": 90,
+    "theme": "Tactical Mastery",
+    "rating": 2050,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 90 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #90: Find the most accurate master continuation."
+  },
+  {
+    "id": 91,
+    "theme": "Tactical Pin & Fork",
+    "rating": 2065,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 91 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #91: Find the most accurate master continuation."
+  },
+  {
+    "id": 92,
+    "theme": "Tactical Mastery",
+    "rating": 2080,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 92 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #92: Find the most accurate master continuation."
+  },
+  {
+    "id": 93,
+    "theme": "Tactical Pin & Fork",
+    "rating": 2095,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 93 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #93: Find the most accurate master continuation."
+  },
+  {
+    "id": 94,
+    "theme": "Tactical Mastery",
+    "rating": 2110,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 94 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #94: Find the most accurate master continuation."
+  },
+  {
+    "id": 95,
+    "theme": "Tactical Pin & Fork",
+    "rating": 2125,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 95 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #95: Find the most accurate master continuation."
+  },
+  {
+    "id": 96,
+    "theme": "Tactical Mastery",
+    "rating": 2140,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 96 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #96: Find the most accurate master continuation."
+  },
+  {
+    "id": 97,
+    "theme": "Tactical Pin & Fork",
+    "rating": 2155,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 97 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #97: Find the most accurate master continuation."
+  },
+  {
+    "id": 98,
+    "theme": "Tactical Mastery",
+    "rating": 2170,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 98 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #98: Find the most accurate master continuation."
+  },
+  {
+    "id": 99,
+    "theme": "Tactical Pin & Fork",
+    "rating": 2185,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 99 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #99: Find the most accurate master continuation."
+  },
+  {
+    "id": 100,
+    "theme": "Tactical Mastery",
+    "rating": 2200,
+    "fen": "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 100 1",
+    "solution": [
+      "Nd5",
+      "Nxe4",
+      "O-O"
+    ],
+    "turn": "w",
+    "description": "Position #100: Find the most accurate master continuation."
+  }
+]

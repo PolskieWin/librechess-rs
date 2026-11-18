@@ -1,0 +1,785 @@
+{
+  "e4": {
+    "name": "King Pawn Opening",
+    "eco": "B00",
+    "reply": [
+      "e5",
+      "c5",
+      "e6",
+      "c6",
+      "d6",
+      "g6",
+      "Nf6"
+    ]
+  },
+  "e4 e5": {
+    "name": "Open Game",
+    "eco": "C20",
+    "reply": [
+      "Nf3",
+      "Nc3",
+      "Bc4",
+      "f4",
+      "d4"
+    ]
+  },
+  "e4 e5 Nf3": {
+    "name": "King Knight Opening",
+    "eco": "C40",
+    "reply": [
+      "Nc6",
+      "Nf6",
+      "d6"
+    ]
+  },
+  "e4 e5 Nf3 Nc6": {
+    "name": "Open Game: Main Line",
+    "eco": "C44",
+    "reply": [
+      "Bb5",
+      "Bc4",
+      "d4",
+      "Nc3"
+    ]
+  },
+  "e4 e5 Nf3 Nc6 Bb5": {
+    "name": "Ruy Lopez (Spanish Opening)",
+    "eco": "C60",
+    "reply": [
+      "a6",
+      "Nf6",
+      "d6",
+      "Bc5",
+      "f5"
+    ]
+  },
+  "e4 e5 Nf3 Nc6 Bb5 a6": {
+    "name": "Ruy Lopez: Morphy Defense",
+    "eco": "C70",
+    "reply": [
+      "Ba4",
+      "Bxc6"
+    ]
+  },
+  "e4 e5 Nf3 Nc6 Bb5 a6 Ba4": {
+    "name": "Ruy Lopez: Columbus",
+    "eco": "C70",
+    "reply": [
+      "Nf6",
+      "d6",
+      "b5"
+    ]
+  },
+  "e4 e5 Nf3 Nc6 Bb5 a6 Ba4 Nf6": {
+    "name": "Ruy Lopez: Closed / Open Line",
+    "eco": "C80",
+    "reply": [
+      "O-O",
+      "d3",
+      "Qe2"
+    ]
+  },
+  "e4 e5 Nf3 Nc6 Bb5 a6 Ba4 Nf6 O-O": {
+    "name": "Ruy Lopez: Classical Defense",
+    "eco": "C84",
+    "reply": [
+      "Be7",
+      "Nxe4",
+      "b5"
+    ]
+  },
+  "e4 e5 Nf3 Nc6 Bb5 a6 Ba4 Nf6 O-O Be7": {
+    "name": "Ruy Lopez: Closed Defense",
+    "eco": "C88",
+    "reply": [
+      "Re1",
+      "d3"
+    ]
+  },
+  "e4 e5 Nf3 Nc6 Bb5 a6 Ba4 Nf6 O-O Be7 Re1": {
+    "name": "Ruy Lopez: Main Line",
+    "eco": "C89",
+    "reply": [
+      "b5"
+    ]
+  },
+  "e4 e5 Nf3 Nc6 Bb5 a6 Ba4 Nf6 O-O Be7 Re1 b5 Bb3 d6 c3 O-O": {
+    "name": "Ruy Lopez: Breyer / Chigorin",
+    "eco": "C92",
+    "reply": [
+      "h3"
+    ]
+  },
+  "e4 e5 Nf3 Nc6 Bb5 Nf6": {
+    "name": "Ruy Lopez: Berlin Defense",
+    "eco": "C65",
+    "reply": [
+      "O-O",
+      "d3"
+    ]
+  },
+  "e4 e5 Nf3 Nc6 Bc4": {
+    "name": "Italian Game",
+    "eco": "C50",
+    "reply": [
+      "Bc5",
+      "Nf6",
+      "Be7"
+    ]
+  },
+  "e4 e5 Nf3 Nc6 Bc4 Bc5": {
+    "name": "Giuoco Piano",
+    "eco": "C50",
+    "reply": [
+      "c3",
+      "d3",
+      "b4",
+      "O-O"
+    ]
+  },
+  "e4 e5 Nf3 Nc6 Bc4 Bc5 c3": {
+    "name": "Giuoco Piano: Classical Variation",
+    "eco": "C53",
+    "reply": [
+      "Nf6",
+      "Qe7"
+    ]
+  },
+  "e4 e5 Nf3 Nc6 Bc4 Bc5 c3 Nf6 d4": {
+    "name": "Giuoco Piano: Center Attack",
+    "eco": "C54",
+    "reply": [
+      "exd4"
+    ]
+  },
+  "e4 e5 Nf3 Nc6 Bc4 Bc5 b4": {
+    "name": "Evans Gambit",
+    "eco": "C51",
+    "reply": [
+      "Bxb4",
+      "Be7"
+    ]
+  },
+  "e4 e5 Nf3 Nc6 Bc4 Nf6": {
+    "name": "Two Knights Defense",
+    "eco": "C55",
+    "reply": [
+      "Ng5",
+      "d3",
+      "d4"
+    ]
+  },
+  "e4 e5 Nf3 Nc6 Bc4 Nf6 Ng5": {
+    "name": "Two Knights: Fried Liver Attack Line",
+    "eco": "C57",
+    "reply": [
+      "d5"
+    ]
+  },
+  "e4 e5 Nf3 Nc6 Bc4 Nf6 Ng5 d5 exd5": {
+    "name": "Two Knights: Polerio Defense",
+    "eco": "C57",
+    "reply": [
+      "Na5",
+      "Nd4",
+      "b5"
+    ]
+  },
+  "e4 e5 Nf3 Nc6 d4": {
+    "name": "Scotch Game",
+    "eco": "C45",
+    "reply": [
+      "exd4"
+    ]
+  },
+  "e4 e5 Nf3 Nc6 d4 exd4 Nxd4": {
+    "name": "Scotch Game: Mieses / Classical",
+    "eco": "C45",
+    "reply": [
+      "Nf6",
+      "Bc5",
+      "Qh4"
+    ]
+  },
+  "e4 e5 Nf3 Nc6 Nc3": {
+    "name": "Three Knights Game",
+    "eco": "C46",
+    "reply": [
+      "Nf6",
+      "Bc5",
+      "Bb4",
+      "g6"
+    ]
+  },
+  "e4 e5 Nf3 Nc6 Nc3 Nf6": {
+    "name": "Four Knights Game",
+    "eco": "C47",
+    "reply": [
+      "Bb5",
+      "d4",
+      "Bc4"
+    ]
+  },
+  "e4 e5 Nf3 Nf6": {
+    "name": "Petrov Defense (Russian Game)",
+    "eco": "C42",
+    "reply": [
+      "Nxe5",
+      "d4"
+    ]
+  },
+  "e4 e5 Nf3 d6": {
+    "name": "Philidor Defense",
+    "eco": "C41",
+    "reply": [
+      "d4",
+      "Bc4"
+    ]
+  },
+  "e4 e5 f4": {
+    "name": "King Gambit",
+    "eco": "C30",
+    "reply": [
+      "exf4",
+      "d5",
+      "Bc5"
+    ]
+  },
+  "e4 e5 Nc3": {
+    "name": "Vienna Game",
+    "eco": "C25",
+    "reply": [
+      "Nf6",
+      "Nc6",
+      "Bc5"
+    ]
+  },
+  "e4 c5": {
+    "name": "Sicilian Defense",
+    "eco": "B20",
+    "reply": [
+      "Nf3",
+      "Nc3",
+      "c3",
+      "d4"
+    ]
+  },
+  "e4 c5 Nf3": {
+    "name": "Sicilian Defense: Open Line",
+    "eco": "B27",
+    "reply": [
+      "d6",
+      "Nc6",
+      "e6",
+      "g6",
+      "a6"
+    ]
+  },
+  "e4 c5 Nf3 d6": {
+    "name": "Sicilian Defense: Classical Line",
+    "eco": "B50",
+    "reply": [
+      "d4",
+      "Bb5+",
+      "c3"
+    ]
+  },
+  "e4 c5 Nf3 d6 d4": {
+    "name": "Sicilian: Open Main",
+    "eco": "B50",
+    "reply": [
+      "cxd4"
+    ]
+  },
+  "e4 c5 Nf3 d6 d4 cxd4 Nxd4": {
+    "name": "Sicilian: Open Center",
+    "eco": "B53",
+    "reply": [
+      "Nf6",
+      "g6",
+      "e6"
+    ]
+  },
+  "e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6": {
+    "name": "Sicilian: Najdorf / Dragon Prep",
+    "eco": "B54",
+    "reply": [
+      "Nc3"
+    ]
+  },
+  "e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3": {
+    "name": "Sicilian: Modern Core",
+    "eco": "B54",
+    "reply": [
+      "a6",
+      "g6",
+      "e6",
+      "Nc6"
+    ]
+  },
+  "e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 a6": {
+    "name": "Sicilian Defense: Najdorf Variation",
+    "eco": "B90",
+    "reply": [
+      "Be3",
+      "Bg5",
+      "Be2",
+      "h3",
+      "f4"
+    ]
+  },
+  "e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 a6 Be3": {
+    "name": "Sicilian Najdorf: English Attack",
+    "eco": "B90",
+    "reply": [
+      "e5",
+      "e6",
+      "Ng4"
+    ]
+  },
+  "e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 g6": {
+    "name": "Sicilian Defense: Dragon Variation",
+    "eco": "B70",
+    "reply": [
+      "Be3",
+      "Be2",
+      "f4"
+    ]
+  },
+  "e4 c5 Nf3 d6 d4 cxd4 Nxd4 Nf6 Nc3 g6 Be3 Bg7 f3 O-O Qd2 Nc6": {
+    "name": "Sicilian Dragon: Yugoslav Attack",
+    "eco": "B76",
+    "reply": [
+      "Bc4",
+      "O-O-O"
+    ]
+  },
+  "e4 c5 Nf3 Nc6": {
+    "name": "Sicilian: Old Line",
+    "eco": "B30",
+    "reply": [
+      "d4",
+      "Bb5",
+      "Nc3"
+    ]
+  },
+  "e4 c5 Nf3 e6": {
+    "name": "Sicilian Defense: French Variation",
+    "eco": "B40",
+    "reply": [
+      "d4",
+      "c3",
+      "Nc3"
+    ]
+  },
+  "e4 c5 c3": {
+    "name": "Sicilian Defense: Alapin Variation",
+    "eco": "B22",
+    "reply": [
+      "d5",
+      "Nf6"
+    ]
+  },
+  "e4 c5 Nc3": {
+    "name": "Closed Sicilian",
+    "eco": "B23",
+    "reply": [
+      "Nc6",
+      "g6",
+      "e6",
+      "d6"
+    ]
+  },
+  "e4 e6": {
+    "name": "French Defense",
+    "eco": "C00",
+    "reply": [
+      "d4",
+      "d3",
+      "Nf3"
+    ]
+  },
+  "e4 e6 d4": {
+    "name": "French Defense: Open",
+    "eco": "C00",
+    "reply": [
+      "d5"
+    ]
+  },
+  "e4 e6 d4 d5": {
+    "name": "French Defense: Main Line",
+    "eco": "C01",
+    "reply": [
+      "Nc3",
+      "Nd2",
+      "e5",
+      "exd5"
+    ]
+  },
+  "e4 e6 d4 d5 Nc3": {
+    "name": "French: Paulsen Variation",
+    "eco": "C10",
+    "reply": [
+      "Nf6",
+      "Bb4",
+      "dxe4"
+    ]
+  },
+  "e4 e6 d4 d5 Nc3 Bb4": {
+    "name": "French Defense: Winawer Variation",
+    "eco": "C15",
+    "reply": [
+      "e5",
+      "a3"
+    ]
+  },
+  "e4 e6 d4 d5 Nd2": {
+    "name": "French Defense: Tarrasch Variation",
+    "eco": "C03",
+    "reply": [
+      "Nf6",
+      "c5",
+      "Be7"
+    ]
+  },
+  "e4 e6 d4 d5 e5": {
+    "name": "French Defense: Advance Variation",
+    "eco": "C02",
+    "reply": [
+      "c5"
+    ]
+  },
+  "e4 c6": {
+    "name": "Caro-Kann Defense",
+    "eco": "B10",
+    "reply": [
+      "d4",
+      "Nc3",
+      "c4"
+    ]
+  },
+  "e4 c6 d4 d5": {
+    "name": "Caro-Kann Defense: Main Line",
+    "eco": "B12",
+    "reply": [
+      "Nc3",
+      "e5",
+      "exd5",
+      "Nd2"
+    ]
+  },
+  "e4 c6 d4 d5 Nc3 dxe4 Nxe4": {
+    "name": "Caro-Kann: Classical Variation",
+    "eco": "B18",
+    "reply": [
+      "Bf5",
+      "Nd7",
+      "Nf6"
+    ]
+  },
+  "e4 c6 d4 d5 e5": {
+    "name": "Caro-Kann Defense: Advance Variation",
+    "eco": "B12",
+    "reply": [
+      "Bf5",
+      "c5"
+    ]
+  },
+  "e4 d6": {
+    "name": "Pirc Defense",
+    "eco": "B07",
+    "reply": [
+      "d4",
+      "Nf3",
+      "Nc3"
+    ]
+  },
+  "e4 d5": {
+    "name": "Scandinavian Defense (Center Counter)",
+    "eco": "B01",
+    "reply": [
+      "exd5",
+      "e5"
+    ]
+  },
+  "e4 d5 exd5": {
+    "name": "Scandinavian: Main Line",
+    "eco": "B01",
+    "reply": [
+      "Qxd5",
+      "Nf6"
+    ]
+  },
+  "e4 Nf6": {
+    "name": "Alekhine Defense",
+    "eco": "B02",
+    "reply": [
+      "e5",
+      "Nc3",
+      "d3"
+    ]
+  },
+  "d4": {
+    "name": "Queen Pawn Opening",
+    "eco": "A40",
+    "reply": [
+      "d5",
+      "Nf6",
+      "e6",
+      "f5",
+      "g6",
+      "c5"
+    ]
+  },
+  "d4 d5": {
+    "name": "Closed Game",
+    "eco": "D00",
+    "reply": [
+      "c4",
+      "Nf3",
+      "Bf4",
+      "e3"
+    ]
+  },
+  "d4 d5 c4": {
+    "name": "Queen Gambit",
+    "eco": "D06",
+    "reply": [
+      "e6",
+      "c6",
+      "dxc4",
+      "Nc6",
+      "e5"
+    ]
+  },
+  "d4 d5 c4 e6": {
+    "name": "Queen Gambit Declined (QGD)",
+    "eco": "D30",
+    "reply": [
+      "Nc3",
+      "Nf3",
+      "cxd5"
+    ]
+  },
+  "d4 d5 c4 e6 Nc3 Nf6": {
+    "name": "QGD: Classical Line",
+    "eco": "D35",
+    "reply": [
+      "Bg5",
+      "Nf3",
+      "cxd5"
+    ]
+  },
+  "d4 d5 c4 e6 Nc3 Nf6 Bg5": {
+    "name": "QGD: Tartakower / Orthodox",
+    "eco": "D50",
+    "reply": [
+      "Be7",
+      "Nbd7",
+      "c6"
+    ]
+  },
+  "d4 d5 c4 c6": {
+    "name": "Slav Defense",
+    "eco": "D10",
+    "reply": [
+      "Nf3",
+      "Nc3",
+      "cxd5"
+    ]
+  },
+  "d4 d5 c4 c6 Nf3 Nf6": {
+    "name": "Slav Defense: Modern Line",
+    "eco": "D11",
+    "reply": [
+      "Nc3",
+      "e3"
+    ]
+  },
+  "d4 d5 c4 c6 Nf3 Nf6 Nc3 dxc4": {
+    "name": "Slav Defense: Accepted Line",
+    "eco": "D15",
+    "reply": [
+      "a4",
+      "e4"
+    ]
+  },
+  "d4 d5 c4 dxc4": {
+    "name": "Queen Gambit Accepted (QGA)",
+    "eco": "D20",
+    "reply": [
+      "Nf3",
+      "e3",
+      "e4"
+    ]
+  },
+  "d4 d5 Bf4": {
+    "name": "London System",
+    "eco": "D00",
+    "reply": [
+      "Nf6",
+      "c5",
+      "e6",
+      "Bf5"
+    ]
+  },
+  "d4 d5 Nf3 Nf6 Bf4": {
+    "name": "London System: Main Line",
+    "eco": "D02",
+    "reply": [
+      "c5",
+      "e6",
+      "c6"
+    ]
+  },
+  "d4 Nf6": {
+    "name": "Indian Defense",
+    "eco": "A45",
+    "reply": [
+      "c4",
+      "Nf3",
+      "Bg5",
+      "Bf4"
+    ]
+  },
+  "d4 Nf6 c4": {
+    "name": "Indian Defense: Classical",
+    "eco": "E00",
+    "reply": [
+      "e6",
+      "g6",
+      "c5",
+      "d6"
+    ]
+  },
+  "d4 Nf6 c4 e6": {
+    "name": "East Indian Defense",
+    "eco": "E00",
+    "reply": [
+      "Nc3",
+      "Nf3",
+      "g3"
+    ]
+  },
+  "d4 Nf6 c4 e6 Nc3 Bb4": {
+    "name": "Nimzo-Indian Defense",
+    "eco": "E20",
+    "reply": [
+      "Qc2",
+      "e3",
+      "Nf3",
+      "a3"
+    ]
+  },
+  "d4 Nf6 c4 e6 Nf3 b6": {
+    "name": "Queen Indian Defense",
+    "eco": "E12",
+    "reply": [
+      "g3",
+      "a3",
+      "Nc3"
+    ]
+  },
+  "d4 Nf6 c4 e6 g3": {
+    "name": "Catalan Opening",
+    "eco": "E01",
+    "reply": [
+      "d5",
+      "c5",
+      "Bb4+"
+    ]
+  },
+  "d4 Nf6 c4 g6": {
+    "name": "King Indian / Grunfeld Prep",
+    "eco": "E60",
+    "reply": [
+      "Nc3",
+      "Nf3",
+      "g3"
+    ]
+  },
+  "d4 Nf6 c4 g6 Nc3 Bg7": {
+    "name": "King Indian Defense (KID)",
+    "eco": "E60",
+    "reply": [
+      "e4",
+      "Nf3"
+    ]
+  },
+  "d4 Nf6 c4 g6 Nc3 Bg7 e4 d6": {
+    "name": "King Indian Defense: Classical",
+    "eco": "E70",
+    "reply": [
+      "Nf3",
+      "f3",
+      "Be2",
+      "h3"
+    ]
+  },
+  "d4 Nf6 c4 g6 Nc3 d5": {
+    "name": "Grunfeld Defense",
+    "eco": "D80",
+    "reply": [
+      "cxd5",
+      "Nf3",
+      "Bf4"
+    ]
+  },
+  "d4 Nf6 c4 c5": {
+    "name": "Benoni Defense",
+    "eco": "A56",
+    "reply": [
+      "d5",
+      "Nf3"
+    ]
+  },
+  "d4 f5": {
+    "name": "Dutch Defense",
+    "eco": "A80",
+    "reply": [
+      "c4",
+      "g3",
+      "Nf3",
+      "Bg5"
+    ]
+  },
+  "c4": {
+    "name": "English Opening",
+    "eco": "A10",
+    "reply": [
+      "e5",
+      "c5",
+      "Nf6",
+      "e6",
+      "g6"
+    ]
+  },
+  "c4 e5": {
+    "name": "English Opening: King English",
+    "eco": "A20",
+    "reply": [
+      "Nc3",
+      "g3",
+      "Nf3"
+    ]
+  },
+  "c4 c5": {
+    "name": "English Opening: Symmetrical",
+    "eco": "A30",
+    "reply": [
+      "Nc3",
+      "Nf3",
+      "g3"
+    ]
+  },
+  "Nf3": {
+    "name": "Reti Opening (Zukertort)",
+    "eco": "A04",
+    "reply": [
+      "d5",
+      "Nf6",
+      "c5",
+      "g6"
+    ]
+  }
+}

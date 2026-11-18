@@ -1082,8 +1082,11 @@ public class PieceRenderer {
                     canvas.drawCircle(9.50f, 25.50f, 1.50f, paintStrokeBlack);
                     break;
                 case ChessEngine.BISHOP:
+                    canvas.drawPath(P_Lichess_wB_0, paintFillWhite);
                     canvas.drawPath(P_Lichess_wB_0, paintStrokeBlack);
+                    canvas.drawPath(P_Lichess_wB_1, paintFillWhite);
                     canvas.drawPath(P_Lichess_wB_1, paintStrokeBlack);
+                    canvas.drawPath(P_Lichess_wB_2, paintFillWhite);
                     canvas.drawPath(P_Lichess_wB_2, paintStrokeBlack);
                     canvas.drawPath(P_Lichess_wB_3, paintStrokeBlack);
                     break;
@@ -1128,34 +1131,37 @@ public class PieceRenderer {
                     canvas.drawCircle(9.50f, 25.50f, 1.50f, paintStrokeBlack);
                     break;
                 case ChessEngine.BISHOP:
-                    canvas.drawPath(P_Lichess_bB_0, paintStrokeBlack);
-                    canvas.drawPath(P_Lichess_bB_1, paintStrokeBlack);
-                    canvas.drawPath(P_Lichess_bB_2, paintStrokeBlack);
+                    canvas.drawPath(P_Lichess_bB_0, paintFillBlack);
+                    canvas.drawPath(P_Lichess_bB_0, paintStrokeWhite);
+                    canvas.drawPath(P_Lichess_bB_1, paintFillBlack);
+                    canvas.drawPath(P_Lichess_bB_1, paintStrokeWhite);
+                    canvas.drawPath(P_Lichess_bB_2, paintFillBlack);
+                    canvas.drawPath(P_Lichess_bB_2, paintStrokeWhite);
                     canvas.drawPath(P_Lichess_bB_3, paintStrokeWhite);
                     break;
                 case ChessEngine.ROOK:
                     canvas.drawPath(P_Lichess_bR_0, paintFillBlack);
-                    canvas.drawPath(P_Lichess_bR_0, paintStrokeBlack);
+                    canvas.drawPath(P_Lichess_bR_0, paintStrokeWhite);
                     canvas.drawPath(P_Lichess_bR_1, paintStrokeWhite);
                     canvas.drawPath(P_Lichess_bR_2, paintStrokeWhite);
                     canvas.drawPath(P_Lichess_bR_3, paintStrokeWhite);
                     break;
                 case ChessEngine.QUEEN:
                     canvas.drawPath(P_Lichess_bQ_0, paintFillBlack);
-                    canvas.drawPath(P_Lichess_bQ_0, paintStrokeBlack);
+                    canvas.drawPath(P_Lichess_bQ_0, paintStrokeWhite);
                     canvas.drawPath(P_Lichess_bQ_1, paintFillBlack);
-                    canvas.drawPath(P_Lichess_bQ_1, paintStrokeBlack);
+                    canvas.drawPath(P_Lichess_bQ_1, paintStrokeWhite);
                     canvas.drawPath(P_Lichess_bQ_2, paintFillBlack);
-                    canvas.drawPath(P_Lichess_bQ_2, paintStrokeBlack);
+                    canvas.drawPath(P_Lichess_bQ_2, paintStrokeWhite);
                     canvas.drawPath(P_Lichess_bQ_3, paintStrokeWhite);
                     canvas.drawPath(P_Lichess_bQ_4, paintStrokeWhite);
                     break;
                 case ChessEngine.KING:
-                    canvas.drawPath(P_Lichess_bK_0, paintStrokeBlack);
+                    canvas.drawPath(P_Lichess_bK_0, paintStrokeWhite);
                     canvas.drawPath(P_Lichess_bK_1, paintFillBlack);
-                    canvas.drawPath(P_Lichess_bK_1, paintStrokeBlack);
+                    canvas.drawPath(P_Lichess_bK_1, paintStrokeWhite);
                     canvas.drawPath(P_Lichess_bK_2, paintFillBlack);
-                    canvas.drawPath(P_Lichess_bK_2, paintStrokeBlack);
+                    canvas.drawPath(P_Lichess_bK_2, paintStrokeWhite);
                     canvas.drawPath(P_Lichess_bK_3, paintStrokeWhite);
                     break;
             }
@@ -1209,40 +1215,40 @@ public class PieceRenderer {
             switch (type) {
                 case ChessEngine.PAWN:
                     canvas.drawPath(P_Neo_bP_0, paintFillBlack);
-                    canvas.drawPath(P_Neo_bP_0, paintStrokeBlackThick);
+                    canvas.drawPath(P_Neo_bP_0, paintStrokeWhite);
                     canvas.drawCircle(22.50f, 15.00f, 4.50f, paintFillBlack);
-                    canvas.drawCircle(22.50f, 15.00f, 4.50f, paintStrokeBlackThick);
+                    canvas.drawCircle(22.50f, 15.00f, 4.50f, paintStrokeWhite);
                     break;
                 case ChessEngine.KNIGHT:
                     canvas.drawPath(P_Neo_bN_0, paintFillBlack);
-                    canvas.drawPath(P_Neo_bN_0, paintStrokeBlackThick);
+                    canvas.drawPath(P_Neo_bN_0, paintStrokeWhite);
                     canvas.drawCircle(20.00f, 18.00f, 1.50f, paintFillWhite);
-                    canvas.drawCircle(20.00f, 18.00f, 1.50f, paintStrokeWhiteThick);
+                    canvas.drawCircle(20.00f, 18.00f, 1.50f, paintStrokeWhite);
                     break;
                 case ChessEngine.BISHOP:
                     canvas.drawPath(P_Neo_bB_0, paintFillBlack);
-                    canvas.drawPath(P_Neo_bB_0, paintStrokeBlackThick);
+                    canvas.drawPath(P_Neo_bB_0, paintStrokeWhite);
                     canvas.drawLine(22.50f, 18.00f, 22.50f, 28.00f, paintStrokeWhite);
                     canvas.drawCircle(22.50f, 7.50f, 1.50f, paintFillWhite);
-                    canvas.drawCircle(22.50f, 7.50f, 1.50f, paintStrokeWhiteThick);
+                    canvas.drawCircle(22.50f, 7.50f, 1.50f, paintStrokeWhite);
                     break;
                 case ChessEngine.ROOK:
                     canvas.drawPath(P_Neo_bR_0, paintFillBlack);
-                    canvas.drawPath(P_Neo_bR_0, paintStrokeBlackThick);
+                    canvas.drawPath(P_Neo_bR_0, paintStrokeWhite);
                     break;
                 case ChessEngine.QUEEN:
                     canvas.drawPath(P_Neo_bQ_0, paintFillBlack);
-                    canvas.drawPath(P_Neo_bQ_0, paintStrokeBlackThick);
+                    canvas.drawPath(P_Neo_bQ_0, paintStrokeWhite);
                     canvas.drawCircle(16.00f, 19.00f, 1.50f, paintFillWhite);
-                    canvas.drawCircle(16.00f, 19.00f, 1.50f, paintStrokeBlackThick);
+                    canvas.drawCircle(16.00f, 19.00f, 1.50f, paintStrokeWhite);
                     canvas.drawCircle(22.50f, 14.00f, 1.50f, paintFillWhite);
-                    canvas.drawCircle(22.50f, 14.00f, 1.50f, paintStrokeBlackThick);
+                    canvas.drawCircle(22.50f, 14.00f, 1.50f, paintStrokeWhite);
                     canvas.drawCircle(29.00f, 19.00f, 1.50f, paintFillWhite);
-                    canvas.drawCircle(29.00f, 19.00f, 1.50f, paintStrokeBlackThick);
+                    canvas.drawCircle(29.00f, 19.00f, 1.50f, paintStrokeWhite);
                     break;
                 case ChessEngine.KING:
                     canvas.drawPath(P_Neo_bK_0, paintFillBlack);
-                    canvas.drawPath(P_Neo_bK_0, paintStrokeWhiteThick);
+                    canvas.drawPath(P_Neo_bK_0, paintStrokeWhite);
                     canvas.drawPath(P_Neo_bK_poly_1, paintFillWhite);
                     canvas.drawPath(P_Neo_bK_poly_1, paintStrokeWhite);
                     break;
@@ -1308,51 +1314,51 @@ public class PieceRenderer {
             switch (type) {
                 case ChessEngine.PAWN:
                     canvas.drawPath(P_Staunton_bP_0, paintFillBlack);
-                    canvas.drawPath(P_Staunton_bP_0, paintStrokeBlack);
+                    canvas.drawPath(P_Staunton_bP_0, paintStrokeWhite);
                     canvas.drawCircle(22.50f, 15.00f, 4.50f, paintFillBlack);
-                    canvas.drawCircle(22.50f, 15.00f, 4.50f, paintStrokeBlack);
-                    canvas.drawCircle(22.50f, 9.50f, 2.00f, paintStrokeBlack);
+                    canvas.drawCircle(22.50f, 15.00f, 4.50f, paintStrokeWhite);
+                    canvas.drawCircle(22.50f, 9.50f, 2.00f, paintStrokeWhite);
                     break;
                 case ChessEngine.KNIGHT:
                     canvas.drawPath(P_Staunton_bN_0, paintFillBlack);
-                    canvas.drawPath(P_Staunton_bN_0, paintStrokeBlack);
+                    canvas.drawPath(P_Staunton_bN_0, paintStrokeWhite);
                     canvas.drawCircle(19.00f, 18.00f, 1.50f, paintFillWhite);
-                    canvas.drawCircle(19.00f, 18.00f, 1.50f, paintStrokeBlack);
+                    canvas.drawCircle(19.00f, 18.00f, 1.50f, paintStrokeWhite);
                     canvas.drawPath(P_Staunton_bN_1, paintStrokeWhite);
                     break;
                 case ChessEngine.BISHOP:
                     canvas.drawPath(P_Staunton_bB_0, paintFillBlack);
-                    canvas.drawPath(P_Staunton_bB_0, paintStrokeBlack);
+                    canvas.drawPath(P_Staunton_bB_0, paintStrokeWhite);
                     canvas.drawCircle(22.50f, 8.50f, 2.00f, paintFillBlack);
-                    canvas.drawCircle(22.50f, 8.50f, 2.00f, paintStrokeBlack);
+                    canvas.drawCircle(22.50f, 8.50f, 2.00f, paintStrokeWhite);
                     canvas.drawPath(P_Staunton_bB_1, paintFillBlack);
                     canvas.drawPath(P_Staunton_bB_1, paintStrokeWhiteThick);
                     break;
                 case ChessEngine.ROOK:
                     canvas.drawPath(P_Staunton_bR_0, paintFillBlack);
-                    canvas.drawPath(P_Staunton_bR_0, paintStrokeBlack);
+                    canvas.drawPath(P_Staunton_bR_0, paintStrokeWhite);
                     break;
                 case ChessEngine.QUEEN:
                     canvas.drawPath(P_Staunton_bQ_0, paintFillBlack);
-                    canvas.drawPath(P_Staunton_bQ_0, paintStrokeBlack);
+                    canvas.drawPath(P_Staunton_bQ_0, paintStrokeWhite);
                     canvas.drawPath(P_Staunton_bQ_1, paintFillBlack);
-                    canvas.drawPath(P_Staunton_bQ_1, paintStrokeBlack);
+                    canvas.drawPath(P_Staunton_bQ_1, paintStrokeWhite);
                     canvas.drawCircle(11.00f, 10.00f, 1.50f, paintFillWhite);
-                    canvas.drawCircle(11.00f, 10.00f, 1.50f, paintStrokeBlack);
+                    canvas.drawCircle(11.00f, 10.00f, 1.50f, paintStrokeWhite);
                     canvas.drawCircle(17.00f, 17.00f, 1.50f, paintFillWhite);
-                    canvas.drawCircle(17.00f, 17.00f, 1.50f, paintStrokeBlack);
+                    canvas.drawCircle(17.00f, 17.00f, 1.50f, paintStrokeWhite);
                     canvas.drawCircle(22.50f, 7.00f, 1.50f, paintFillWhite);
-                    canvas.drawCircle(22.50f, 7.00f, 1.50f, paintStrokeBlack);
+                    canvas.drawCircle(22.50f, 7.00f, 1.50f, paintStrokeWhite);
                     canvas.drawCircle(28.00f, 17.00f, 1.50f, paintFillWhite);
-                    canvas.drawCircle(28.00f, 17.00f, 1.50f, paintStrokeBlack);
+                    canvas.drawCircle(28.00f, 17.00f, 1.50f, paintStrokeWhite);
                     canvas.drawCircle(34.00f, 10.00f, 1.50f, paintFillWhite);
-                    canvas.drawCircle(34.00f, 10.00f, 1.50f, paintStrokeBlack);
+                    canvas.drawCircle(34.00f, 10.00f, 1.50f, paintStrokeWhite);
                     break;
                 case ChessEngine.KING:
                     canvas.drawPath(P_Staunton_bK_0, paintFillBlack);
-                    canvas.drawPath(P_Staunton_bK_0, paintStrokeBlack);
+                    canvas.drawPath(P_Staunton_bK_0, paintStrokeWhite);
                     canvas.drawPath(P_Staunton_bK_1, paintFillBlack);
-                    canvas.drawPath(P_Staunton_bK_1, paintStrokeBlack);
+                    canvas.drawPath(P_Staunton_bK_1, paintStrokeWhite);
                     canvas.drawPath(P_Staunton_bK_2, paintFillBlack);
                     canvas.drawPath(P_Staunton_bK_2, paintStrokeWhiteThick);
                     break;

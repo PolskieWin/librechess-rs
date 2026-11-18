@@ -100,6 +100,41 @@ public class ChessEngine {
         gameOverReason = "";
     }
 
+    public List<Integer> getCapturedPieces(int capturedByColor) {
+        List<Integer> list = new ArrayList<>();
+        for (MoveRecord r : moveHistory) {
+            if (r.captured != EMPTY && colorOf(r.piece) == capturedByColor) {
+                list.add(r.captured);
+            }
+        }
+        return list;
+    }
+
+    public int getMaterialDifferential(int forColor) {
+        int wMat = 0, bMat = 0;
+        int[] vals = {0, 1, 3, 3, 5, 9, 0};
+        for (int i = 0; i < 64; i++) {
+            int p = board[i];
+            if (p != EMPTY) {
+                int t = typeOf(p);
+                if (t >= 1 && t <= 5) {
+                    if (colorOf(p) == WHITE) wMat += vals[t];
+                    else bMat += vals[t];
+                }
+            }
+        }
+        return forColor == WHITE ? (wMat - bMat) : (bMat - wMat);
+    }
+
+    public String getMovesSANString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < moveHistory.size(); i++) {
+            if (i > 0) sb.append(" ");
+            sb.append(moveHistory.get(i).san.replace("+", "").replace("#", ""));
+        }
+        return sb.toString();
+    }
+
     public static int colorOf(int piece) {
         return piece & (WHITE | BLACK);
     }

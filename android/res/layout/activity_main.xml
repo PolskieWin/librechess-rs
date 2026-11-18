@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#0F172A"
+    android:background="#18110B"
     android:paddingLeft="12dp"
     android:paddingRight="12dp">
 
@@ -43,7 +43,7 @@
             android:layout_height="34dp"
             android:background="@drawable/btn_flat"
             android:text="Pieces"
-            android:textColor="#38BDF8"
+            android:textColor="#FF7A00"
             android:textSize="11sp"
             android:minWidth="0dp"
             android:minHeight="0dp"
@@ -147,32 +147,54 @@
 
             <!-- Opponent Info Card -->
             <LinearLayout
+                android:id="@+id/card_opponent"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="44dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:paddingLeft="6dp"
-                android:paddingRight="6dp">
+                android:background="@drawable/card_material"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_marginBottom="4dp">
 
-                <TextView
-                    android:id="@+id/txt_opponent_name"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Bot 100"
-                    android:textColor="#94A3B8"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txt_opponent_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bot 100"
+                        android:textColor="#F8FAFC"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txt_opponent_captured"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="#FF7A00"
+                        android:textSize="12sp" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/txt_opponent_clock"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="10:00"
-                    android:textColor="#F8FAFC"
-                    android:textSize="16sp"
+                    android:textColor="#FF7A00"
+                    android:textSize="15sp"
                     android:typeface="monospace"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:background="@drawable/badge_flat"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp" />
             </LinearLayout>
 
             <!-- Center Chessboard -->
@@ -191,49 +213,80 @@
 
             <!-- Player Info Card -->
             <LinearLayout
+                android:id="@+id/card_player"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="44dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:paddingLeft="6dp"
-                android:paddingRight="6dp">
+                android:background="@drawable/card_material"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_marginTop="4dp">
 
-                <TextView
-                    android:id="@+id/txt_player_name"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Polskie (100)"
-                    android:textColor="#38BDF8"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txt_player_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Polskie (100)"
+                        android:textColor="#FF7A00"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txt_player_captured"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="#FF7A00"
+                        android:textSize="12sp" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/txt_player_clock"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="10:00"
-                    android:textColor="#F8FAFC"
-                    android:textSize="16sp"
+                    android:textColor="#FF7A00"
+                    android:textSize="15sp"
                     android:typeface="monospace"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:background="@drawable/badge_flat"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp" />
             </LinearLayout>
 
-            <!-- Status & Move Evaluation Line -->
+            <!-- Status, Opening & Move Evaluation Line -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp">
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp">
+
+                <TextView
+                    android:id="@+id/txt_opening_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="#D8B498"
+                    android:textSize="12sp"
+                    android:textStyle="italic" />
 
                 <TextView
                     android:id="@+id/txt_status_bar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="White to move"
-                    android:textColor="#38BDF8"
+                    android:textColor="#FF7A00"
                     android:textSize="13sp" />
 
                 <TextView
@@ -241,7 +294,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textColor="#A855F7"
+                    android:textColor="#FF7A00"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:visibility="gone" />
@@ -471,7 +524,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="1 min lightning"
-                            android:textColor="#38BDF8"
+                            android:textColor="#FF7A00"
                             android:textSize="11sp" />
                     </LinearLayout>
 
@@ -496,7 +549,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="2 min + 1s inc"
-                            android:textColor="#38BDF8"
+                            android:textColor="#FF7A00"
                             android:textSize="11sp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -677,7 +730,7 @@
                             android:layout_weight="1"
                             android:background="@drawable/btn_flat"
                             android:text="Test Ping"
-                            android:textColor="#38BDF8"
+                            android:textColor="#FF7A00"
                             android:textSize="12sp"
                             android:layout_marginLeft="6dp" />
                     </LinearLayout>
@@ -742,7 +795,7 @@
                         android:layout_height="26dp"
                         android:background="@drawable/nav_tab_active"
                         android:text="White"
-                        android:textColor="#38BDF8"
+                        android:textColor="#FF7A00"
                         android:textSize="11sp"
                         android:textStyle="bold"
                         android:gravity="center"
@@ -1365,7 +1418,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Play a game or import PGN below to generate a Stockfish tactical review."
-                        android:textColor="#38BDF8"
+                        android:textColor="#FF7A00"
                         android:textSize="13sp"
                         android:textStyle="bold" />
                 </LinearLayout>

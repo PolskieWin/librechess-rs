@@ -1,25 +1,25 @@
-/* LibreChess RS - Human Clean Minimalist Styling (No Gradients, No Material You) */
+/* LibreChess RS - Material You Orange Minimalist Styling */
 
 :root {
-  /* Default Full Dark Mode (Sleek Slate) */
-  --bg-color: #0f172a;
-  --surface-color: #1e293b;
-  --surface-hover: #334155;
-  --surface-active: #475569;
-  --border-color: #334155;
+  /* Default Material You Orange Theme */
+  --bg-color: #18110b;
+  --surface-color: #241a13;
+  --surface-hover: #33241b;
+  --surface-active: #443024;
+  --border-color: #4a3426;
   --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --accent-color: #22c55e;
-  --accent-hover: #16a34a;
+  --text-muted: #d8b498;
+  --accent-color: #ff7a00;
+  --accent-hover: #e66b00;
   --accent-text: #ffffff;
   --danger-color: #ef4444;
   --danger-hover: #dc2626;
-  --blue-color: #38bdf8;
+  --blue-color: #ff7a00;
 
   --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
 }
 
 [data-theme="oled"] {
