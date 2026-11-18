@@ -1599,7 +1599,7 @@ public class MainActivity extends Activity implements ChessBoardView.OnMoveListe
 
         // Credits Box
         TextView txtCredits = new TextView(this);
-        txtCredits.setText("\nLibreChess RS\nVersion 1.2.0 • Ultra-Lightweight (<1MB)\nLichess Pieces & Boards • Full Tactics Bot AI");
+        txtCredits.setText("\nLibreChess RS\nVersion 1.3.0 • Material You Orange • Chess.com Overhaul\nLichess Pieces & Boards • Full Tactics Bot AI");
         txtCredits.setTextSize(12f);
         txtCredits.setTextColor(textSecondary);
         txtCredits.setPadding(0, 10, 0, 10);
